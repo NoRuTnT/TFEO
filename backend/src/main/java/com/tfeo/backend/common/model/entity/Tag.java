@@ -1,6 +1,7 @@
-package com.tfeo.backend.domain.common.model.entity;
+package com.tfeo.backend.common.model.entity;
 
 import static javax.persistence.CascadeType.*;
+import static lombok.AccessLevel.*;
 
 import java.util.List;
 
@@ -11,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.tfeo.backend.domain.home.model.entity.HomeOption;
 import com.tfeo.backend.domain.home.model.entity.HostPreference;
 import com.tfeo.backend.domain.member.model.entity.MemberTag;
 
@@ -20,10 +20,10 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Tag {
 	@Id
-	@Column(name="tag_no")
+	@Column(name = "tag_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long tagNo;
 	private String keyword;
