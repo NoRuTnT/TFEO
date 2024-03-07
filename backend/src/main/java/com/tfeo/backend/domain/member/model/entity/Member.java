@@ -12,6 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.tfeo.backend.common.model.type.CertificateStatusType;
+import com.tfeo.backend.common.model.type.GenderType;
+import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.review.model.entity.Review;
 
@@ -47,14 +50,14 @@ public class Member {
 	@Column(name = "profile_url")
 	private String profileUrl;
 
-	private String gender;
+	private GenderType gender;
 
-	private String role;
+	private MemberRoleType role;
 
 	private String certificate;
 
 	@Column(name = "certificate_status")
-	private String certificateStatus;
+	private CertificateStatusType certificateStatus;
 
 	@Column(name = "certificate_register_date")
 	private String certificateRegisterDate;

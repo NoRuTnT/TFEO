@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 
 import org.springframework.data.annotation.CreatedDate;
 
-import com.tfeo.backend.common.model.type.activityApproveType;
+import com.tfeo.backend.common.model.type.ActivityApproveType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 
 import lombok.Getter;
@@ -42,7 +42,7 @@ public class Activity {
 	@Column(name = "activity_text")
 	private String activityText;
 
-	private activityApproveType approve;
+	private ActivityApproveType approve;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "contract_no")

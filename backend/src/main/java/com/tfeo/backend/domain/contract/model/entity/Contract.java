@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
 
+import com.tfeo.backend.common.model.type.ContractProgressType;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.home.model.entity.Home;
 
@@ -39,7 +40,7 @@ public class Contract {
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
-	private int progress;
+	private ContractProgressType progress;
 
 	@Column(name = "start_at")
 	private LocalDateTime startAt;

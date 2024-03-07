@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.tfeo.backend.common.model.type.Address;
+import com.tfeo.backend.common.model.type.GenderType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.member.model.entity.Wish;
 import com.tfeo.backend.domain.review.model.entity.Review;
@@ -39,7 +40,7 @@ public class Home {
 	private String hostPhone;
 
 	@Column(name = "home_gender")
-	private String hostGender;
+	private GenderType hostGender;
 
 	@Column(name = "guardian_name")
 	private String guardianName;
