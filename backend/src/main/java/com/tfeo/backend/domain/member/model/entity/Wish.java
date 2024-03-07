@@ -1,9 +1,12 @@
 package com.tfeo.backend.domain.member.model.entity;
 
+import static lombok.AccessLevel.*;
+
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,24 +23,27 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Wish {
 	@Id
-	@Column(name="wish_no")
+	@Column(name = "wish_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long wishNo;
-	@ManyToOne
-	@JoinColumn(name="member_no")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_no")
 	private Member member;
+
 	@CreatedDate
-	@Column(name="created_at")
+	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	@LastModifiedDate
-	@Column(name="updated_at")
+	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
-	@ManyToOne
-	@JoinColumn(name="home_no")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "home_no")
 	private Home home;
 
 }

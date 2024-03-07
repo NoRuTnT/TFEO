@@ -1,6 +1,7 @@
 package com.tfeo.backend.domain.member.model.entity;
 
 import static javax.persistence.CascadeType.*;
+import static lombok.AccessLevel.*;
 
 import java.util.List;
 
@@ -13,38 +14,52 @@ import javax.persistence.OneToMany;
 
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.review.model.entity.Review;
-import com.tfeo.backend.domain.review.model.entity.ReviewKeyword;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Member {
 	@Id
-	@Column(name="member_no")
+	@Column(name = "member_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberNo;
+
 	private String id;
+
 	private String name;
+
 	private String password;
+
 	private String phone;
+
 	private String email;
-	@Column(name="register_no")
+
+	@Column(name = "register_no")
 	private String registerNo;
+
 	private String college;
+
 	private String address;
-	@Column(name="profile_url")
+
+	@Column(name = "profile_url")
 	private String profileUrl;
+
 	private String gender;
+
 	private String role;
+
 	private String certificate;
-	@Column(name="certificate_status")
+
+	@Column(name = "certificate_status")
 	private String certificateStatus;
-	@Column(name="certificate_register_date")
+
+	@Column(name = "certificate_register_date")
 	private String certificateRegisterDate;
-	@Column(name="certificate_expiration_date")
+
+	@Column(name = "certificate_expiration_date")
 	private String certificateExpirationDate;
 
 	@OneToMany(mappedBy = "member", cascade = ALL)

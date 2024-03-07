@@ -1,6 +1,7 @@
 package com.tfeo.backend.domain.home.model.entity;
 
 import static javax.persistence.CascadeType.*;
+import static lombok.AccessLevel.*;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.tfeo.backend.domain.common.model.type.Address;
+import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.member.model.entity.Wish;
 import com.tfeo.backend.domain.review.model.entity.Review;
@@ -21,40 +22,40 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Home {
 	@Id
-	@Column(name="home_no")
+	@Column(name = "home_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long homeNo;
 
-	@Column(name="host_name")
+	@Column(name = "host_name")
 	private String hostName;
 
-	@Column(name="host_age")
+	@Column(name = "host_age")
 	private int hostAge;
 
-	@Column(name="host_phone")
+	@Column(name = "host_phone")
 	private String hostPhone;
 
-	@Column(name="home_gender")
+	@Column(name = "home_gender")
 	private String hostGender;
 
-	@Column(name="guardian_name")
+	@Column(name = "guardian_name")
 	private String guardianName;
 
-	@Column(name="guardian_phone")
+	@Column(name = "guardian_phone")
 	private String guardianPhone;
 
 	private String relation;
 
-	@Column(name="host_register_no")
+	@Column(name = "host_register_no")
 	private String hostRegisterNo;
 
-	@Column(name="host_account_no")
+	@Column(name = "host_account_no")
 	private String hostAccountNo;
 
-	@Column(name="host_bank")
+	@Column(name = "host_bank")
 	private String hostBank;
 
 	private Address address;
@@ -65,7 +66,7 @@ public class Home {
 
 	private Double lng;
 
-	@Column(name="non_member")
+	@Column(name = "non_member")
 	private Boolean nonMember;
 
 	private String introduce;

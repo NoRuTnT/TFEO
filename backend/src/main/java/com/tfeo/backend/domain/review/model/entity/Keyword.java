@@ -1,6 +1,7 @@
 package com.tfeo.backend.domain.review.model.entity;
 
 import static javax.persistence.CascadeType.*;
+import static lombok.AccessLevel.*;
 
 import java.util.List;
 
@@ -16,13 +17,14 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Keyword {
 	@Id
-	@Column(name="keyword_no")
+	@Column(name = "keyword_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long keywordNo;
-	@Column(name="keyword_name")
+
+	@Column(name = "keyword_name")
 	private String keywordName;
 
 	@OneToMany(mappedBy = "keyword", cascade = ALL)

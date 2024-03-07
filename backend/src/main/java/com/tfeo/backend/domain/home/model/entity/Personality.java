@@ -1,6 +1,7 @@
 package com.tfeo.backend.domain.home.model.entity;
 
 import static javax.persistence.CascadeType.*;
+import static lombok.AccessLevel.*;
 
 import java.util.List;
 
@@ -16,13 +17,14 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Personality {
 	@Id
-	@Column(name="personality_no")
+	@Column(name = "personality_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long personalityNo;
-	@Column(name="personality_name")
+
+	@Column(name = "personality_name")
 	private String personalityName;
 
 	@OneToMany(mappedBy = "personality", cascade = ALL)

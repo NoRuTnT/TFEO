@@ -1,12 +1,14 @@
 package com.tfeo.backend.domain.contract.model.entity;
 
 import static javax.persistence.CascadeType.*;
+import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,30 +26,29 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class Contract {
 	@Id
-	@Column(name="contract_no")
+	@Column(name = "contract_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
 	private Long contractNo;
 
 	private String contractUrl;
 
 	@CreatedDate
-	@Column(name="created_at")
+	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	private int progress;
 
-	@Column(name="start_at")
+	@Column(name = "start_at")
 	private LocalDateTime startAt;
 
-	@Column(name="expired_at")
+	@Column(name = "expired_at")
 	private LocalDateTime expiredAt;
 
-	@ManyToOne
-	@JoinColumn(name="home_no")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "home_no")
 	private Home home;
 
 	@OneToMany(mappedBy = "contract", cascade = ALL)

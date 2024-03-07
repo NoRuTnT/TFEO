@@ -1,7 +1,10 @@
 package com.tfeo.backend.domain.review.model.entity;
 
+import static lombok.AccessLevel.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,16 +16,18 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class ReviewKeyword {
 	@Id
-	@Column(name="review_keyword_no")
+	@Column(name = "review_keyword_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long reviewKeywordNo;
-	@ManyToOne
-	@JoinColumn(name="keyword_no")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "keyword_no")
 	private Keyword keyword;
-	@ManyToOne
-	@JoinColumn(name="review_no")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "review_no")
 	private Review review;
 }

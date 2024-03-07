@@ -1,7 +1,10 @@
 package com.tfeo.backend.domain.home.model.entity;
 
+import static lombok.AccessLevel.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,15 +16,17 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class HostImage {
 	@Id
-	@Column(name="host_image_no")
+	@Column(name = "host_image_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long hostImageNo;
-	@ManyToOne
-	@JoinColumn(name="home_no")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "home_no")
 	private Home home;
-	@Column(name="host_image_url")
+
+	@Column(name = "host_image_url")
 	private String hostImageUrl;
 }

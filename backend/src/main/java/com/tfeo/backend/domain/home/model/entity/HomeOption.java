@@ -1,7 +1,10 @@
 package com.tfeo.backend.domain.home.model.entity;
 
+import static lombok.AccessLevel.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,17 +16,18 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = PROTECTED)
 public class HomeOption {
 	@Id
-	@Column(name="home_option_no")
+	@Column(name = "home_option_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long homeOptionNo;
-	@ManyToOne
-	@JoinColumn(name="option_no")
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "option_no")
 	private Option option;
 
-	@ManyToOne
-	@JoinColumn(name="home_no")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "home_no")
 	private Home home;
 }
