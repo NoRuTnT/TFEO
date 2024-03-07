@@ -1,4 +1,4 @@
-package com.tfeo.backend.domain.common.model;
+package com.tfeo.backend.domain.common.model.type;
 
 import javax.persistence.Embeddable;
 

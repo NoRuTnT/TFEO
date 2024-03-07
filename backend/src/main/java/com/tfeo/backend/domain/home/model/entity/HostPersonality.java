@@ -5,16 +5,25 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class HostPersonality {
 	@Id
 	@Column(name="host_personality_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long hostPersonalityNo;
-	@Column(name="home_no")
-	private Long homeNo;
-	@Column(name="personality_no")
-	private Long personalityNo;
+	@ManyToOne
+	@JoinColumn(name="home_no")
+	private Home home;
+	@ManyToOne
+	@JoinColumn(name="personality_no")
+	private Personality personality;
 
 }
