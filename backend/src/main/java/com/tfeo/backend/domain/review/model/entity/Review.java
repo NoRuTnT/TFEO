@@ -3,7 +3,6 @@ package com.tfeo.backend.domain.review.model.entity;
 import static javax.persistence.CascadeType.*;
 import static lombok.AccessLevel.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -16,9 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
+import com.tfeo.backend.common.model.entity.BaseTimeEntity;
 import com.tfeo.backend.domain.home.model.entity.Home;
 import com.tfeo.backend.domain.member.model.entity.Member;
 
@@ -28,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-public class Review {
+public class Review extends BaseTimeEntity {
 	@Id
 	@Column(name = "review_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,14 +37,6 @@ public class Review {
 
 	@Column(name = "home_content")
 	private String homeContent;
-
-	@CreatedDate
-	@Column(name = "created_at")
-	private LocalDateTime createdAt;
-
-	@LastModifiedDate
-	@Column(name = "updated_at")
-	private LocalDateTime updatedAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "home_no")
