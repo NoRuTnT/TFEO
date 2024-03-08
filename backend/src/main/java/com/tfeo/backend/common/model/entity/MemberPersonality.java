@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 @Builder
 @AllArgsConstructor
-@Table(name="member_personality")
+@Table(name = "member_personality")
 public class MemberPersonality {
 	@Id
 	@Column(name = "member_personality_no")
@@ -27,29 +27,38 @@ public class MemberPersonality {
 	private Long memberPersonalityNo;
 
 	private Boolean daytime;
+
 	private Boolean nighttime;
+
 	private Boolean fast;
+
 	private Boolean late;
+
 	private Boolean dinner;
+
 	private Boolean smoke;
+
 	private Boolean drink;
+
 	private Boolean outside;
+
 	private Boolean inside;
+
 	private Boolean quiet;
+
 	private Boolean electronics;
+
 	private Boolean strong;
+
 	private Boolean housework;
+
 	private Boolean errand;
 
-	@Column(name="live_long")
+	@Column(name = "live_long")
 	private Boolean liveLong;
 
-	@Column(name="live_short")
+	@Column(name = "live_short")
 	private Boolean liveShort;
 	private Boolean pet;
-
-
-
-
 
 }
