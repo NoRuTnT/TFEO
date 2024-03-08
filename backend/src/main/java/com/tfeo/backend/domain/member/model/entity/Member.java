@@ -3,6 +3,7 @@ package com.tfeo.backend.domain.member.model.entity;
 import static javax.persistence.CascadeType.*;
 import static lombok.AccessLevel.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -69,9 +70,9 @@ public class Member {
 
 	private CertificateStatusType certificateStatus;
 
-	private String certificateRegisterDate;
+	private LocalDateTime certificateRegisterDate;
 
-	private String certificateExpirationDate;
+	private LocalDateTime certificateExpirationDate;
 
 	@OneToMany(mappedBy = "member", cascade = ALL)
 	private List<Wish> wishes;
