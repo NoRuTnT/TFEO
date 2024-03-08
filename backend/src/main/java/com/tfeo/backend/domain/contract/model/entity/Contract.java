@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 import org.springframework.data.annotation.CreatedDate;
 
@@ -22,12 +23,17 @@ import com.tfeo.backend.common.model.type.ContractProgressType;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.home.model.entity.Home;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
+@Builder
+@AllArgsConstructor
+@Table(name = "contract")
 public class Contract {
 	@Id
 	@Column(name = "contract_no")

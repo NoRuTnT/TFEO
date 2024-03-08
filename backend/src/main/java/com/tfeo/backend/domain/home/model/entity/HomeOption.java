@@ -10,24 +10,33 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
+@Builder
+@AllArgsConstructor
+@Table(name="home_option")
 public class HomeOption {
 	@Id
 	@Column(name = "home_option_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long homeOptionNo;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "option_no")
-	private Option option;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "home_no")
-	private Home home;
+	private Boolean internet;
+	private Boolean kitchen;
+	private Boolean washingMachine;
+	private Boolean airconditioner;
+	private Boolean refrigerator;
+	private Boolean elevator;
+	private Boolean microwave;
+	private Boolean breakfast;
+	private Boolean toilet;
+	private Boolean heating;
 }

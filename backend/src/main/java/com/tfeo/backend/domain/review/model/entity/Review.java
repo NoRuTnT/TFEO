@@ -14,17 +14,24 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import com.tfeo.backend.common.model.entity.BaseTimeEntity;
 import com.tfeo.backend.domain.home.model.entity.Home;
 import com.tfeo.backend.domain.member.model.entity.Member;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
+@Builder
+@AllArgsConstructor
+@Table(name = "review")
 public class Review extends BaseTimeEntity {
 	@Id
 	@Column(name = "review_no")
@@ -42,7 +49,8 @@ public class Review extends BaseTimeEntity {
 	@JoinColumn(name = "home_no")
 	private Home home;
 
-	@OneToMany(mappedBy = "review", cascade = ALL)
-	private List<ReviewKeyword> reviewKeywords;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="review_keyword_no")
+	private ReviewKeyword reviewKeyword;
 
 }
