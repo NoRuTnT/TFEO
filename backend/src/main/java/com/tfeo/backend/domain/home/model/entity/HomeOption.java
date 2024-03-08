@@ -38,4 +38,5 @@ public class HomeOption {
 	private Boolean breakfast;
 	private Boolean toilet;
 	private Boolean heating;
+	private Boolean parking;
 }
