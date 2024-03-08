@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,6 +19,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.tfeo.backend.common.model.entity.MemberPersonality;
+import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.CertificateStatusType;
 import com.tfeo.backend.common.model.type.GenderType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
@@ -54,7 +56,8 @@ public class Member {
 
 	private String college;
 
-	private String address;
+	@Embedded
+	private Address address;
 
 	private String profileUrl;
 
