@@ -32,7 +32,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "wish")
 public class Wish {
 	@Id
-	@Column(name = "wish_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long wishNo;
 
@@ -41,11 +40,9 @@ public class Wish {
 	private Member member;
 
 	@CreatedDate
-	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	@LastModifiedDate
-	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)

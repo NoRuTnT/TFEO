@@ -34,7 +34,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "review")
 public class Review extends BaseTimeEntity {
 	@Id
-	@Column(name = "review_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long reviewNo;
 
@@ -42,7 +41,6 @@ public class Review extends BaseTimeEntity {
 	@JoinColumn(name = "member_no")
 	private Member member;
 
-	@Column(name = "home_content")
 	private String homeContent;
 
 	@ManyToOne(fetch = FetchType.LAZY)

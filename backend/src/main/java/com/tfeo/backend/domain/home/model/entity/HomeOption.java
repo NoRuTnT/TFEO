@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 @Table(name="home_option")
 public class HomeOption {
 	@Id
-	@Column(name = "home_option_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long homeOptionNo;
 

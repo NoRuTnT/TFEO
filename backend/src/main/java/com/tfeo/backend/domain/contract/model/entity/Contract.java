@@ -36,22 +36,18 @@ import lombok.NoArgsConstructor;
 @Table(name = "contract")
 public class Contract {
 	@Id
-	@Column(name = "contract_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long contractNo;
 
 	private String contractUrl;
 
 	@CreatedDate
-	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	private ContractProgressType progress;
 
-	@Column(name = "start_at")
 	private LocalDateTime startAt;
 
-	@Column(name = "expired_at")
 	private LocalDateTime expiredAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)

@@ -32,20 +32,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "activity")
 public class Activity {
 	@Id
-	@Column(name = "activity_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long activityNo;
 
 	private String week;
 
 	@CreatedDate
-	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
-	@Column(name = "activity_image_url")
 	private String activityImageUrl;
 
-	@Column(name = "activity_text")
 	private String activityText;
 
 	private ActivityApproveType approve;

@@ -36,7 +36,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "member")
 public class Member {
 	@Id
-	@Column(name = "member_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberNo;
 
@@ -50,14 +49,12 @@ public class Member {
 
 	private String email;
 
-	@Column(name = "register_no")
 	private String registerNo;
 
 	private String college;
 
 	private String address;
 
-	@Column(name = "profile_url")
 	private String profileUrl;
 
 	private GenderType gender;
@@ -70,13 +67,10 @@ public class Member {
 	@JoinColumn(name="member_personality_no")
 	private MemberPersonality memberPersonality;
 
-	@Column(name = "certificate_status")
 	private CertificateStatusType certificateStatus;
 
-	@Column(name = "certificate_register_date")
 	private String certificateRegisterDate;
 
-	@Column(name = "certificate_expiration_date")
 	private String certificateExpirationDate;
 
 	@OneToMany(mappedBy = "member", cascade = ALL)

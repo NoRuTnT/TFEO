@@ -37,37 +37,27 @@ import lombok.NoArgsConstructor;
 @Table(name = "home")
 public class Home {
 	@Id
-	@Column(name = "home_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long homeNo;
 
-	@Column(name = "host_name")
 	private String hostName;
 
-	@Column(name = "host_age")
 	private int hostAge;
 
-	@Column(name = "host_phone")
 	private String hostPhone;
 
-	@Column(name = "home_gender")
 	private GenderType hostGender;
 
-	@Column(name = "guardian_name")
 	private String guardianName;
 
-	@Column(name = "guardian_phone")
 	private String guardianPhone;
 
 	private String relation;
 
-	@Column(name = "host_register_no")
 	private String hostRegisterNo;
 
-	@Column(name = "host_account_no")
 	private String hostAccountNo;
 
-	@Column(name = "host_bank")
 	private String hostBank;
 
 	private Address address;
@@ -78,7 +68,6 @@ public class Home {
 
 	private Double lng;
 
-	@Column(name = "register_member_role")
 	private MemberRoleType registerMemberRole;
 
 	private String introduce;

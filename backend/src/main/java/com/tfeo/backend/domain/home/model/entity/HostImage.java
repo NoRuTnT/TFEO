@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 @Table(name="host_image")
 public class HostImage {
 	@Id
-	@Column(name = "host_image_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long hostImageNo;
 
@@ -33,6 +32,5 @@ public class HostImage {
 	@JoinColumn(name = "home_no")
 	private Home home;
 
-	@Column(name = "host_image_url")
 	private String hostImageUrl;
 }

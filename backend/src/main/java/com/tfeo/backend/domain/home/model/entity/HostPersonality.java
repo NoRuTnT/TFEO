@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 @Table(name="host_personality")
 public class HostPersonality {
 	@Id
-	@Column(name = "host_personality_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long hostPersonalityNo;
 
