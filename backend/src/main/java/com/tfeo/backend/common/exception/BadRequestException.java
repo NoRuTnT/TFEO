@@ -1,4 +1,4 @@
-package com.tfeo.backend.advice.exception;
+package com.tfeo.backend.common.exception;
 
 import org.springframework.http.HttpStatus;
 
