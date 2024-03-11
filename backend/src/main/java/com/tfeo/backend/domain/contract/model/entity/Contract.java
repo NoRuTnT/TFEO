@@ -6,7 +6,6 @@ import static lombok.AccessLevel.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +21,7 @@ import org.springframework.data.annotation.CreatedDate;
 import com.tfeo.backend.common.model.type.ContractProgressType;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.home.model.entity.Home;
+import com.tfeo.backend.domain.member.model.entity.Member;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,6 +49,10 @@ public class Contract {
 	private LocalDateTime startAt;
 
 	private LocalDateTime expiredAt;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_no")
+	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "home_no")
