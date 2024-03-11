@@ -5,11 +5,9 @@ import requests
 from bs4 import BeautifulSoup
 
 def main():
-    # 크롤링 시 걸리지 않는 개수
-    cnt = 0
-    # 결과리스트
+    # 결과 리스트 (크롤링한 json 데이터를 저장하고 있는 결과 리스트)
     result_list = []
-    # 크롤링 할 지역
+    # 크롤링 할 지역 (네이버 접근 제한 이슈로 한 번에 1600개까지만 조회 가능 -> 적절히 수정해서 사용할 것)
     keywords = ["서초구"]
           # "광진구",
           # "성동구",
@@ -40,15 +38,17 @@ def main():
           # "노원구"
 
     for keyword in keywords:
+        # 네이버 접근 제한 이슈로 접근 경로 우회를 위해 url, headers 설정
         url = f"https://m.land.naver.com/search/result/{keyword}"
         res = requests.get(url, headers={'User-agent':'Mozilla/5.0'})
         res.raise_for_status()
         soup = (str)(BeautifulSoup(res.text, "lxml"))
 
+        # 해당 지역의 클러스터 리스트를 조회합니다.
         value = soup.split("filter: {")[1].split("}")[0].replace(" ", "").replace("'", "")
 
-        lat = value.split("lat:")[1].split(",")[0]
-        lon = value.split("lon:")[1].split(",")[0]
+        lat = value.split("lat:")[1].split(",")[0]      # 위도
+        lon = value.split("lon:")[1].split(",")[0]      # 경도
         z = value.split("z:")[1].split(",")[0]
         cortarNo = value.split("cortarNo:")[1].split(",")[0]
         rletTpCds = value.split("rletTpCds:")[1].split(",")[0]
@@ -67,18 +67,20 @@ def main():
         top = float(lat) + lat_margin
         rgt = float(lon) + lon_margin
 
-        # 최초 요청 시 디폴트 값으로 설정되어 있으나, 원하는 값으로 구성
-        rletTpCds = "APT:OPST:VL:OR:DDDGG"  # 아파트, 오피스텔, 빌라, 원룸, 단독/다가구
-        tradTpCds = "B2"  # 월세 매물 확인
+        rletTpCds = "APT:OPST:VL:OR:DDDGG"  # 아파트, 오피스텔, 빌라, 원룸, 단독/다가구 매물
+        tradTpCds = "B2"  # 월세 매물
 
-        # clusterList?view 를 통한 그룹의 데이터를 가져온다.
+        wprcMax = 1000  # 보증금 1000만원 이하
+        rprcMax = 70    # 월세 70만원 이하
+
+        # 클러스터 리스트 그룹의 데이터를 가져옵니다.
         remaked_URL = f"https://m.land.naver.com/cluster/clusterList?view=atcl&cortarNo={cortarNo}&rletTpCd={rletTpCds}&tradTpCd={tradTpCds}&z={z}&lat={lat}&lon={lon}&btm={btm}&lft={lft}&top={top}&rgt={rgt}&wprcMax=1000&rprcMax=70"
 
         res2 = requests.get(remaked_URL, headers={'User-agent':'Mozilla/5.0'})
         json_str = json.loads(json.dumps(res2.json()))
         values = json_str['data']['ARTICLE']
 
-        # 큰 원으로 구성되어 있는 전체 매물그룹(values)을 load 하여 한 그룹씩 세부 쿼리 진행
+        # 큰 원으로 구성되어 있는 전체 매물그룹(values)을 load 하여 한 그룹씩 세부 쿼리를 진행합니다.
         for v in values:
             lgeo = v['lgeo']
             count = v['count']
@@ -96,7 +98,9 @@ def main():
                     result_list.append(atcl)
 
 
+        # pandas 모듈을 이용해 크롤링한 결과를 dataframe 형식으로 변환합니다.
         df = pd.json_normalize(result_list)
+        # csv 파일에 데이터를 저장합니다. (수정모드)
         df.to_csv('result_naver.csv', mode='a', header=False, index=False, encoding='UTF-8')
 
 if __name__ == "__main__":
