@@ -2,13 +2,21 @@ package com.tfeo.backend.common.model.dto;
 
 import org.springframework.http.HttpStatus;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@Builder
 @Getter
+@AllArgsConstructor
+@Builder
 public class SuccessResponse {
-	private HttpStatus status;
-	private String message;
-	private Object result;
+
+	HttpStatus status;
+	String message;
+	Object result;
+
+	public SuccessResponse(HttpStatus status, String message) {
+		this.status = status;
+		this.message = message;
+	}
 }
