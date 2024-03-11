@@ -1,4 +1,4 @@
-package com.tfeo.backend.advice;
+package com.tfeo.backend.common;
 
 import java.util.stream.Collectors;
 
@@ -10,7 +10,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.tfeo.backend.advice.exception.BusinessException;
+import com.tfeo.backend.common.exception.BusinessException;
+import com.tfeo.backend.common.model.dto.ErrorResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +23,7 @@ public class ControllerAdvice {
 	@ExceptionHandler(BusinessException.class)
 	public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
 		log.error("{} error message >> {} ", e.getClass().getSimpleName(), e.getMessage());
-		return ResponseEntity.status(e.status()).body(new ErrorResponse(e.status().value(), e.getMessage()));
+		return ResponseEntity.status(e.status()).body(new ErrorResponse(e.status(), e.getMessage()));
 	}
 
 	//validation 관련 예외처리1 << 400
@@ -34,7 +35,8 @@ public class ControllerAdvice {
 				violation.getMessage()))
 			.collect(Collectors.joining("; "));
 		log.error("ConstraintViolationException error message >> {} ", errorMessage);
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(400, errorMessage));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(new ErrorResponse(HttpStatus.BAD_REQUEST, errorMessage));
 	}
 
 	//validation 관련 예외처리2 << 400
@@ -46,7 +48,8 @@ public class ControllerAdvice {
 				fieldError.getDefaultMessage()))
 			.collect(Collectors.joining("; "));
 		log.error("MethodArgumentNotValidException error message >> {} ", errorMessage);
-		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(400, errorMessage));
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+			.body(new ErrorResponse(HttpStatus.BAD_REQUEST, errorMessage));
 	}
 
 	// 그 외 예상하지 못한 예외처리 << 500
@@ -54,6 +57,6 @@ public class ControllerAdvice {
 	public ResponseEntity<ErrorResponse> unexpectedRException(RuntimeException e) {
 		log.error("{} error message >> {} \n", e.getClass().getSimpleName(), e.getMessage(), e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-			.body(new ErrorResponse(500, e.getMessage()));
+			.body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
 	}
 }
