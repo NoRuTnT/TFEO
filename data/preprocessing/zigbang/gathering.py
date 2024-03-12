@@ -30,6 +30,15 @@ def get_aparts():
     # print(len(items))
     # print(json_str)
 
+
+    url = "https://www.zigbang.com/_next/data/ZHqQnhZil26j9bfVZPk6o/home/apt_danjis_detail.json?area_danji_id=17983"
+    user_agent = "Mozilla/5.0 (Windows; U; Windows NT 5.1;)"
+    resp = requests.get(url, headers={"User-Agent": user_agent})
+    json_data = resp.json()
+    print_json_info(json_data)
+
+
+
     print("아파트 정보 탐색 시작!")
     aparts_list = []  # 위도, 경도, 아파트id정보
     aparts_id_list = []  # 아파트id정보
@@ -173,7 +182,6 @@ def get_officetel():
                 df.to_csv('officetelDetail.csv', mode='a', index=False, header=not os.path.exists('officetelDetail.csv'),
                           encoding="utf-8-sig")
 
-
 def get_review():
     # id = 80
     id = 6692
@@ -189,17 +197,10 @@ def print_json_info(json_info):
     items_info = items_info.encode().decode("unicode_escape")
     print(items_info)
 
-
 if __name__ == "__main__":
     print("직방 매물 정보를 크롤링")
-    # main()
     get_aparts()
     # get_villa()
     # get_officetel()
-
-
     # get_oneroom()
-    # "https://apis.zigbang.com/v3/items/40014490?version=&domain=zigbang"
-
-    # json_str = json.dumps(json_res, indent=4, ensure_ascii=False) # 한글 문자열 인코딩 맞춰서 출력
-    # print(json_str)
+    # main()
