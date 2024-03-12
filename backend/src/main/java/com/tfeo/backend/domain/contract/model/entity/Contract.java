@@ -3,6 +3,7 @@ package com.tfeo.backend.domain.contract.model.entity;
 import static javax.persistence.CascadeType.*;
 import static lombok.AccessLevel.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,9 +47,9 @@ public class Contract {
 
 	private ContractProgressType progress;
 
-	private LocalDateTime startAt;
+	private LocalDate startAt;
 
-	private LocalDateTime expiredAt;
+	private LocalDate expiredAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_no")

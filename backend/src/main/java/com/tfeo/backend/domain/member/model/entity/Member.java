@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -44,6 +46,7 @@ public class Member {
 
 	private String socialId;
 
+	@Enumerated(value = EnumType.STRING)
 	private SocialType socialType;
 
 	private String name;
@@ -61,8 +64,10 @@ public class Member {
 
 	private String profileUrl;
 
+	@Enumerated(value = EnumType.STRING)
 	private GenderType gender;
 
+	@Enumerated(value = EnumType.STRING)
 	private MemberRoleType role;
 
 	private String certificate;
@@ -71,6 +76,7 @@ public class Member {
 	@JoinColumn(name = "member_personality_no")
 	private MemberPersonality memberPersonality;
 
+	@Enumerated(value = EnumType.STRING)
 	private CertificateStatusType certificateStatus;
 
 	private LocalDateTime certificateRegisterDate;

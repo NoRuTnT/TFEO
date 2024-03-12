@@ -4,8 +4,9 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,7 +36,7 @@ public class Activity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long activityNo;
 
-	private String week;
+	private Integer week;
 
 	@CreatedDate
 	private LocalDateTime createdAt;
@@ -44,9 +45,16 @@ public class Activity {
 
 	private String activityText;
 
+	@Enumerated(value = EnumType.STRING)
 	private ActivityApproveType approve;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "contract_no")
 	private Contract contract;
+
+	public void updateActivity(String activityImageUrl, String activityText) {
+		this.activityImageUrl = activityImageUrl;
+		this.activityText = activityText;
+	}
+
 }
