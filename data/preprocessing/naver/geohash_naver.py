@@ -8,34 +8,25 @@ def main():
     # 결과 리스트 (크롤링한 json 데이터를 저장하고 있는 결과 리스트)
     result_list = []
     # 크롤링 할 지역 (네이버 접근 제한 이슈로 한 번에 1600개까지만 조회 가능 -> 적절히 수정해서 사용할 것)
-    keywords = ["서초구"]
-          # "광진구",
-          # "성동구",
-          # "성북구",
-          # "동대문구",
-          # "마포구",
-          # "서대문구",
-          # "은평구",
-          # "강동구",
-          # "송파구",
-          # "관악구",
-          # "동작구",
-          # "서초구",
-          # "영등포구",
-          # "양천구",
-          # "강서구",
-          # "양천구",
-          # "구로구",
-          # "금천구",
-          # "강남구",
-          # "송파구",
-          # "용산구",
-          # "중구",
-          # "종로구",
-          # "중랑구",
-          # "강북구",
-          # "도봉구",
-          # "노원구"
+    keywords = ["중구"]
+
+    # -- 여기부터 하면 됨
+    # 중구: 800
+    # 60
+    # 강서구: 700
+    # 50
+    # 관악구: 600
+    # 40
+    # 구로구: 600
+    # 40
+    # 중랑구: 500
+    # 30
+    # 금천구: 500
+    # 30
+    # 강북구: 500
+    # 30
+    # 도봉구: 500
+    # 30
 
     for keyword in keywords:
         # 네이버 접근 제한 이슈로 접근 경로 우회를 위해 url, headers 설정
@@ -70,17 +61,18 @@ def main():
         rletTpCds = "APT:OPST:VL:OR:DDDGG"  # 아파트, 오피스텔, 빌라, 원룸, 단독/다가구 매물
         tradTpCds = "B2"  # 월세 매물
 
-        wprcMax = 1000  # 보증금 1000만원 이하
-        rprcMax = 70    # 월세 70만원 이하
+        wprcMax = 800  # 보증금 1000만원 이하
+        rprcMax = 60    # 월세 70만원 이하
 
         # 클러스터 리스트 그룹의 데이터를 가져옵니다.
-        remaked_URL = f"https://m.land.naver.com/cluster/clusterList?view=atcl&cortarNo={cortarNo}&rletTpCd={rletTpCds}&tradTpCd={tradTpCds}&z={z}&lat={lat}&lon={lon}&btm={btm}&lft={lft}&top={top}&rgt={rgt}&wprcMax=1000&rprcMax=70"
+        remaked_URL = f"https://m.land.naver.com/cluster/clusterList?view=atcl&cortarNo={cortarNo}&rletTpCd={rletTpCds}&tradTpCd={tradTpCds}&z={z}&lat={lat}&lon={lon}&btm={btm}&lft={lft}&top={top}&rgt={rgt}&wprcMax={wprcMax}&rprcMax={rprcMax}"
 
         res2 = requests.get(remaked_URL, headers={'User-agent':'Mozilla/5.0'})
         json_str = json.loads(json.dumps(res2.json()))
         values = json_str['data']['ARTICLE']
 
         # 큰 원으로 구성되어 있는 전체 매물그룹(values)을 load 하여 한 그룹씩 세부 쿼리를 진행합니다.
+        cnt = 0
         for v in values:
             lgeo = v['lgeo']
             count = v['count']
@@ -95,13 +87,21 @@ def main():
                 json_str = json.loads(json.dumps(res3.json()))
                 atcls = json_str['body']
                 for atcl in atcls:
+                    if cnt == 1600:
+                        # pandas 모듈을 이용해 크롤링한 결과를 dataframe 형식으로 변환합니다.
+                        df = pd.json_normalize(result_list)
+                        # csv 파일에 데이터를 저장합니다. (수정모드)
+                        df.to_csv('result_naver.csv', mode='a', header=False, index=False, encoding='UTF-8')
+                        return
+
+                    if atcl['prc'] > 800: continue
+                    if atcl['rentPrc'] > 60: continue
                     result_list.append(atcl)
+                    cnt += 1
+                    print(cnt)
 
 
-        # pandas 모듈을 이용해 크롤링한 결과를 dataframe 형식으로 변환합니다.
-        df = pd.json_normalize(result_list)
-        # csv 파일에 데이터를 저장합니다. (수정모드)
-        df.to_csv('result_naver.csv', mode='a', header=False, index=False, encoding='UTF-8')
+
 
 if __name__ == "__main__":
     main()
