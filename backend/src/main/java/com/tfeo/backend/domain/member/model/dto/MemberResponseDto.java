@@ -13,26 +13,24 @@ import lombok.Getter;
 
 @Getter
 public class MemberResponseDto {
-	Long memberNo;
-	String id;
-	String name;
-	String phone;
-	String email;
-	String registerNo;
-	String college;
-	Address address;
-	String profileUrl;
-	GenderType gender;
-	MemberRoleType role;
-	String certificate;
-	CertificateStatusType certificateStatus;
-	LocalDateTime certificateRegisterDate;
-	LocalDateTime certificateExpirationDate;
-	MemberPersonality memberPersonality;
+	private Long memberNo;
+	private String name;
+	private String phone;
+	private String email;
+	private String registerNo;
+	private String college;
+	private Address address;
+	private String profileUrl;
+	private GenderType gender;
+	private MemberRoleType role;
+	private String certificate;
+	private CertificateStatusType certificateStatus;
+	private LocalDateTime certificateRegisterDate;
+	private LocalDateTime certificateExpirationDate;
+	private MemberPersonality memberPersonality;
 
 	public MemberResponseDto(Member member) {
 		this.memberNo = member.getMemberNo();
-		this.id = member.getId();
 		this.name = member.getName();
 		this.phone = member.getPhone();
 		this.email = member.getEmail();

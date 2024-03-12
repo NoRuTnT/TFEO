@@ -2,7 +2,6 @@ package com.tfeo.backend.domain.home.model.entity;
 
 import static lombok.AccessLevel.*;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,7 +21,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 @Builder
 @AllArgsConstructor
-@Table(name="home_image")
+@Table(name = "home_image")
 public class HomeImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,5 +31,5 @@ public class HomeImage {
 	@JoinColumn(name = "home_no")
 	private Home home;
 
-	private String pictureUrl;
+	private String homeImageUrl;
 }
