@@ -1,34 +1,21 @@
 package com.tfeo.backend.domain.activity.model.dto;
 
-import com.tfeo.backend.domain.contract.model.entity.Contract;
+import java.time.LocalDateTime;
 
-import lombok.AllArgsConstructor;
+import com.tfeo.backend.common.model.type.ActivityApproveType;
+
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@Data
 public class AddActivityResponseDto {
 	private Long activityNo;
 	private String week;
+	private LocalDateTime createdAt;
 	private String activityImageUrl;
 	private String activityText;
-	private Contract contract;
-
-	public AddActivityResponseDto toEntity() {
-		return AddActivityResponseDto.builder()
-			.activityNo(activityNo)
-			.week(week)
-			.activityImageUrl(activityImageUrl)
-			.activityText(activityText)
-			// .activityApproveType(WAITING)
-			.contract(contract)
-			.build();
-	}
+	private ActivityApproveType activityApproveType;
+	private Long contractNo;
 
 }

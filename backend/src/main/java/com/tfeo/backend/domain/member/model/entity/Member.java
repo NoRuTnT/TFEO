@@ -6,9 +6,10 @@ import static lombok.AccessLevel.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +24,7 @@ import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.CertificateStatusType;
 import com.tfeo.backend.common.model.type.GenderType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.SocialType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.review.model.entity.Review;
 
@@ -42,11 +44,12 @@ public class Member {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberNo;
 
-	private String id;
+	private String socialId;
+
+	@Enumerated(value = EnumType.STRING)
+	private SocialType socialType;
 
 	private String name;
-
-	private String password;
 
 	private String phone;
 
@@ -61,16 +64,19 @@ public class Member {
 
 	private String profileUrl;
 
+	@Enumerated(value = EnumType.STRING)
 	private GenderType gender;
 
+	@Enumerated(value = EnumType.STRING)
 	private MemberRoleType role;
 
 	private String certificate;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="member_personality_no")
+	@JoinColumn(name = "member_personality_no")
 	private MemberPersonality memberPersonality;
 
+	@Enumerated(value = EnumType.STRING)
 	private CertificateStatusType certificateStatus;
 
 	private LocalDateTime certificateRegisterDate;
