@@ -30,7 +30,7 @@ public class ActivityCommandController {
 
 	//활동인증글 작성
 	@PostMapping
-	public ResponseEntity<?> addActivity(@RequestBody AddActivityRequestDto request) {
+	public ResponseEntity<?> activityAdd(@RequestBody AddActivityRequestDto request) {
 		Long memberNo = 1L;
 		MemberRoleType role = MEMBER;
 		AddActivityResponseDto result = activityCommandService.addActivity(memberNo, role, request);
@@ -39,7 +39,7 @@ public class ActivityCommandController {
 
 	//활동인증글 수정
 	@PutMapping("/{activityNo}")
-	public ResponseEntity<?> modifyActivity(@PathVariable("activityNo") Long activityNo,
+	public ResponseEntity<?> activityModify(@PathVariable("activityNo") Long activityNo,
 		@RequestBody ModifyActivityRequestDto request) {
 		Long memberNo = 1L;
 		MemberRoleType role = MEMBER;
@@ -49,7 +49,7 @@ public class ActivityCommandController {
 
 	//활동인증글 삭제
 	@DeleteMapping("/{activityNo}")
-	public ResponseEntity<?> removeActivity(@PathVariable("activityNo") Long activityNo) {
+	public ResponseEntity<?> activityRemove(@PathVariable("activityNo") Long activityNo) {
 		Long memberNo = 1L;
 		MemberRoleType role = MEMBER;
 		activityCommandService.removeActivity(memberNo, role, activityNo);

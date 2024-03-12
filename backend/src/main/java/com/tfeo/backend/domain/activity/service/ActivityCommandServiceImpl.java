@@ -2,6 +2,8 @@ package com.tfeo.backend.domain.activity.service;
 
 import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +14,8 @@ import com.tfeo.backend.domain.activity.model.dto.AddActivityResponseDto;
 import com.tfeo.backend.domain.activity.model.dto.ModifyActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
+import com.tfeo.backend.domain.contract.model.entity.Contract;
+import com.tfeo.backend.domain.contract.repository.ContractRepository;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 
@@ -26,6 +30,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 
 	private final MemberRepository memberRepository;
 	private final ActivityRepository activityRepository;
+	private final ContractRepository contractRepository;
 
 	@Override
 	public AddActivityResponseDto addActivity(Long memberNo, MemberRoleType role, AddActivityRequestDto request) {
@@ -33,14 +38,30 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			Member member = memberRepository.findByMemberNo(memberNo)
 				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + memberNo));
 
-			AddActivityResponseDto activity = AddActivityResponseDto.builder()
+			Contract contract = contractRepository.findById(request.getContractNo())
+				.orElseThrow(() -> new ActivityException("해당 계약이 존재하지 않습니다. id=" + request.getContractNo()));
+
+			Activity activity = Activity.builder()
 				.week(request.getWeek())
+				.createdAt(LocalDateTime.now())
 				.activityImageUrl(request.getActivityImageUrl())
 				.activityText(request.getActivityText())
-				.activityApproveType(WAITING)
-				.contractNo(request.getContractNo())
+				.approve(WAITING)
+				.contract(contract)
 				.build();
-			return activity;
+			activityRepository.save(activity);
+
+			AddActivityResponseDto result = AddActivityResponseDto.builder()
+				.activityNo(activity.getActivityNo())
+				.week(activity.getWeek())
+				.createdAt(activity.getCreatedAt())
+				.activityImageUrl(activity.getActivityImageUrl())
+				.activityText(activity.getActivityText())
+				.activityApproveType(activity.getApprove())
+				.contractNo(activity.getContract().getContractNo())
+				.build();
+
+			return result;
 		} catch (Exception e) {
 			throw new ActivityException(e.getMessage());
 		}

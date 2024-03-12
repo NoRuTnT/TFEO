@@ -5,9 +5,9 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${MYSQL_URL}
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://localhost:3306/tfeo?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+    username: tfeo
+    password: tfeo
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
@@ -16,3 +16,5 @@ spring:
       hibernate:
         format_sql: true
       show-sql: true
+    hibernate:
+      ddl-auto: none

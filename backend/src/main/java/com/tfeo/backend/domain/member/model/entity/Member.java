@@ -44,6 +44,8 @@ public class Member {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberNo;
 
+	private String id;
+
 	private String socialId;
 
 	@Enumerated(value = EnumType.STRING)

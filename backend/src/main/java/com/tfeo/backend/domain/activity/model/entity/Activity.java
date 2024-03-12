@@ -36,7 +36,7 @@ public class Activity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long activityNo;
 
-	private String week;
+	private Integer week;
 
 	@CreatedDate
 	private LocalDateTime createdAt;

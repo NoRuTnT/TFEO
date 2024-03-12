@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class AddActivityResponseDto {
+public class ReadActivityResponseDto {
 	private Long activityNo;
 	private Integer week;
 	private LocalDateTime createdAt;
