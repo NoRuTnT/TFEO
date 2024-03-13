@@ -1,4 +1,4 @@
-
+import json
 # 강남구, 용산구, 송파구, 서초구는
 # 기존 데이터 셋의 평균을 상회하는 매매가격 때문에
 # 데이터 수집 대상에서 제회
@@ -51,51 +51,8 @@ def main():
     for gu in seoul_geocode_list:
         for geocode in gu.values():
             print(geocode)
-        print("-------")
 
 if __name__ == "__main__":
-    main()
-
-
-# # wydn : 가장 가장자리 하나의 격자(용두동)만 포함
-# wydnp : 동대문구
-# # wydq
-# wydq6 : 도봉구
-# wydq7 : 노원구
-# wydq0 : 은평구
-# wydq1 : 성북구
-# wydq4 : 강북구
-# wydq5 : 노원구
-# wydqh : 노원구
-# # wydj : 부천일대, 강서쪽 포함
-# wydjv : 강서구
-# wydjz : 은평구
-# wydjt : 강서구
-# wydjw : 강서구
-# wydjx : 영등포구
-# wydjm : 구로구
-# wydjq : 구로구
-# wydjr : 영등포구
-# wydjp : 금천구
-# # wydm : 서울 중심부
-# wydmb : 서대문구
-# wydmc : 종로구
-# wydmf : 성북구
-# wydmg : 동대문구
-# wydmu : 중랑구
-# wydm8 : 마포구
-# wydm9 : 중구
-# wydmd : 성동구
-# wydme : 성동구
-# wydms : 송파구
-# wydmt : 강동구
-# wydm2 : 동작구
-# wydm3 : 동작구
-# wydm6 : 강남구
-# wydm7 : 송파구
-# wydmk : 송파구
-# wydm0 : 관악구
-# wydm1 : 관악구
-# wydm4 : 서초구
-# wydm5 : 서초구
-# wydmh : 강남구
+    seoul_geocode_json = json.dumps(seoul_geocode_list, indent=4, ensure_ascii=False)
+    print(seoul_geocode_json)
+    # main()
