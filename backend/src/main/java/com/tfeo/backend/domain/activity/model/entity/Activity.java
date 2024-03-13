@@ -1,5 +1,6 @@
 package com.tfeo.backend.domain.activity.model.entity;
 
+import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
 import static lombok.AccessLevel.*;
 
 import java.time.LocalDateTime;
@@ -55,6 +56,11 @@ public class Activity {
 	public void updateActivity(String activityImageUrl, String activityText) {
 		this.activityImageUrl = activityImageUrl;
 		this.activityText = activityText;
+		this.approve = WAITING;
+	}
+
+	public void setApprove(ActivityApproveType approve) {
+		this.approve = approve;
 	}
 
 }

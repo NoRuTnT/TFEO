@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+
 import com.tfeo.backend.common.model.dto.SuccessResponse;
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityRequestDto;
@@ -54,6 +56,24 @@ public class ActivityCommandController {
 		MemberRoleType role = MEMBER;
 		activityCommandService.removeActivity(memberNo, role, activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 삭제 성공", null));
+	}
+
+	//활동인증글 승인
+	@PutMapping("/{activityNo}/approve")
+	public ResponseEntity<?> activityApprove(@PathVariable("activityNo") Long activityNo) {
+		Long memberNo = 1L;
+		MemberRoleType role = MEMBER;
+		SingleMessageSentResponse result = activityCommandService.approveActivity(memberNo, role, activityNo);
+		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 승인 성공", result));
+	}
+
+	//활동인증글 반려
+	@PutMapping("/{activityNo}/reject")
+	public ResponseEntity<?> activityReject(@PathVariable("activityNo") Long activityNo) {
+		Long memberNo = 1L;
+		MemberRoleType role = MEMBER;
+		Long result = activityCommandService.rejectActivity(memberNo, role, activityNo);
+		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 반려 성공", result));
 	}
 
 }

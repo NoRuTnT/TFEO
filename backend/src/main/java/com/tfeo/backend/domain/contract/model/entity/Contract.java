@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -45,6 +47,7 @@ public class Contract {
 	@CreatedDate
 	private LocalDateTime createdAt;
 
+	@Enumerated(value = EnumType.STRING)
 	private ContractProgressType progress;
 
 	private LocalDate startAt;

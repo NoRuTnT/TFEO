@@ -5,9 +5,10 @@ import static lombok.AccessLevel.*;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -47,6 +48,7 @@ public class Home {
 
 	private String hostPhone;
 
+	@Enumerated(value = EnumType.STRING)
 	private GenderType hostGender;
 
 	private String guardianName;
@@ -70,20 +72,21 @@ public class Home {
 
 	private Double lng;
 
+	@Enumerated(value = EnumType.STRING)
 	private MemberRoleType registerMemberRole;
 
 	private String introduce;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="member_personality_no")
+	@JoinColumn(name = "member_personality_no")
 	private MemberPersonality memberPersonality;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="host_personality_no")
+	@JoinColumn(name = "host_personality_no")
 	private HostPersonality hostPersonality;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="home_option_no")
+	@JoinColumn(name = "home_option_no")
 	private HomeOption homeOption;
 
 	@OneToMany(mappedBy = "home", cascade = ALL)

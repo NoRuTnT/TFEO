@@ -1,5 +1,7 @@
 package com.tfeo.backend.domain.activity.service;
 
+import net.nurigo.sdk.message.response.SingleMessageSentResponse;
+
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityResponseDto;
@@ -12,4 +14,9 @@ public interface ActivityCommandService {
 		ModifyActivityRequestDto request);
 
 	public void removeActivity(Long memberNo, MemberRoleType role, Long activityNo);
+
+	public SingleMessageSentResponse approveActivity(Long memberNo, MemberRoleType role, Long activityNo);
+
+	public Long rejectActivity(Long memberNo, MemberRoleType role, Long activityNo);
+
 }
