@@ -24,7 +24,7 @@ import com.tfeo.backend.domain.activity.service.ActivityQueryService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@RequestMapping("/activity")
+@RequestMapping("/api/activity")
 @RestController
 public class ActivityQueryController {
 
