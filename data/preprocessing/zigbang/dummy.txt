@@ -1,0 +1,10 @@
+    # aparts_id_list = []
+    # url = "https://apis.zigbang.com/v2/aparts/items?domain=zigbang&rentMin=0&rentMax=70&salesTypes%5B0%5D=월세&geohash={wydm}"
+    # req = requests.get(url)
+    # items = req.json()
+    # # print(items)
+    # # JSON을 인덴트하여 출력
+    # json_str = json.dumps(items, indent=4)
+    # json_str = json_str.encode().decode("unicode_escape")
+    # print(len(items))
+    # print(json_str)
