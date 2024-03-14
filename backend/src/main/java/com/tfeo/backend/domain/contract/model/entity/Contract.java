@@ -65,4 +65,8 @@ public class Contract {
 	@OneToMany(mappedBy = "contract", cascade = ALL)
 	private List<Activity> activities;
 
+	public void setProgress(ContractProgressType progress){
+		this.progress = progress;
+	}
+
 }

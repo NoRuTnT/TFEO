@@ -8,7 +8,7 @@ import com.tfeo.backend.domain.activity.model.dto.AddActivityResponseDto;
 import com.tfeo.backend.domain.activity.model.dto.ModifyActivityRequestDto;
 
 public interface ActivityCommandService {
-	public AddActivityResponseDto addActivity(Long memberNo, MemberRoleType role, AddActivityRequestDto request);
+	public AddActivityResponseDto addActivity(Long memberNo, MemberRoleType role, Long activityNo,AddActivityRequestDto request);
 
 	public Long modifyActivity(Long memberNo, MemberRoleType role, Long activityNo,
 		ModifyActivityRequestDto request);

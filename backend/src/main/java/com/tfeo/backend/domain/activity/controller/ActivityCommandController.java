@@ -31,16 +31,17 @@ public class ActivityCommandController {
 	private final ActivityCommandService activityCommandService;
 
 	//활동인증글 작성
-	@PostMapping
-	public ResponseEntity<?> activityAdd(@RequestBody AddActivityRequestDto request) {
+	@PutMapping(value="/{activityNo}")
+	public ResponseEntity<?> activityAdd(@PathVariable("activityNo") Long activityNo,
+		@RequestBody AddActivityRequestDto request) {
 		Long memberNo = 1L;
 		MemberRoleType role = MEMBER;
-		AddActivityResponseDto result = activityCommandService.addActivity(memberNo, role, request);
+		AddActivityResponseDto result = activityCommandService.addActivity(memberNo, role,activityNo, request);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 작성 성공", result));
 	}
 
 	//활동인증글 수정
-	@PutMapping("/{activityNo}")
+	@PutMapping("/{activityNo}/edit")
 	public ResponseEntity<?> activityModify(@PathVariable("activityNo") Long activityNo,
 		@RequestBody ModifyActivityRequestDto request) {
 		Long memberNo = 1L;
@@ -50,7 +51,7 @@ public class ActivityCommandController {
 	}
 
 	//활동인증글 삭제
-	@DeleteMapping("/{activityNo}")
+	@PutMapping("/{activityNo}/delete")
 	public ResponseEntity<?> activityRemove(@PathVariable("activityNo") Long activityNo) {
 		Long memberNo = 1L;
 		MemberRoleType role = MEMBER;

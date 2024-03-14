@@ -4,6 +4,7 @@ import static com.tfeo.backend.common.model.type.MemberRoleType.*;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -38,7 +39,7 @@ public class ActivityQueryController {
 	) {
 		Long memberNo = 1L;
 		MemberRoleType role = MEMBER;
-		List<ReadActivityResponseDto> result = null;
+		Page<ReadActivityResponseDto> result = activityQueryService.readActivityList(memberNo, role, request, pageable);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 목록 조회 성공", result));
 	}
 
@@ -47,7 +48,7 @@ public class ActivityQueryController {
 	public ResponseEntity<?> roadmapRead(@PathVariable("studentNo") Long studentNo) {
 		Long memberNo = 1L;
 		MemberRoleType role = MEMBER;
-		List<ReadActivityResponseDto> result = null;
+		List<ReadActivityResponseDto> result = activityQueryService.readRoadmap(memberNo, role, studentNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "로드맵 조회 성공", result));
 	}
 

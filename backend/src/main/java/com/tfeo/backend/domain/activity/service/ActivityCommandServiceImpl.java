@@ -41,7 +41,6 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	private MemberRepository memberRepository;
 	private HomeRepository homeRepository;
 	private ActivityRepository activityRepository;
-	private ContractRepository contractRepository;
 
 	@Autowired
 	public ActivityCommandServiceImpl(MemberRepository memberRepository, HomeRepository homeRepository,
@@ -52,27 +51,18 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 		this.memberRepository = memberRepository;
 		this.homeRepository = homeRepository;
 		this.activityRepository = activityRepository;
-		this.contractRepository = contractRepository;
 	}
 
 	@Override
-	public AddActivityResponseDto addActivity(Long memberNo, MemberRoleType role, AddActivityRequestDto request) {
+	public AddActivityResponseDto addActivity(Long memberNo, MemberRoleType role, Long activityNo, AddActivityRequestDto request) {
 		try {
 			Member member = memberRepository.findByMemberNo(memberNo)
 				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + memberNo));
 
-			Contract contract = contractRepository.findById(request.getContractNo())
-				.orElseThrow(() -> new ActivityException("해당 계약이 존재하지 않습니다. id=" + request.getContractNo()));
+			Activity activity = activityRepository.findById(activityNo)
+				.orElseThrow(()->new ActivityException("해당 글이 존재하지 않습니다."));
 
-			Activity activity = Activity.builder()
-				.week(request.getWeek())
-				.createdAt(LocalDateTime.now())
-				.activityImageUrl(request.getActivityImageUrl())
-				.activityText(request.getActivityText())
-				.approve(WAITING)
-				.contract(contract)
-				.build();
-			activityRepository.save(activity);
+			activity.writeActivity(request.getActivityImageUrl(), request.getActivityText());
 
 			AddActivityResponseDto result = AddActivityResponseDto.builder()
 				.activityNo(activity.getActivityNo())
@@ -116,7 +106,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
 
-			activityRepository.delete(activity);
+			activity.deleteActivity();
 		} catch (Exception e) {
 			throw new ActivityException(e.getMessage());
 		}
@@ -144,14 +134,15 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			).getGuardianPhone();
 
 			Message message = new Message();
-			// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+			// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력
 			message.setFrom("01045417183");
 			message.setTo(receiver);
 			message.setText(activity.getActivityText());
 			message.setImageId(imageId);
-
-			// 여러 건 메시지 발송일 경우 send many 예제와 동일하게 구성하여 발송할 수 있습니다.
-			SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+			
+			//돈 나가서 막음
+			// SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+			SingleMessageSentResponse response = null;
 			System.out.println(response);
 
 			return response;
@@ -170,6 +161,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
 
+			//반려 처리
 			activity.setApprove(REJECT);
 
 			return activity.getActivityNo();
