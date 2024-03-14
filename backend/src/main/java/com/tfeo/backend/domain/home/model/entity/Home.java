@@ -5,7 +5,6 @@ import static lombok.AccessLevel.*;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,7 +19,6 @@ import javax.persistence.Table;
 import com.tfeo.backend.common.model.entity.MemberPersonality;
 import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.GenderType;
-import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.member.model.entity.Wish;
 import com.tfeo.backend.domain.review.model.entity.Review;
@@ -70,20 +68,20 @@ public class Home {
 
 	private Double lng;
 
-	private MemberRoleType registerMemberRole;
+	private boolean nonregisterMember;
 
 	private String introduce;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="member_personality_no")
+	@JoinColumn(name = "member_personality_no")
 	private MemberPersonality memberPersonality;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="host_personality_no")
+	@JoinColumn(name = "host_personality_no")
 	private HostPersonality hostPersonality;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="home_option_no")
+	@JoinColumn(name = "home_option_no")
 	private HomeOption homeOption;
 
 	@OneToMany(mappedBy = "home", cascade = ALL)

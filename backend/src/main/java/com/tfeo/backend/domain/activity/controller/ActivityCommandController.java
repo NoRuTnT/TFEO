@@ -22,7 +22,7 @@ import com.tfeo.backend.domain.activity.service.ActivityCommandService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@RequestMapping("/activity")
+@RequestMapping("/api/activity")
 @RestController
 public class ActivityCommandController {
 

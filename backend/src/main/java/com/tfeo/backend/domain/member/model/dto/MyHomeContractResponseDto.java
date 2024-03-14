@@ -1,6 +1,6 @@
 package com.tfeo.backend.domain.member.model.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 
@@ -10,8 +10,8 @@ import lombok.Getter;
 public class MyHomeContractResponseDto {
 	private Long contractNo;
 	private String contractUrl;
-	private LocalDateTime startAt;
-	private LocalDateTime expiredAt;
+	private LocalDate startAt;
+	private LocalDate expiredAt;
 
 	public MyHomeContractResponseDto(Contract contract) {
 		this.contractNo = contract.getContractNo();
