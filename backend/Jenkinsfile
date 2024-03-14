@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-            gradle '8.5'
+            gradle 'gradle'
         }
     stages {
         stage('Setup build environment') {
@@ -23,19 +23,14 @@ pipeline {
             steps {
                 echo 'Building...'
                  // 빌드 실행
-                sh 'gradle init'
-                withGradle {
-                   sh 'gradle wrapper build'
-                }
+                sh './gradlew build'
             }
         }
         stage('Test') {
             steps {
                 echo 'Test...'
                 // 테스트 실행
-                withGradle() {
-                    sh './gradlew test'
-                }
+                sh './gradlew test'
             }
         }
     }
