@@ -73,10 +73,6 @@ public class Home {
 	private String introduce;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_personality_no")
-	private MemberPersonality memberPersonality;
-
-	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "host_personality_no")
 	private HostPersonality hostPersonality;
 
