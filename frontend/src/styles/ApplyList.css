@@ -1,0 +1,29 @@
+.test {
+    margin: auto;
+    height: 40%;
+    width: 50%;
+}
+
+.owner-info {
+    height: 40%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.owner-img {
+    width: 40%;
+}
+
+.slick-dots li button {
+    background-color: green;
+    border-radius: 50%;
+}
+
+.slick-dots li.slick-active button {
+    background-color: darkgreen;
+}
+
+.btn {
+    width: 30%;
+}
