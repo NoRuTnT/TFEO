@@ -68,9 +68,11 @@ public class Home {
 
 	private Double lng;
 
-	private boolean nonregisterMember;
+	private Boolean nonregisterMember;
 
 	private String introduce;
+
+	private Integer maintenanceFee;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "host_personality_no")
