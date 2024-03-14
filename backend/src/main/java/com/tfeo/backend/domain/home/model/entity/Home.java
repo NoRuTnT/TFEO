@@ -74,6 +74,7 @@ public class Home {
 
 	@Enumerated(value = EnumType.STRING)
 	private MemberRoleType registerMemberRole;
+	private boolean nonregisterMember;
 
 	private String introduce;
 
