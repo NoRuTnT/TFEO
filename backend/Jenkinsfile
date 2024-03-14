@@ -7,8 +7,9 @@ pipeline {
         stage('Setup build environment') {
             steps {
                 echo 'Setting up build environment...'
-                sh './backend/gradlew build -p backend'
                 sh 'chmod +x ./backend/gradlew'
+                sh './backend/gradlew build -p backend'
+
             }
         }
         stage('Checkout') {
