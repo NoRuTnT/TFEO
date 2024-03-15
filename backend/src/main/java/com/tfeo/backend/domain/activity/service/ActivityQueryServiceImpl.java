@@ -36,7 +36,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 	@Override
 	public Page<ReadActivityResponseDto> readActivityList(Long memberNo, MemberRoleType role,
 		ReadActivityRequestDto request, Pageable pageable) {
-		ActivityApproveType approveType = request.getApprove();
+		// ActivityApproveType approveType = request.getApprove();
 		return null;
 	}
 
@@ -75,6 +75,8 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
 			ReadActivityResponseDto result = ReadActivityResponseDto.builder()
+				.memberNo(activity.getContract().getMember().getMemberNo())
+				.memberName(activity.getContract().getMember().getName())
 				.activityNo(activity.getActivityNo())
 				.week(activity.getWeek())
 				.createdAt(activity.getCreatedAt())
