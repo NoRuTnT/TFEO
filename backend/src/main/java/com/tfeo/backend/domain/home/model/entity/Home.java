@@ -7,8 +7,6 @@ import java.util.List;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +19,6 @@ import javax.persistence.Table;
 import com.tfeo.backend.common.model.entity.MemberPersonality;
 import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.GenderType;
-import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.member.model.entity.Wish;
 import com.tfeo.backend.domain.review.model.entity.Review;
@@ -48,7 +45,6 @@ public class Home {
 
 	private String hostPhone;
 
-	@Enumerated(value = EnumType.STRING)
 	private GenderType hostGender;
 
 	private String guardianName;
@@ -71,9 +67,6 @@ public class Home {
 	private Double lat;
 
 	private Double lng;
-
-	@Enumerated(value = EnumType.STRING)
-	private MemberRoleType registerMemberRole;
 
 	private Boolean nonregisterMember;
 
