@@ -21,10 +21,11 @@ pipeline {
             steps {
                 script {
                     def envFiles = ['/home/ubuntu/env/db.env', '/home/ubuntu/env/test-db.env']
-
                     // 환경 변수 로드
                     envFiles.each { filePath ->
-                        new File(filePath).eachLine { line ->
+                        def fileContent = readFile(file: filePath)
+                        def lines = fileContent.tokenize('\n')
+                        lines.each { line ->
                             def parts = line.split('=')
                             if (parts.size() == 2) {
                                 // 환경 변수 할당
