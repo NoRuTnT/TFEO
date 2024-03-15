@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class AddActivityResponseDto {
 	private Long activityNo;
-	private Integer week;
+	private String week;
 	private LocalDateTime createdAt;
 	private String activityImageUrl;
 	private String activityText;
