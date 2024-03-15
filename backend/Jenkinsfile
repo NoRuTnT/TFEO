@@ -3,15 +3,53 @@ pipeline {
     tools {
             gradle 'gradle'
         }
+
+    environment {
+            // 환경 변수를 저장할 맵 정의
+            myEnvVars = [:]
+        }
+
     stages {
         stage('Setup build environment') {
             steps {
+                script {
+                    def envFiles = ['/home/ubuntu/env/db.env', '/home/ubuntu/env/test-db.env']
+
+                        // 선택적으로 환경 변수를 로드하여 설정
+                    envFiles.each { filePath ->
+                        // 파일을 읽어서 라인별로 처리
+                        new File(filePath).eachLine { line ->
+                            // 라인을 '=' 기준으로 분리하여 키와 값으로 나눔
+                            def parts = line.split('=')
+                            if (parts.size() == 2) {
+                                // 환경 변수 설정
+                                myEnvVars[parts[0].trim()] = parts[1].trim()
+                            }
+                        }
+                    }
+                }
                 echo 'Setting up build environment...'
                 sh 'chmod +x ./backend/gradlew'
                 sh './backend/gradlew build -p backend'
-
             }
         }
+
+        stage('Use Environment Variables') {
+            steps {
+                // MySQL 데이터베이스 연결 정보 출력
+                script {
+                    echo "MySQL URL: ${myEnvVars.MYSQL_URL}"
+                    echo "MySQL Database: ${myEnvVars.MYSQL_DATABASE}"
+                    echo "MySQL Username: ${myEnvVars.MYSQL_USERNAME}"
+                    echo "MySQL Password: ${myEnvVars.MYSQL_PASSWORD}"
+                    echo "Test MySQL URL: ${myEnvVars.MYSQL_TEST_URL}"
+                    echo "Test MySQL Database: ${myEnvVars.MYSQL_TEST_DATABASE}"
+                    echo "Test MySQL Username: ${myEnvVars.MYSQL_TEST_USERNAME}"
+                    echo "Test MySQL Password: ${myEnvVars.MYSQL_TEST_PASSWORD}"
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
