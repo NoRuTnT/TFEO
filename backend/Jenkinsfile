@@ -4,10 +4,17 @@ pipeline {
             gradle 'gradle'
         }
 
+    // 환경 변수 정의
     environment {
-            // 환경 변수를 저장할 맵 정의
-            myEnvVars = [:]
-        }
+        MYSQL_URL = ""
+        MYSQL_DATABASE = ""
+        MYSQL_USERNAME = ""
+        MYSQL_PASSWORD = ""
+        MYSQL_TEST_URL = ""
+        MYSQL_TEST_DATABASE = ""
+        MYSQL_TEST_USERNAME = ""
+        MYSQL_TEST_PASSWORD = ""
+    }
 
     stages {
         stage('Setup build environment') {
@@ -15,15 +22,13 @@ pipeline {
                 script {
                     def envFiles = ['/home/ubuntu/env/db.env', '/home/ubuntu/env/test-db.env']
 
-                        // 선택적으로 환경 변수를 로드하여 설정
+                    // 환경 변수 로드
                     envFiles.each { filePath ->
-                        // 파일을 읽어서 라인별로 처리
                         new File(filePath).eachLine { line ->
-                            // 라인을 '=' 기준으로 분리하여 키와 값으로 나눔
                             def parts = line.split('=')
                             if (parts.size() == 2) {
-                                // 환경 변수 설정
-                                myEnvVars[parts[0].trim()] = parts[1].trim()
+                                // 환경 변수 할당
+                                env[parts[0].trim()] = parts[1].trim()
                             }
                         }
                     }
