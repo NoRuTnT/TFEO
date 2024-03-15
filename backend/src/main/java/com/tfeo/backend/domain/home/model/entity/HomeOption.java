@@ -43,5 +43,10 @@ public class HomeOption {
 	private Boolean toilet;
 
 	private Boolean heating;
+
 	private Boolean parking;
+
+	private Boolean station;
+
+	private Boolean moveInDate;
 }

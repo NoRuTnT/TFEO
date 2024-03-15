@@ -3,15 +3,59 @@ pipeline {
     tools {
             gradle 'gradle'
         }
+
+    // 환경 변수 정의
+    environment {
+        MYSQL_URL = ""
+        MYSQL_DATABASE = ""
+        MYSQL_USERNAME = ""
+        MYSQL_PASSWORD = ""
+        MYSQL_TEST_URL = ""
+        MYSQL_TEST_DATABASE = ""
+        MYSQL_TEST_USERNAME = ""
+        MYSQL_TEST_PASSWORD = ""
+    }
+
     stages {
         stage('Setup build environment') {
             steps {
+                script {
+                    def envFiles = ['/home/ubuntu/env/db.env', '/home/ubuntu/env/test-db.env']
+                    // 환경 변수 로드
+                    envFiles.each { filePath ->
+                        def fileContent = readFile(file: filePath)
+                        def lines = fileContent.tokenize('\n')
+                        lines.each { line ->
+                            def parts = line.split('=')
+                            if (parts.size() == 2) {
+                                // 환경 변수 할당
+                                env[parts[0].trim()] = parts[1].trim()
+                            }
+                        }
+                    }
+                }
                 echo 'Setting up build environment...'
                 sh 'chmod +x ./backend/gradlew'
                 sh './backend/gradlew build -p backend'
-
             }
         }
+
+        stage('Use Environment Variables') {
+            steps {
+                // MySQL 데이터베이스 연결 정보 출력
+                script {
+                    echo "MySQL URL: ${myEnvVars.MYSQL_URL}"
+                    echo "MySQL Database: ${myEnvVars.MYSQL_DATABASE}"
+                    echo "MySQL Username: ${myEnvVars.MYSQL_USERNAME}"
+                    echo "MySQL Password: ${myEnvVars.MYSQL_PASSWORD}"
+                    echo "Test MySQL URL: ${myEnvVars.MYSQL_TEST_URL}"
+                    echo "Test MySQL Database: ${myEnvVars.MYSQL_TEST_DATABASE}"
+                    echo "Test MySQL Username: ${myEnvVars.MYSQL_TEST_USERNAME}"
+                    echo "Test MySQL Password: ${myEnvVars.MYSQL_TEST_PASSWORD}"
+                }
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
