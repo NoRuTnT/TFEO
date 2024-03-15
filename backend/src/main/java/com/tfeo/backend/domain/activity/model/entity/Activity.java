@@ -1,7 +1,10 @@
 package com.tfeo.backend.domain.activity.model.entity;
 
+import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
+import static com.tfeo.backend.common.model.type.ActivityApproveType.NONE;
 import static lombok.AccessLevel.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
@@ -36,9 +39,8 @@ public class Activity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long activityNo;
 
-	private Integer week;
+	private String week;
 
-	@CreatedDate
 	private LocalDateTime createdAt;
 
 	private String activityImageUrl;
@@ -52,9 +54,32 @@ public class Activity {
 	@JoinColumn(name = "contract_no")
 	private Contract contract;
 
+	private LocalDate startAt;
+
+	private LocalDate expiredAt;
+
+	public void writeActivity(String activityImageUrl, String activityText) {
+		this.createdAt = LocalDateTime.now();
+		this.activityImageUrl = activityImageUrl;
+		this.activityText = activityText;
+		this.approve = WAITING;
+	}
+
 	public void updateActivity(String activityImageUrl, String activityText) {
 		this.activityImageUrl = activityImageUrl;
 		this.activityText = activityText;
+		this.approve = WAITING;
+	}
+
+	public void deleteActivity() {
+		this.createdAt = null;
+		this.activityImageUrl = null;
+		this.activityText = null;
+		this.approve = NONE;
+	}
+
+	public void setApprove(ActivityApproveType approve) {
+		this.approve = approve;
 	}
 
 }
