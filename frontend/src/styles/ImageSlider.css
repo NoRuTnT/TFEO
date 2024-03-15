@@ -1,0 +1,17 @@
+.relative {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%; /* 필요에 따라 조절 */
+  overflow: hidden;
+}
+
+img.inline-block {
+  flex-shrink: 0;
+  width: 33.3333%; /* 세 이미지가 컨테이너에 맞게 조정 */
+  object-fit: cover; /* 이미지가 공간을 왜곡 없이 채우도록 조정 */
+}
+
+button {
+  /* 버튼 스타일을 필요에 따라 조절 */
+}
