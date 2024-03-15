@@ -3,6 +3,7 @@ package com.tfeo.backend.domain.activity.service;
 import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,10 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(()->new ActivityException("해당 글이 존재하지 않습니다."));
+
+			if(activity.getStartAt().isAfter(LocalDate.now()) || activity.getExpiredAt().isBefore(LocalDate.now())){
+				throw new ActivityException("작성할 수 있는 기간이 아닙니다.");
+			}
 
 			activity.writeActivity(request.getActivityImageUrl(), request.getActivityText());
 
