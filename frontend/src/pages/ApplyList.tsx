@@ -33,7 +33,7 @@ type Home = {
   ownerImage: string;
 };
 
-const MainPage: React.FC = () => {
+const ApplyList: React.FC = () => {
   const [currentHome, setCurrentHome] = useState<Home | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalContent, setModalContent] = useState<string>('');
@@ -131,4 +131,4 @@ const MainPage: React.FC = () => {
   );
 };
 
-export default MainPage;
+export default ApplyList;
