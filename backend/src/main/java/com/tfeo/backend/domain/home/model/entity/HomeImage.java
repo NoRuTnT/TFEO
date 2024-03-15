@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 public class HomeImage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long pictureNo;
+	private Long homeImageNo;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "home_no")
