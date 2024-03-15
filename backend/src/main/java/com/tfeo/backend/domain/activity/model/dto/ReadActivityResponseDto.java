@@ -10,10 +10,8 @@ import lombok.Data;
 @Builder
 @Data
 public class ReadActivityResponseDto {
-	private Long memberNo;
-	private String memberName;
 	private Long activityNo;
-	private String week;
+	private Integer week;
 	private LocalDateTime createdAt;
 	private String activityImageUrl;
 	private String activityText;
