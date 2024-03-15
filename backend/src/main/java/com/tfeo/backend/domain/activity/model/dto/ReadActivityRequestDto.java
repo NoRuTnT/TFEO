@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class ReadActivityRequestDto {
 	private String sgg;
-	private String week;
+	private Integer week;
 	private ActivityApproveType approve;
 }
