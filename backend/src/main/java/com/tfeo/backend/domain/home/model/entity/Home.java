@@ -18,11 +18,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.tfeo.backend.common.model.entity.MemberPersonality;
 import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.GenderType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
+import com.tfeo.backend.domain.home.model.dto.HomeDto;
 import com.tfeo.backend.domain.member.model.entity.Wish;
 import com.tfeo.backend.domain.review.model.entity.Review;
 
@@ -100,4 +100,43 @@ public class Home {
 	@OneToMany(mappedBy = "home", cascade = ALL)
 	private List<HostImage> hostImages;
 
+	public void setRegisterMemberRole(MemberRoleType registerMemberRole) {
+		this.registerMemberRole = registerMemberRole;
+	}
+
+	public void update(HomeDto homeDto, HomeOption homeOption, HostPersonality hostPersonality) {
+		this.hostName = homeDto.getHostName();
+
+		this.hostAge = homeDto.getHostAge();
+
+		this.hostPhone = homeDto.getHostPhone();
+
+		this.hostGender = homeDto.getHostGender();
+
+		this.guardianName = homeDto.getGuardianName();
+
+		this.guardianPhone = homeDto.getGuardianPhone();
+
+		this.relation = homeDto.getRelation();
+
+		this.hostRegisterNo = homeDto.getHostRegisterNo();
+
+		this.hostAccountNo = homeDto.getHostAccountNo();
+
+		this.hostBank = homeDto.getHostBank();
+
+		this.address.setAddress(homeDto.getAddress());
+
+		this.rent = homeDto.getRent();
+
+		this.lat = homeDto.getLat();
+
+		this.lng = homeDto.getLng();
+
+		this.introduce = homeDto.getIntroduce();
+
+		this.hostPersonality = hostPersonality;
+
+		this.homeOption = homeOption;
+	}
 }
