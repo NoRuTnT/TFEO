@@ -8,8 +8,8 @@ pipeline {
         stage('Setup build environment') {
             steps {
                 script {
-                        chown -R jenkins:jenkins backend/env
-                        chmod -R 755 backend/env
+                        sh "chown -R jenkins:jenkins backend/env"
+                        sh "chmod -R 755 backend/env"
                         sh 'mkdir -p backend/env'
                 }
                 withCredentials([file(credentialsId: 'db', variable: 'dbFile')]) {
