@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.tfeo.backend.domain.home.model.dto.HostPersonalityDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,24 +26,45 @@ public class HostPersonality {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long hostPersonalityNo;
 
-	private Boolean kind;
-
 	private Boolean smoke;
 
 	private Boolean pet;
 
 	private Boolean clean;
 
-	private Boolean extrovert;
-
-	private Boolean sense;
-
-	private Boolean thought;
-
-	private Boolean judgment;
-
 	private Boolean daytime;
 
 	private Boolean nighttime;
 
+	private Boolean extrovert;
+
+	private Boolean introvert;
+
+	private Boolean cold;
+
+	private Boolean hot;
+
+	private Boolean noTouch;
+
+	public void update(HostPersonalityDto hostPersonalityDto) {
+		this.smoke = hostPersonalityDto.getSmoke();
+
+		this.pet = hostPersonalityDto.getPet();
+
+		this.clean = hostPersonalityDto.getClean();
+
+		this.daytime = hostPersonalityDto.getDaytime();
+
+		this.nighttime = hostPersonalityDto.getNighttime();
+
+		this.extrovert = hostPersonalityDto.getExtrovert();
+
+		this.introvert = hostPersonalityDto.getIntrovert();
+
+		this.cold = hostPersonalityDto.getCold();
+
+		this.hot = hostPersonalityDto.getHot();
+
+		this.noTouch = hostPersonalityDto.getNoTouch();
+	}
 }

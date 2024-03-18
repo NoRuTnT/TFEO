@@ -4,34 +4,22 @@ pipeline {
             gradle 'gradle'
         }
 
-    // 환경 변수 정의
-    environment {
-        MYSQL_URL = ""
-        MYSQL_DATABASE = ""
-        MYSQL_USERNAME = ""
-        MYSQL_PASSWORD = ""
-        MYSQL_TEST_URL = ""
-        MYSQL_TEST_DATABASE = ""
-        MYSQL_TEST_USERNAME = ""
-        MYSQL_TEST_PASSWORD = ""
-    }
-
     stages {
         stage('Setup build environment') {
             steps {
                 script {
-                    def envFiles = ['/home/ubuntu/env/db.env', '/home/ubuntu/env/test-db.env']
-                    // 환경 변수 로드
-                    envFiles.each { filePath ->
-                        def fileContent = readFile(file: filePath)
-                        def lines = fileContent.tokenize('\n')
-                        lines.each { line ->
-                            def parts = line.split('=')
-                            if (parts.size() == 2) {
-                                // 환경 변수 할당
-                                env[parts[0].trim()] = parts[1].trim()
-                            }
-                        }
+                        sh "chown -R jenkins:jenkins backend/env"
+                        sh "chmod -R 755 backend/env"
+                        sh 'mkdir -p backend/env'
+                }
+                withCredentials([file(credentialsId: 'db', variable: 'dbFile')]) {
+                    script {
+                        sh 'cp $dbFile backend/env/db.env'
+                    }
+                }
+                withCredentials([file(credentialsId: 'test-db', variable: 'testdbFile')]) {
+                    script {
+                        sh 'cp $testdbFile backend/env/test-db.env'
                     }
                 }
                 echo 'Setting up build environment...'
@@ -40,21 +28,6 @@ pipeline {
             }
         }
 
-        stage('Use Environment Variables') {
-            steps {
-                // MySQL 데이터베이스 연결 정보 출력
-                script {
-                    echo "MySQL URL: ${myEnvVars.MYSQL_URL}"
-                    echo "MySQL Database: ${myEnvVars.MYSQL_DATABASE}"
-                    echo "MySQL Username: ${myEnvVars.MYSQL_USERNAME}"
-                    echo "MySQL Password: ${myEnvVars.MYSQL_PASSWORD}"
-                    echo "Test MySQL URL: ${myEnvVars.MYSQL_TEST_URL}"
-                    echo "Test MySQL Database: ${myEnvVars.MYSQL_TEST_DATABASE}"
-                    echo "Test MySQL Username: ${myEnvVars.MYSQL_TEST_USERNAME}"
-                    echo "Test MySQL Password: ${myEnvVars.MYSQL_TEST_PASSWORD}"
-                }
-            }
-        }
 
         stage('Checkout') {
             steps {
@@ -66,14 +39,20 @@ pipeline {
             steps {
                 echo 'Building...'
                  // 빌드 실행
-                sh './gradlew build'
+                 dir('backend') {
+                    // backend 디렉토리 안에서 빌드 실행
+                    sh './gradlew build'
+                }
             }
         }
         stage('Test') {
             steps {
                 echo 'Test...'
                 // 테스트 실행
-                sh './gradlew test'
+                dir('backend') {
+                    // backend 디렉토리 안에서 빌드 실행
+                    sh './gradlew test'
+                }
             }
         }
     }
