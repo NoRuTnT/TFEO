@@ -1,0 +1,15 @@
+.circle-row {
+    display: flex;
+}
+
+.circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 10px;
+    border: 2px solid green; /* 모든 동그라미에 초록색 테두리를 적용 */
+}
+
+.circle.filled {
+    background-color: green; /* flag가 1인 동그라미에만 초록색 배경 적용 */
+}
