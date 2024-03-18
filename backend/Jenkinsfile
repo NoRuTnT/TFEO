@@ -8,7 +8,7 @@ pipeline {
         stage('Setup build environment') {
             steps {
                 script {
-                        sh 'mkdir -p backend/env'
+                        sh 'sudo mkdir -p backend/env'
                 }
                 withCredentials([file(credentialsId: 'db', variable: 'dbFile')]) {
                     script {
