@@ -5,12 +5,15 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.tfeo.backend.common.model.type.ActivityApproveType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.activity.common.ActivityException;
+import com.tfeo.backend.domain.activity.common.ActivitySpecification;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityResponseDto;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
@@ -35,9 +38,35 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 
 	@Override
 	public Page<ReadActivityResponseDto> readActivityList(Long memberNo, MemberRoleType role,
-		ReadActivityRequestDto request, Pageable pageable) {
-		// ActivityApproveType approveType = request.getApprove();
-		return null;
+		@ModelAttribute("request") ReadActivityRequestDto request, Pageable pageable) {
+		Specification<Activity> spce = null;
+		if(request.getSgg()!=null){
+			spce = ActivitySpecification.bySgg(request.getSgg());
+		}
+		if(request.getApprove() != null){
+			spce = spce.and(ActivitySpecification.equalApprove(request.getApprove()));
+		}
+		if(request.getWeek() != null){
+			spce = spce.and(ActivitySpecification.equalWeek(request.getWeek()));
+		}
+		Page<Activity> activities = activityRepository.findAll(spce, pageable);
+
+			return activities.map(activity -> {
+				ReadActivityResponseDto.ReadActivityResponseDtoBuilder builder = ReadActivityResponseDto.builder()
+					.activityNo(activity.getActivityNo())
+					.week(activity.getWeek())
+					.memberName(activity.getContract().getMember().getName())
+					.activityApproveType(activity.getApprove())
+					.createdAt(activity.getCreatedAt())
+					.si(activity.getContract().getHome().getAddress().getSi())
+					.sgg(activity.getContract().getHome().getAddress().getSgg())
+					.emd(activity.getContract().getHome().getAddress().getEmd())
+					.ro(activity.getContract().getHome().getAddress().getRo())
+					.detail(activity.getContract().getHome().getAddress().getDetail());
+
+				return builder.build();
+			});
+
 	}
 
 	@Override
