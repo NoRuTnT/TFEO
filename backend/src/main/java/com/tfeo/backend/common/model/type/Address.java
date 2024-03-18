@@ -18,4 +18,12 @@ public class Address {
 	private String emd;
 	private String ro;
 	private String detail;
+
+	public void setAddress(Address address) {
+		this.si = address.getSi();
+		this.sgg = address.getSgg();
+		this.emd = address.getEmd();
+		this.ro = address.getRo();
+		this.detail = address.getDetail();
+	}
 }
