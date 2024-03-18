@@ -39,14 +39,20 @@ pipeline {
             steps {
                 echo 'Building...'
                  // 빌드 실행
-                sh './backend/gradlew build'
+                 dir('backend') {
+                    // backend 디렉토리 안에서 빌드 실행
+                    sh './gradlew build'
+                }
             }
         }
         stage('Test') {
             steps {
                 echo 'Test...'
                 // 테스트 실행
-                sh './backend/gradlew test'
+                dir('backend') {
+                    // backend 디렉토리 안에서 빌드 실행
+                    sh './gradlew test'
+                }
             }
         }
     }
