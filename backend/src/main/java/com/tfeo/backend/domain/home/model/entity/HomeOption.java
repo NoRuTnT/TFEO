@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.tfeo.backend.common.model.type.BuildingType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,11 +28,11 @@ public class HomeOption {
 
 	private Boolean internet;
 
-	private Boolean kitchen;
+	private Boolean gas;
 
 	private Boolean washingMachine;
 
-	private Boolean airconditioner;
+	private Boolean airConditioner;
 
 	private Boolean refrigerator;
 
@@ -49,4 +51,8 @@ public class HomeOption {
 	private Boolean station;
 
 	private Boolean moveInDate;
+
+	private Boolean sink;
+
+	private BuildingType type;
 }
