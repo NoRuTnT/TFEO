@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
         <img src="/assets/icons/footer/homeIcon.png" alt="홈" />
         <span className="icon-description">홈</span>
       </Link>
-      <Link to="/find-home" className="icon-container">
+      <Link to="/find-house" className="icon-container">
         <img src="/assets/icons/footer/findHomeIcon.png" alt="집찾기" />
         <span className="icon-description">집찾기</span>
       </Link>
