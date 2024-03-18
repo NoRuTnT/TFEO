@@ -24,24 +24,24 @@ public class HostPersonality {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long hostPersonalityNo;
 
-	private Boolean kind;
-
 	private Boolean smoke;
 
 	private Boolean pet;
 
 	private Boolean clean;
 
-	private Boolean extrovert;
-
-	private Boolean sense;
-
-	private Boolean thought;
-
-	private Boolean judgment;
-
 	private Boolean daytime;
 
 	private Boolean nighttime;
+
+	private Boolean extrovert;
+
+	private Boolean introvert;
+
+	private Boolean cold;
+
+	private Boolean hot;
+
+	private Boolean noTouch;
 
 }
