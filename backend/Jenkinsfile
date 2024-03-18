@@ -15,9 +15,9 @@ pipeline {
                         sh 'cp $dbFile backend/env/db.env'
                     }
                 }
-                withCredentials([file(credentialsId: 'test-db', variable: 'test-dbFile')]) {
+                withCredentials([file(credentialsId: 'test-db', variable: 'testdbFile')]) {
                     script {
-                        sh 'cp $test-dbFile backend/env/test-db.env'
+                        sh 'cp $testdbFile backend/env/test-db.env'
                     }
                 }
                 echo 'Setting up build environment...'
