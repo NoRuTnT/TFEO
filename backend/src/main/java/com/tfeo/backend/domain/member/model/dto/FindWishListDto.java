@@ -2,11 +2,11 @@ package com.tfeo.backend.domain.member.model.dto;
 
 import java.util.List;
 
-import com.tfeo.backend.domain.home.model.dto.HomeImageResponseDto;
-import com.tfeo.backend.domain.home.model.dto.HomeOptionResponseDto;
-import com.tfeo.backend.domain.home.model.dto.HomeResponseDto;
-import com.tfeo.backend.domain.home.model.dto.HostImageResponseDto;
-import com.tfeo.backend.domain.home.model.dto.HostPersonalityResponseDto;
+import com.tfeo.backend.domain.home.model.dto.HomeDto;
+import com.tfeo.backend.domain.home.model.dto.HomeImageDto;
+import com.tfeo.backend.domain.home.model.dto.HomeOptionDto;
+import com.tfeo.backend.domain.home.model.dto.HostImageDto;
+import com.tfeo.backend.domain.home.model.dto.HostPersonalityDto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -14,9 +14,9 @@ import lombok.Getter;
 @Getter
 @Builder
 public class FindWishListDto {
-	private HomeResponseDto homeResponseDto;
-	private HostPersonalityResponseDto hostPersonalityResponseDto;
-	private HomeOptionResponseDto homeOptionResponseDto;
-	private List<HostImageResponseDto> hostImageResponseDtoList;
-	private List<HomeImageResponseDto> homeImageResponseDtoList;
+	private HomeDto homeDto;
+	private HostPersonalityDto hostPersonalityDto;
+	private HomeOptionDto homeOptionDto;
+	private List<HostImageDto> hostImageDtoList;
+	private List<HomeImageDto> homeImageDtoList;
 }
