@@ -75,11 +75,7 @@ public class Home {
 	@Enumerated(value = EnumType.STRING)
 	private MemberRoleType registerMemberRole;
 
-	private Boolean nonregisterMember;
-
 	private String introduce;
-
-	private Integer maintenanceFee;
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "host_personality_no")

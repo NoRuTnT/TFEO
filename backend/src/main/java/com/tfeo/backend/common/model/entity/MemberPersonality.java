@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "member_personality")
 public class MemberPersonality {
 	@Id
-	@Column(name = "member_personality_no")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberPersonalityNo;
 
@@ -54,11 +53,14 @@ public class MemberPersonality {
 
 	private Boolean errand;
 
-	@Column(name = "live_long")
 	private Boolean liveLong;
 
-	@Column(name = "live_short")
 	private Boolean liveShort;
+
 	private Boolean pet;
+
+	private Boolean cold;
+
+	private Boolean hot;
 
 }
