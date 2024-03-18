@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.tfeo.backend.common.model.type.BuildingType;
+import com.tfeo.backend.domain.home.model.dto.HomeOptionDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -55,4 +56,36 @@ public class HomeOption {
 	private Boolean sink;
 
 	private BuildingType type;
+
+	public void update(HomeOptionDto homeOptionDto) {
+		this.internet = homeOptionDto.getInternet();
+
+		this.gas = homeOptionDto.getGas();
+
+		this.washingMachine = homeOptionDto.getWashingMachine();
+
+		this.airConditioner = homeOptionDto.getAirConditioner();
+
+		this.refrigerator = homeOptionDto.getRefrigerator();
+
+		this.elevator = homeOptionDto.getElevator();
+
+		this.microwave = homeOptionDto.getMicrowave();
+
+		this.breakfast = homeOptionDto.getBreakfast();
+
+		this.toilet = homeOptionDto.getToilet();
+
+		this.heating = homeOptionDto.getHeating();
+
+		this.parking = homeOptionDto.getParking();
+
+		this.station = homeOptionDto.getStation();
+
+		this.moveInDate = homeOptionDto.getMoveInDate();
+
+		this.sink = homeOptionDto.getSink();
+
+		this.type = homeOptionDto.getType();
+	}
 }

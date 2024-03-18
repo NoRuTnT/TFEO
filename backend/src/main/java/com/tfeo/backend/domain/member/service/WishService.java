@@ -7,11 +7,11 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
-import com.tfeo.backend.domain.home.model.dto.HomeImageResponseDto;
-import com.tfeo.backend.domain.home.model.dto.HomeOptionResponseDto;
-import com.tfeo.backend.domain.home.model.dto.HomeResponseDto;
-import com.tfeo.backend.domain.home.model.dto.HostImageResponseDto;
-import com.tfeo.backend.domain.home.model.dto.HostPersonalityResponseDto;
+import com.tfeo.backend.domain.home.model.dto.HomeDto;
+import com.tfeo.backend.domain.home.model.dto.HomeImageDto;
+import com.tfeo.backend.domain.home.model.dto.HomeOptionDto;
+import com.tfeo.backend.domain.home.model.dto.HostImageDto;
+import com.tfeo.backend.domain.home.model.dto.HostPersonalityDto;
 import com.tfeo.backend.domain.home.model.entity.Home;
 import com.tfeo.backend.domain.home.repository.HomeImageRepository;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
@@ -51,24 +51,24 @@ public class WishService {
 		List<FindWishListDto> findWishListDtoList = new ArrayList<>();
 		for (Wish wish : wishList) {
 			Home home = wish.getHome();
-			HomeResponseDto homeResponseDto = new HomeResponseDto(home);
-			List<HomeImageResponseDto> homeImageResponseDtoList = homeImageRepository.findAllByHome(home)
+			HomeDto homeDto = new HomeDto(home);
+			List<HomeImageDto> homeImageDtoList = homeImageRepository.findAllByHome(home)
 				.stream()
-				.map(homeImage -> new HomeImageResponseDto(homeImage))
+				.map(homeImage -> new HomeImageDto(homeImage))
 				.collect(Collectors.toList());
-			List<HostImageResponseDto> hostImageResponseDtoList = hostImageRepository.findAllByHome(home)
+			List<HostImageDto> hostImageDtoList = hostImageRepository.findAllByHome(home)
 				.stream()
-				.map(hostImage -> new HostImageResponseDto(hostImage))
+				.map(hostImage -> new HostImageDto(hostImage))
 				.collect(Collectors.toList());
-			HostPersonalityResponseDto hostPersonalityResponseDto = new HostPersonalityResponseDto(
+			HostPersonalityDto hostPersonalityDto = new HostPersonalityDto(
 				home.getHostPersonality());
-			HomeOptionResponseDto homeOptionResponseDto = new HomeOptionResponseDto(home.getHomeOption());
+			HomeOptionDto homeOptionDto = new HomeOptionDto(home.getHomeOption());
 			FindWishListDto findWishListDto = FindWishListDto.builder()
-				.homeImageResponseDtoList(homeImageResponseDtoList)
-				.hostImageResponseDtoList(hostImageResponseDtoList)
-				.homeResponseDto(homeResponseDto)
-				.homeOptionResponseDto(homeOptionResponseDto)
-				.hostPersonalityResponseDto(hostPersonalityResponseDto)
+				.homeImageDtoList(homeImageDtoList)
+				.hostImageDtoList(hostImageDtoList)
+				.homeDto(homeDto)
+				.homeOptionDto(homeOptionDto)
+				.hostPersonalityDto(hostPersonalityDto)
 				.build();
 			findWishListDtoList.add(findWishListDto);
 		}
