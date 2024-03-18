@@ -1,0 +1,8 @@
+aws:
+  s3:
+    bucket: tfeo-bucket
+  stack.auto: false
+  region.static: ap-northeast-2
+  credentials:
+    accessKey: AKIA4QRMPZYRUH5IQSFJ
+    secretKey: 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
