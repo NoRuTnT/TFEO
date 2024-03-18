@@ -20,6 +20,9 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.activity.common.ActivityException;
+import com.tfeo.backend.domain.activity.common.exception.AccessDeniedException;
+import com.tfeo.backend.domain.activity.common.exception.ActivityNotExistException;
+import com.tfeo.backend.domain.activity.common.exception.PeriodException;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityResponseDto;
 import com.tfeo.backend.domain.activity.model.dto.ModifyActivityRequestDto;
@@ -28,6 +31,7 @@ import com.tfeo.backend.domain.activity.repository.ActivityRepository;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
+import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 
@@ -56,15 +60,19 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 
 	@Override
 	public AddActivityResponseDto addActivity(Long memberNo, MemberRoleType role, Long activityNo, AddActivityRequestDto request) {
-		try {
+
 			Member member = memberRepository.findByMemberNo(memberNo)
-				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + memberNo));
+				.orElseThrow(() -> new MemberNotExistException(memberNo));
 
 			Activity activity = activityRepository.findById(activityNo)
-				.orElseThrow(()->new ActivityException("해당 글이 존재하지 않습니다."));
+				.orElseThrow(()->new ActivityNotExistException(activityNo));
+
+			if(!member.equals(activity.getContract().getMember())){
+				throw new AccessDeniedException(memberNo);
+			}
 
 			if(activity.getStartAt().isAfter(LocalDate.now()) || activity.getExpiredAt().isBefore(LocalDate.now())){
-				throw new ActivityException("작성할 수 있는 기간이 아닙니다.");
+				throw new PeriodException();
 			}
 
 			activity.writeActivity(request.getActivityImageUrl(), request.getActivityText());
@@ -80,51 +88,45 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 				.build();
 
 			return result;
-		} catch (Exception e) {
-			throw new ActivityException(e.getMessage());
-		}
 	}
 
 	@Override
 	public Long modifyActivity(Long memberNo, MemberRoleType role, Long activityNo, ModifyActivityRequestDto request) {
-		try {
 			Member member = memberRepository.findByMemberNo(memberNo)
-				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + memberNo));
+				.orElseThrow(() -> new MemberNotExistException(memberNo));
 
 			Activity activity = activityRepository.findById(activityNo)
-				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
+				.orElseThrow(() -> new ActivityNotExistException(activityNo));
+
+		if(!member.equals(activity.getContract().getMember())){
+			throw new AccessDeniedException(memberNo);
+		}
 
 			activity.updateActivity(request.getActivityImageUrl(), request.getActivityText());
 
 			return activity.getActivityNo();
-		} catch (Exception e) {
-			throw new ActivityException(e.getMessage());
-		}
 	}
 
 	@Override
 	public void removeActivity(Long memberNo, MemberRoleType role, Long activityNo) {
-		try {
+
 			Member member = memberRepository.findByMemberNo(memberNo)
-				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + memberNo));
+				.orElseThrow(() -> new MemberNotExistException(memberNo));
 
 			Activity activity = activityRepository.findById(activityNo)
-				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
+				.orElseThrow(() -> new ActivityNotExistException(activityNo));
 
 			activity.deleteActivity();
-		} catch (Exception e) {
-			throw new ActivityException(e.getMessage());
-		}
 	}
 
 	@Override
 	public SingleMessageSentResponse approveActivity(Long memberNo, MemberRoleType role, Long activityNo) {
 		try {
 			Member member = memberRepository.findByMemberNo(memberNo)
-				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + memberNo));
+				.orElseThrow(() -> new MemberNotExistException(memberNo));
 
 			Activity activity = activityRepository.findById(activityNo)
-				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
+				.orElseThrow(() -> new ActivityNotExistException(activityNo));
 
 			//승인 처리
 			activity.setApprove(APPROVE);
@@ -159,20 +161,15 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 
 	@Override
 	public Long rejectActivity(Long memberNo, MemberRoleType role, Long activityNo) {
-		try {
-			Member member = memberRepository.findByMemberNo(memberNo)
-				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + memberNo));
 
+			Member member = memberRepository.findByMemberNo(memberNo)
+				.orElseThrow(() -> new MemberNotExistException(memberNo));
 			Activity activity = activityRepository.findById(activityNo)
-				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
+				.orElseThrow(() -> new ActivityNotExistException(activityNo));
 
 			//반려 처리
 			activity.setApprove(REJECT);
 
 			return activity.getActivityNo();
-
-		} catch (Exception e) {
-			throw new ActivityException(e.getMessage());
-		}
 	}
 }

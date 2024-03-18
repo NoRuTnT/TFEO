@@ -19,4 +19,10 @@ public class ReadActivityResponseDto {
 	private String activityText;
 	private ActivityApproveType activityApproveType;
 	private Long contractNo;
+	// 주소
+	private String si;
+	private String sgg;
+	private String emd;
+	private String ro;
+	private String detail;
 }
