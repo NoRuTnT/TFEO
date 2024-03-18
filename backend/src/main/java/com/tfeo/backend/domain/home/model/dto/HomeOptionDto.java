@@ -1,45 +1,35 @@
 package com.tfeo.backend.domain.home.model.dto;
 
+import com.tfeo.backend.common.model.type.BuildingType;
 import com.tfeo.backend.domain.home.model.entity.HomeOption;
 
 import lombok.Getter;
 
 @Getter
-public class HomeOptionResponseDto {
+public class HomeOptionDto {
 	private Long homeOptionNo;
-
 	private Boolean internet;
-
-	private Boolean kitchen;
-
+	private Boolean gas;
+	private Boolean airConditioner;
 	private Boolean washingMachine;
-
-	private Boolean airconditioner;
-
 	private Boolean refrigerator;
-
 	private Boolean elevator;
-
 	private Boolean microwave;
-
 	private Boolean breakfast;
-
 	private Boolean toilet;
-
 	private Boolean heating;
-
 	private Boolean parking;
-
 	private Boolean station;
-
 	private Boolean moveInDate;
+	private Boolean sink;
+	private BuildingType type;
 
-	public HomeOptionResponseDto(HomeOption homeOption) {
+	public HomeOptionDto(HomeOption homeOption) {
 		this.homeOptionNo = homeOption.getHomeOptionNo();
 		this.internet = homeOption.getInternet();
-		this.kitchen = homeOption.getKitchen();
+		this.gas = homeOption.getGas();
+		this.airConditioner = homeOption.getAirConditioner();
 		this.washingMachine = homeOption.getWashingMachine();
-		this.airconditioner = homeOption.getAirconditioner();
 		this.refrigerator = homeOption.getRefrigerator();
 		this.elevator = homeOption.getElevator();
 		this.microwave = homeOption.getMicrowave();
@@ -49,6 +39,7 @@ public class HomeOptionResponseDto {
 		this.parking = homeOption.getParking();
 		this.station = homeOption.getStation();
 		this.moveInDate = homeOption.getMoveInDate();
+		this.sink = homeOption.getSink();
+		this.type = homeOption.getType();
 	}
-
 }

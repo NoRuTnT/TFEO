@@ -2,8 +2,6 @@ package com.tfeo.backend.domain.member.model.entity;
 
 import static lombok.AccessLevel.*;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,9 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
+import com.tfeo.backend.common.model.entity.BaseTimeEntity;
 import com.tfeo.backend.domain.home.model.entity.Home;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @Table(name = "wish")
-public class Wish {
+public class Wish extends BaseTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long wishNo;
@@ -37,12 +33,6 @@ public class Wish {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_no")
 	private Member member;
-
-	@CreatedDate
-	private LocalDateTime createdAt;
-
-	@LastModifiedDate
-	private LocalDateTime updatedAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "home_no")

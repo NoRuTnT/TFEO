@@ -5,11 +5,11 @@ import com.tfeo.backend.domain.home.model.entity.HostImage;
 import lombok.Getter;
 
 @Getter
-public class HostImageResponseDto {
+public class HostImageDto {
 	private Long hostImageNo;
 	private String hostImageUrl;
 
-	public HostImageResponseDto(HostImage hostImage) {
+	public HostImageDto(HostImage hostImage) {
 		this.hostImageNo = hostImage.getHostImageNo();
 		this.hostImageUrl = hostImage.getHostImageUrl();
 	}

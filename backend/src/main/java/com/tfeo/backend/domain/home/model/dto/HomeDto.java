@@ -7,7 +7,7 @@ import com.tfeo.backend.domain.home.model.entity.Home;
 import lombok.Getter;
 
 @Getter
-public class HomeResponseDto {
+public class HomeDto {
 	private Long homeNo;
 	private String hostName;
 	private int hostAge;
@@ -23,11 +23,9 @@ public class HomeResponseDto {
 	private int rent;
 	private Double lat;
 	private Double lng;
-	private Boolean nonregisterMember;
 	private String introduce;
-	private Integer maintenanceFee;
 
-	public HomeResponseDto(Home home) {
+	public HomeDto(Home home) {
 		this.homeNo = home.getHomeNo();
 		this.hostName = home.getHostName();
 		this.hostAge = home.getHostAge();
@@ -43,8 +41,6 @@ public class HomeResponseDto {
 		this.rent = home.getRent();
 		this.lat = home.getLat();
 		this.lng = home.getLng();
-		nonregisterMember = home.getNonregisterMember();
 		this.introduce = home.getIntroduce();
-		this.maintenanceFee = home.getMaintenanceFee();
 	}
 }
