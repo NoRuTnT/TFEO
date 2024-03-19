@@ -7,11 +7,12 @@ pipeline {
     stages {
         stage('Checkout') {
               steps {
-                 git branch: './develop',
-                    credentialsId: 'gitlab_access_token',
-                    url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707'
+                checkout scm
+//                  git branch: './develop',
+//                     credentialsId: 'gitlab_access_token',
+//                     url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707'
              }
-//              checkout scm
+
          }
 
         stage('Setup build environment') {
