@@ -7,19 +7,14 @@ pipeline {
     stages {
         stage('Setup build environment') {
             steps {
-                script {
-                        sh "chown -R jenkins:jenkins backend/env"
-                        sh "chmod -R 755 backend/env"
-                        sh 'mkdir -p backend/env'
-                }
                 withCredentials([file(credentialsId: 'db', variable: 'dbFile')]) {
                     script {
                         sh 'cp $dbFile backend/env/db.env'
                     }
                 }
-                withCredentials([file(credentialsId: 'test-db', variable: 'testdbFile')]) {
+                withCredentials([file(credentialsId: 'test-db', variable: 'test-dbFile')]) {
                     script {
-                        sh 'cp $testdbFile backend/env/test-db.env'
+                        sh 'cp $test-dbFile backend/env/test-db.env'
                     }
                 }
                 echo 'Setting up build environment...'
@@ -39,20 +34,14 @@ pipeline {
             steps {
                 echo 'Building...'
                  // 빌드 실행
-                 dir('backend') {
-                    // backend 디렉토리 안에서 빌드 실행
-                    sh './gradlew build'
-                }
+                sh './gradlew build'
             }
         }
         stage('Test') {
             steps {
                 echo 'Test...'
                 // 테스트 실행
-                dir('backend') {
-                    // backend 디렉토리 안에서 빌드 실행
-                    sh './gradlew test'
-                }
+                sh './gradlew test'
             }
         }
     }
