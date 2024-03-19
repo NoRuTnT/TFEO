@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,22 +12,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
 import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
 import com.tfeo.backend.domain.member.model.dto.MemberRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 import com.tfeo.backend.domain.member.model.dto.MyHomeResponseDto;
-import com.tfeo.backend.domain.member.model.dto.SmsRequestDto;
-import com.tfeo.backend.domain.member.model.dto.SmsVerifyDto;
 import com.tfeo.backend.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/members")
 public class MemberController {
@@ -112,15 +108,13 @@ public class MemberController {
 
 	//sms 인증번호 요청
 	@PostMapping("sms-request")
-	public ResponseEntity<SuccessResponse> smsRequest(@RequestBody SmsRequestDto smsRequestDto) {
-		SingleMessageSentResponse response = memberService.requestSms(smsRequestDto);
-		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).result(response).build());
+	public ResponseEntity<SuccessResponse> smsRequest() {
+		return null;
 	}
 
 	//sms 인증번호 확인
 	@PostMapping("sms-verify")
-	public ResponseEntity<SuccessResponse> smsVerify(@RequestBody SmsVerifyDto smsVerifyDto) {
-		memberService.verifySms(smsVerifyDto);
-		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).message("인증이 성공했습니다.").build());
+	public ResponseEntity<SuccessResponse> smsVerify() {
+		return null;
 	}
 }
