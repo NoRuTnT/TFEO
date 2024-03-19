@@ -43,7 +43,7 @@ public class ContractServiceImpl implements ContractService {
 
 	//계약서 승인
 	@Override
-	public void creationCongfact(Long memberNo, Long contractNo) {
+	public void creationContract(Long memberNo, Long contractNo) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 
