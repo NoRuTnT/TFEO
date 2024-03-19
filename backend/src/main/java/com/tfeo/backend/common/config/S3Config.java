@@ -14,7 +14,7 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 @Configuration
 @PropertySource("classpath:application-s3.yml")
-@ConfigurationProperties(prefix = "aws")
+@ConfigurationProperties(prefix = "cloud.aws")
 public class S3Config {
 	@Value("${credentials.accessKey}")
 	private String accessKey;

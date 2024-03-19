@@ -22,12 +22,12 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 @PropertySource("classpath:application-s3.yml")
-@ConfigurationProperties(prefix = "aws.s3")
+@ConfigurationProperties(prefix = "cloud.aws.s3")
 public class FileServiceImpl implements FileService {
 
 	@Value("${bucket}")
 	private String bucket;
-	private AmazonS3 s3;
+	private final AmazonS3 s3;
 
 	/**
 	 * 파일 업로드(PUT) presigned url 생성
