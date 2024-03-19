@@ -17,6 +17,8 @@ import com.tfeo.backend.domain.member.model.entity.Member;
 public interface ContractRepository extends JpaRepository<Contract, Long> {
 	Optional<Contract> findByHomeAndMember(Home home, Member member);
 
+	Optional<Contract> findByHomeAndMemberAndProgress(Home home, Member member, ContractProgressType progress);
+
 	Optional<Contract> findByMemberAndProgress(Member member, ContractProgressType contractProgressType);
 
 	List<Contract> findAllByMemberAndProgressNot(Member member,
