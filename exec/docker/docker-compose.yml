@@ -76,7 +76,7 @@ services:
     container_name: "nginx"
     image: nginx:1.18.0
     volumes:
-      - ./tfeo-nginx/conf/default.conf:/etc/nginx/conf.d/default.conf
+      - ./tfeo-nginx/conf:/etc/nginx/conf.d
     networks:
       - tfeo-network
     ports:
