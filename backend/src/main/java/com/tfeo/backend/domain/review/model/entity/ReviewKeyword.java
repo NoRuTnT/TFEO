@@ -2,6 +2,8 @@ package com.tfeo.backend.domain.review.model.entity;
 
 import static lombok.AccessLevel.*;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,4 +51,23 @@ public class ReviewKeyword {
 	private Boolean goodSecurity;
 
 	private Boolean respectfulElderly;
+
+
+	public void setAllKeywordValues(List<Boolean> keywordValues) {
+		if (keywordValues.size() != 11) {
+			throw new IllegalArgumentException("Invalid number of keyword values");
+		}
+
+		this.kindElderly = keywordValues.get(0);
+		this.cleanHouse = keywordValues.get(1);
+		this.spaciousRoom = keywordValues.get(2);
+		this.manyNearbyAmenities = keywordValues.get(3);
+		this.matchesStatedOptions = keywordValues.get(4);
+		this.affordableRent = keywordValues.get(5);
+		this.nearSchool = keywordValues.get(6);
+		this.convenientTransportation = keywordValues.get(7);
+		this.easyAccessToHome = keywordValues.get(8);
+		this.goodSecurity = keywordValues.get(9);
+		this.respectfulElderly = keywordValues.get(10);
+	}
 }
