@@ -5,6 +5,15 @@ pipeline {
         }
 
     stages {
+        stage('Checkout') {
+              steps {
+                 git branch: './develop',
+                    credentialsId: 'gitlab_access_token',
+                    url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707'
+             }
+//              checkout scm
+         }
+
         stage('Setup build environment') {
             steps {
                 script {
@@ -28,16 +37,14 @@ pipeline {
             }
         }
 
+        stage('Run Container') {
+            steps {
+                dir('exec/docker') {
+                    sh 'docker-compose -f docker-compose.yml up -d'
+                }
+            }
+        }
 
-        stage('Checkout') {
-              steps {
-                 git 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git'
-                 dir('exec/docker') {
-                     sh 'docker-compose -f docker-compose.yml up -d'
-                 }
-             }
-//              checkout scm
-         }
 
         stage('Build') {
             steps {
