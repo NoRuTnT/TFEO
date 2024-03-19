@@ -1,7 +1,7 @@
 CREATE DATABASE IF NOT EXISTS tfeo;
+create schema IF NOT EXISTS tfeo.tfeo_test;
+create schema IF NOT EXISTS tfeo.tfeo_temp;
 
-CREATE DATABASE IF NOT EXISTS tfeo_test;
-CREATE DATABASE IF NOT EXISTS tfeo_temp;
 
 CREATE USER 'tfeo'@'%' IDENTIFIED BY 'tfeo123';
 
