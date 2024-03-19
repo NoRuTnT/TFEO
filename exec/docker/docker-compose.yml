@@ -3,7 +3,6 @@ version: '3'
 networks:
   tfeo-network:
 
-
 services:
   tfeo-mysql:
     container_name: "mysql"
