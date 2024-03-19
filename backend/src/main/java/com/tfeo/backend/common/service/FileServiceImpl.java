@@ -21,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 @RequiredArgsConstructor
-@PropertySource("classpath:application-s3.yml")
 public class FileServiceImpl implements FileService {
 
 	@Value("${cloud.aws.s3.bucket}")
