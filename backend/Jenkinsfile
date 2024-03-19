@@ -15,6 +15,15 @@ pipeline {
 
          }
 
+
+        stage('Run Container') {
+            steps {
+                dir('exec/docker') {
+                    sh 'docker-compose -f docker-compose.yml up -d'
+                }
+            }
+        }
+
         stage('Setup build environment') {
             steps {
                 script {
@@ -38,13 +47,7 @@ pipeline {
             }
         }
 
-        stage('Run Container') {
-            steps {
-                dir('exec/docker') {
-                    sh 'docker-compose -f docker-compose.yml up -d'
-                }
-            }
-        }
+
 
 
         stage('Build') {
