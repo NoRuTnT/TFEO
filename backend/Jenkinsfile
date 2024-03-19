@@ -30,10 +30,14 @@ pipeline {
 
 
         stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
+              steps {
+                 git 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git'
+                 dir('exec/docker') {
+                     sh 'docker-compose -f docker-compose.yml up -d'
+                 }
+             }
+//              checkout scm
+         }
 
         stage('Build') {
             steps {
