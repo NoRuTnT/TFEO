@@ -7,6 +7,7 @@
 //
 // import java.util.ArrayList;
 //
+// import org.assertj.core.api.Assertions;
 // import org.junit.jupiter.api.DisplayName;
 // import org.junit.jupiter.api.Test;
 // import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,6 @@
 // import org.springframework.web.context.WebApplicationContext;
 //
 // import com.fasterxml.jackson.databind.ObjectMapper;
-// import com.tfeo.backend.common.model.type.ActivityApproveType;
 // import com.tfeo.backend.common.model.type.Address;
 // import com.tfeo.backend.common.model.type.CertificateStatusType;
 // import com.tfeo.backend.common.model.type.ContractProgressType;
@@ -81,7 +81,7 @@
 // 			.ro("ro")
 // 			.detail("detail")
 // 			.build();
-// 		//코드수정으로 현재는 사용안함
+//
 // 		Member saveMember = Member.builder()
 // 			.socialId("id")
 // 			.socialType(SocialType.KAKAO)
@@ -101,7 +101,7 @@
 // 			.reviews(new ArrayList<>())
 // 			.build();
 // 		memberRepository.save(saveMember);
-// 		//코드수정으로 현재는 사용안함
+//
 // 		Home saveHome = Home.builder()
 // 			.hostName("hostname")
 // 			.hostAge(70)
@@ -127,7 +127,6 @@
 // 			.build();
 // 		homeRepository.save(saveHome);
 //
-// 		//코드수정으로 현재는 사용안함
 // 		Contract saveContract = Contract.builder()
 // 			.contractUrl("contractUrl")
 // 			.progress(ContractProgressType.DONE)
@@ -137,28 +136,21 @@
 // 			.build();
 // 		contractRepository.save(saveContract);
 //
-// 		Activity saveActivity = Activity.builder()
-// 			.week("week")
-// 			.activityImageUrl("url")
-// 			.activityText("text")
-// 			.approve(ActivityApproveType.NONE)
-// 			.contract(saveContract)
-// 			.build();
-// 		activityRepository.save(saveActivity);
-//
 // 		//when
-// 		AddActivityRequestDto addActivityRequestDto = new AddActivityRequestDto("imageUrl", "text");
-// 		mockMvc.perform(put("/api/activity/")
+// 		AddActivityRequestDto addActivityRequestDto = new AddActivityRequestDto(1, "imageUrl", "text", 1L);
+// 		mockMvc.perform(post("/api/activity")
 // 				.contentType(APPLICATION_JSON)
 // 				.content(objectMapper.writeValueAsString(addActivityRequestDto)))
 // 			.andExpect(status().isOk())
 // 			.andDo(print());
 //
-// 		//then 생성이아닌 수정으로 변경
-// 		// Activity saveActivity = activityRepository.findAll().get(0);
-// 		// Assertions.assertThat(saveActivity.getActivityImageUrl())
-// 		// 	.isEqualTo(addActivityRequestDto.getActivityImageUrl());
-// 		// Assertions.assertThat(saveActivity.getActivityText()).isEqualTo(addActivityRequestDto.getActivityText());
-//
+// 		//then
+// 		Activity saveActivity = activityRepository.findAll().get(0);
+// 		Assertions.assertThat(saveActivity.getWeek()).isEqualTo(addActivityRequestDto.getWeek());
+// 		Assertions.assertThat(saveActivity.getActivityImageUrl())
+// 			.isEqualTo(addActivityRequestDto.getActivityImageUrl());
+// 		Assertions.assertThat(saveActivity.getActivityText()).isEqualTo(addActivityRequestDto.getActivityText());
+// 		Assertions.assertThat(saveActivity.getContract().getContractNo())
+// 			.isEqualTo(addActivityRequestDto.getContractNo());
 // 	}
 // }
