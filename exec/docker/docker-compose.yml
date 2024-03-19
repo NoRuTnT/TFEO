@@ -1,0 +1,97 @@
+version: '3'
+
+name: 'tfeo-local'
+
+networks:
+  tfeo-network:
+    name: tfeo-network
+
+
+services:
+  tfeo-mysql:
+    container_name: "mysql"
+    image: mysql:8.0.32
+    networks:
+      - tfeo-network
+    ports:
+      - "3306:3306"
+    env_file:
+      - docker-db.env
+    environment:
+      TZ: Asia/Seoul
+    volumes:
+      - ./tfeo-mysql:/var/lib/mysql
+      - ./initial:/docker-entrypoint-initdb.d
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+    restart: no
+
+  tfeo-redis:
+    container_name: "redis"
+    image: redis:latest
+    networks:
+      - tfeo-network
+    ports:
+      - "6379:6379"
+    environment:
+      TZ: Asia/Seoul
+    volumes:
+      - ./tfeo-redis/data:/data
+      - ./tfeo-redis/conf:/etc/redis/redis.conf
+    restart: no
+
+  tfeo-back:
+    container_name: "back"
+    build:
+      dockerfile: "dockerfile"
+      context: "../../backend"
+    image: tfeo-back-image
+    networks:
+      - tfeo-network
+    ports:
+      - "8081:8081"
+    env_file:
+      - tfeo-back/env/db.env
+      - tfeo-back/env/test-db.env
+    environment:
+      TZ: Asia/Seoul
+    depends_on:
+      - tfeo-mysql
+      - tfeo-redis
+    restart: no
+
+  tfro-front:
+    container_name: "front"
+    build:
+      dockerfile: "dockerfile"
+      context: "../../Frontend"
+    image: tfeo-front-image
+    networks:
+      - tfeo-network
+    ports:
+      - "3000:3000"
+    environment:
+      TZ: Asia/Seoul
+    restart: no
+
+  tfeo-nginx:
+    container_name: "nginx"
+    image: nginx:1.18.0
+    volumes:
+      - ./tfeo-nginx/conf/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - tfeo-network
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - tfeo-mysql
+      - tfeo-redis
+      - tfeo-back
+      - tfeo-jenkins
+    restart: always
+
+
+
