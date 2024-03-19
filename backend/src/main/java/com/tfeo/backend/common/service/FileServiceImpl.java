@@ -22,10 +22,9 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 @PropertySource("classpath:application-s3.yml")
-@ConfigurationProperties(prefix = "cloud.aws.s3")
 public class FileServiceImpl implements FileService {
 
-	@Value("${bucket}")
+	@Value("${cloud.aws.s3.bucket}")
 	private String bucket;
 	private final AmazonS3 s3;
 
