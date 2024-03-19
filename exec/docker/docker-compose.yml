@@ -23,7 +23,7 @@ services:
       - "mysqld"
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
-    restart: no
+    restart: "no"
 
   tfeo-redis:
     container_name: "redis"
@@ -37,7 +37,7 @@ services:
     volumes:
       - ./tfeo-redis/data:/data
       - ./tfeo-redis/conf:/etc/redis/redis.conf
-    restart: no
+    restart: "no"
 
 #  tfeo-back:
 #    container_name: "back"
