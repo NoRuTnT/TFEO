@@ -87,7 +87,6 @@ services:
       - tfeo-mysql
       - tfeo-redis
 #      - tfeo-back
-      - tfeo-jenkins
     restart: always
 
 
