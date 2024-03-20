@@ -24,4 +24,8 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
 	@Query("select c from Contract c where c.member.memberNo = :memberNo and c.expiredAt >= NOW()")
 	Optional<Contract> findByMember(@Param("memberNo") Long memberNo);
+
+	@Query("select c from Contract c where c.progress = :progress and c.home.homeNo = :homeNo and c.expiredAt >= NOW()")
+	Optional<Contract> findByHomeNoProgress(@Param("progress") ContractProgressType progress, @Param("homeNo") Long homeNo);
+
 }

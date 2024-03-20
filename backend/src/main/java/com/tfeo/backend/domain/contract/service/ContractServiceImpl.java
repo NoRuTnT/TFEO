@@ -5,23 +5,19 @@ import static com.tfeo.backend.common.model.type.ContractProgressType.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tfeo.backend.domain.activity.common.ActivityException;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
 import com.tfeo.backend.domain.contract.common.exception.ContractDayNotExistException;
 import com.tfeo.backend.domain.contract.common.exception.ContractNotExistException;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
-import com.tfeo.backend.domain.home.model.entity.Home;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
-import com.tfeo.backend.domain.member.common.MemberException;
 import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
@@ -72,6 +68,57 @@ public class ContractServiceImpl implements ContractService {
 				.build();
 			activityRepository.save(activity);
 		}
+	}
+
+	/**
+	 * "신청 중" 상태의 계약 조회
+	 * @param memberNo
+	 * @param homeNo
+	 * @return s3에 저장된 파일명
+	 */
+	@Override
+	public String getContractApplied(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+
+		Contract contract = contractRepository.findByHomeNoProgress(APPLIED, homeNo)
+			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
+
+		return contract.getContractUrl();
+	}
+
+	/**
+	 * "계약 중" 상태의 계약 조회
+	 * @param memberNo
+	 * @param homeNo
+	 * @return s3에 저장된 파일명
+	 */
+	@Override
+	public String getContractInProgress(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+
+		Contract contract = contractRepository.findByHomeNoProgress(IN_PROGRESS, homeNo)
+			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
+
+		return contract.getContractUrl();
+	}
+
+	/**
+	 * "계약 완료" 상태의 계약 조회
+	 * @param memberNo
+	 * @param homeNo
+	 * @return s3에 저장된 파일명
+	 */
+	@Override
+	public String getContractDone(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+
+		Contract contract = contractRepository.findByHomeNoProgress(DONE, homeNo)
+			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
+
+		return contract.getContractUrl();
 	}
 
 	public static String getCurrentWeekOfMonth(LocalDate localDate) {
