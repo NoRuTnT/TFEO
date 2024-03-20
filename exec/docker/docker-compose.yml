@@ -77,6 +77,9 @@ services:
     image: nginx:1.18.0
     volumes:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline@2/exec/docker/tfeo-nginx/conf:/etc/nginx/conf.d
+      - /etc/letsencrypt/live/j10a707.p.ssafy.io :/srv/ssl
+
+
     networks:
       - tfeo-network
     ports:
