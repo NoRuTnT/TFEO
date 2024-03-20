@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
 import com.tfeo.backend.domain.contract.common.exception.ContractDayNotExistException;
@@ -125,6 +126,11 @@ public class ContractServiceImpl implements ContractService {
 		return contract.getContractUrl();
 	}
 
+	/**
+	 * 학생이 작성한 전체 계약서 조회
+	 * @param memberNo
+	 * @return 계약서 리스트
+	 */
 	@Override
 	public List<Contract> getContracts(Long memberNo) {
 		Member member = memberRepository.findById(memberNo)
@@ -132,6 +138,24 @@ public class ContractServiceImpl implements ContractService {
 
 		return contractRepository.findAllByMemberNo(memberNo)
 			.orElseThrow(() -> new ContractNotExistException("memberNo",memberNo));
+	}
+
+	/**
+	 * 계약서 싸인
+	 * @param memberNo 싸인한 사람의 id
+	 * @param contractNo 싸인한 계약서 pk
+	 */
+	@Override
+	public void signContract(Long memberNo, Long contractNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+		Contract contract = contractRepository.findById(contractNo)
+			.orElseThrow(() -> new ContractNotExistException("contractNo",contractNo));
+
+		if (member.getRole() == MemberRoleType.MEMBER) contract.setStudentSign(true);
+		if (member.getRole() == MemberRoleType.MANAGER) contract.setHostSign(true);
+
+		contract.setProgress(IN_PROGRESS);
 	}
 
 	public static String getCurrentWeekOfMonth(LocalDate localDate) {

@@ -14,4 +14,6 @@ public interface ContractService {
 	String getContractDone(Long memberNo, Long homeNo);
 
 	List<Contract> getContracts(Long memberNo);
+
+	void signContract(Long memberNo, Long contractNo);
 }
