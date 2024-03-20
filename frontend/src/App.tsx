@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import MainPage from './pages/MainPage';
+import Home from './pages/Home';
 import MyInfo from './pages/MyInfo';
 import ApplyList from './pages/ApplyList';
 import ActivityCertification from './pages/ActivityCertification';
@@ -12,7 +12,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<MainPage />} />
+          <Route path="/" element={<Home />} />
           <Route path="/my-info" element={<MyInfo />} />
           <Route path="/apply-list" element={<ApplyList />} />
           <Route path="/activity-certification" element={<ActivityCertification />} />
