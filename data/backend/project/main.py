@@ -6,8 +6,10 @@ from pydantic import BaseModel
 from typing import Union # 예제 구현용
 from starlette.responses import JSONResponse
 from enum import Enum
+from bson.json_util import dumps
 
 import uvicorn
+import json
 import traceback
 
 
@@ -49,7 +51,11 @@ class Item(BaseModel):
     price: float
     is_offer: Union[bool, None] = None
 ##########################################
-class Home(BaseModel): # 집
+
+# MySQL DB에서 식별키로 연결된 집, 호스트 table을
+# MongoDB에서는 하나의 collection으로 묶어서 관리
+class Home(BaseModel):
+    # 집
     home_no: int # 식별키
     host_name: str # 이름
     price: float # 나이
@@ -70,6 +76,18 @@ class Home(BaseModel): # 집
     host_personality_no: int # 식별키
     home_option_no: int # 식별자
     maintenance_fee: int # 관리비
+    image_url: str # 이미지 URL (저장된 서버 URL)
+    # 호스트
+    smoke: bool  # 흡연 여부
+    pet: bool  # 반려동물 여부
+    clean: bool  # 청결한걸 좋아함
+    daytime: bool  # 아침형
+    nighttime: bool  # 저녁형
+    extrovert: bool  # 외향적
+    introvert: bool  # 내향적
+    cold: bool  # 추위잘타는
+    hot: bool  # 더위잘타는
+    no_touch: bool  # 간섭안하는
 
 class Home_Option(BaseModel): # 집별 옵션
     home_option_no: int # 식별자
@@ -89,23 +107,6 @@ class Home_Option(BaseModel): # 집별 옵션
     sink: bool # 싱크대 여부
     type: BuildingType # 건축물 종류(ENUM)
 
-class Host(BaseModel): # 호스트 성향조사(태그 필터링)
-    host_personality_no: int # 식별키
-    smoke: bool # 흡연 여부
-    pet: bool # 반려동물 여부
-    clean: bool # 청결한걸 좋아함
-    daytime: bool # 아침형
-    nighttime: bool # 저녁형
-    extrovert: bool # 외향적
-    introvert: bool # 내향적
-    cold: bool # 추위잘타는
-    hot: bool # 더위잘타는
-    no_touch: bool # 간섭안하는
-
-class Home_Image(BaseModel): # 집 사진
-    home_image_no: int # 식별키
-    home_image_url: str # 사진url
-    home_no: int # 식별키
 
 ##########################################
 
@@ -123,18 +124,10 @@ def read_item(item_id: int, q: Union[str, None] = None):
 
 @app.put("/items/{item_id}")
 def update_item(item_id: int, item: Item):
-    return {"item_name": item.name, "item_id": item_id}
+    # db.items.update({"$set":{"name": item.name, "price": item.price}})
+    return "updated"
 
 """
-# 사용자 맞춤형 추천이 반영된 결과를 반환
-@app.get("/recommend")
-def get_recommended_list():
-    resp = {
-        "name": "김태현",
-        "grade": 4,
-    }
-    list=[]
-    return "큭"
 # 집 정보 update(가장 후 순위, 거의 사용하지 않음)
 @app.put("/update")
 def update_house():
@@ -144,18 +137,38 @@ def update_house():
 ## 비회원 추천 getMapping API 추가로 개발해야 됨 ##
 
 
+
+# 사용자 맞춤형 추천이 반영된 결과를 반환
+@app.get("/recommend")
+def get_recommended_list():
+    weight = 100 # 0-10사이의 값을 적당하게 mapping
+    # 1. 입력으로 주어진 좌표 범위 내 주택만 filtering
+
+    # Ex)
+    # filtered = db.home.find({
+    #     "lat": {$gte:30, $lt:70},
+    #     "lng": {$gte:30, $lt:70},
+    # })
+
+    # 2. 필터 column 기준으로 필터링
+    # 3. 추천 알고리즘 기반으로 sorting
+    # 4. 우선순위가 높은 순서대로 json list 반환
+
+
+    resp = {
+        "name": "김태현",
+        "grade": 4,
+    }
+    return resp
+
+
+
 # 추천이 적용되지 않은 전체 집 정보를 반환
 @app.get("/select/all")
 def get_all_list():
-    obj = db.items.find({})
-    print(list(db.items.find({})))
-    li = []
-    # list=["a", "b", "c"]
-
-    return "OK"
-    # return "OK"
-    # return list(obj)
-
+    data = db.items.find({},{'_id': False})
+    # print(list(data))
+    return list(data)
 
 # 등록된 집 추가
 @app.post("/insert/")
