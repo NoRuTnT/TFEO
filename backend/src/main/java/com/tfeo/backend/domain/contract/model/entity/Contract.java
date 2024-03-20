@@ -30,6 +30,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -47,12 +48,19 @@ public class Contract {
 	@CreatedDate
 	private LocalDateTime createdAt;
 
+	@Setter
 	@Enumerated(value = EnumType.STRING)
 	private ContractProgressType progress;
 
 	private LocalDate startAt;
 
 	private LocalDate expiredAt;
+
+	@Setter
+	private Boolean studentSign;
+
+	@Setter
+	private Boolean hostSign;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_no")
@@ -64,9 +72,5 @@ public class Contract {
 
 	@OneToMany(mappedBy = "contract", cascade = ALL)
 	private List<Activity> activities;
-
-	public void setProgress(ContractProgressType progress){
-		this.progress = progress;
-	}
 
 }
