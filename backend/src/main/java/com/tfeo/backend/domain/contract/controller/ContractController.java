@@ -98,5 +98,19 @@ public class ContractController {
 		return ResponseEntity.ok(response);
 	}
 
+	@PutMapping("/sign/{contractNo}")
+	public ResponseEntity<SuccessResponse> signContract(
+		@PathVariable Long contractNo
+	){
+		Long memberNo = 1L;
+		contractService.signContract(memberNo,contractNo);
+		SuccessResponse response = SuccessResponse.builder()
+			.status(HttpStatus.OK)
+			.message("계약서 싸인이 완료되었습니다.")
+			.result(null)
+			.build();
+		return ResponseEntity.ok(response);
+	}
+
 
 }
