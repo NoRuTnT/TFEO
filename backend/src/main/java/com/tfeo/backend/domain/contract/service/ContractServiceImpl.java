@@ -7,6 +7,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,8 @@ import com.tfeo.backend.domain.contract.common.exception.ContractDayNotExistExce
 import com.tfeo.backend.domain.contract.common.exception.ContractNotExistException;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
+import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
+import com.tfeo.backend.domain.home.model.entity.Home;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
 import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
 import com.tfeo.backend.domain.member.model.entity.Member;
@@ -120,6 +123,15 @@ public class ContractServiceImpl implements ContractService {
 			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
 
 		return contract.getContractUrl();
+	}
+
+	@Override
+	public List<Contract> getContracts(Long memberNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+
+		return contractRepository.findAllByMemberNo(memberNo)
+			.orElseThrow(() -> new ContractNotExistException("memberNo",memberNo));
 	}
 
 	public static String getCurrentWeekOfMonth(LocalDate localDate) {
