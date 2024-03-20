@@ -39,11 +39,12 @@ public class ContractServiceImpl implements ContractService {
 
 	//계약서 승인
 	@Override
-	public void creationContract(Long memberNo) {
-		Member member = memberRepository.findByMemberNo(memberNo)
+	public void creationContract(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
-		Contract contract = contractRepository.findByMember(memberNo)
+		Home home = homeRepository.findById(homeNo)
+			.orElseThrow(() -> new HomeNotExistException(homeNo));
+		Contract contract = contractRepository.findByHomeAndMember(home,member)
 			.orElseThrow(()->new ContractNotExistException("memberNo", memberNo));
 
 		// 계약완료로 변경
