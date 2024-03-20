@@ -156,6 +156,7 @@ public class ContractServiceImpl implements ContractService {
 		if (member.getRole() == MemberRoleType.MANAGER) contract.setHostSign(true);
 
 		contract.setProgress(IN_PROGRESS);
+		contractRepository.save(contract);
 	}
 
 	public static String getCurrentWeekOfMonth(LocalDate localDate) {
