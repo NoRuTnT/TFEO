@@ -21,10 +21,11 @@ public class ContractController {
 	private final ContractService contractService;
 
 	//계약서 승인
-	@PutMapping(value = "/creation")
-	public ResponseEntity<?> contractCreation(){
+	@PutMapping(value = "/creation/{homeNo}")
+	public ResponseEntity<?> contractCreation(
+		@PathVariable Long homeNo){
 		Long memberNo = 1L;
-		contractService.creationContract(memberNo);
+		contractService.creationContract(memberNo,homeNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "성공적으로 계약서가 생성되었습니다.", null));
 	}
 
