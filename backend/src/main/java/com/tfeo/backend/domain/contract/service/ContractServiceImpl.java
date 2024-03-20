@@ -5,23 +5,23 @@ import static com.tfeo.backend.common.model.type.ContractProgressType.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tfeo.backend.domain.activity.common.ActivityException;
+import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
 import com.tfeo.backend.domain.contract.common.exception.ContractDayNotExistException;
 import com.tfeo.backend.domain.contract.common.exception.ContractNotExistException;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
+import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
 import com.tfeo.backend.domain.home.model.entity.Home;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
-import com.tfeo.backend.domain.member.common.MemberException;
 import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
@@ -43,12 +43,13 @@ public class ContractServiceImpl implements ContractService {
 
 	//계약서 승인
 	@Override
-	public void creationCongfact(Long memberNo, Long contractNo) {
-		Member member = memberRepository.findByMemberNo(memberNo)
+	public void creationContract(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
-		Contract contract =contractRepository.findById(contractNo)
-			.orElseThrow(()->new ContractNotExistException(contractNo));
+		Home home = homeRepository.findById(homeNo)
+			.orElseThrow(() -> new HomeNotExistException(homeNo));
+		Contract contract = contractRepository.findByHomeAndMember(home,member)
+			.orElseThrow(()->new ContractNotExistException("memberNo", memberNo));
 
 		// 계약완료로 변경
 		contract.setProgress(DONE);
@@ -57,7 +58,7 @@ public class ContractServiceImpl implements ContractService {
 		LocalDate expiredAt = contract.getExpiredAt();
 
 		if(startAt==null || expiredAt==null){
-			throw new ContractDayNotExistException(contractNo);
+			throw new ContractDayNotExistException(contract.getContractNo());
 		}
 
 		//활동인증글 생성
@@ -72,6 +73,89 @@ public class ContractServiceImpl implements ContractService {
 				.build();
 			activityRepository.save(activity);
 		}
+	}
+
+	/**
+	 * "신청 중" 상태의 계약 조회
+	 * @param memberNo
+	 * @param homeNo
+	 * @return s3에 저장된 파일명
+	 */
+	@Override
+	public String getContractApplied(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+
+		Contract contract = contractRepository.findByHomeNoProgress(APPLIED, homeNo)
+			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
+
+		return contract.getContractUrl();
+	}
+
+	/**
+	 * "계약 중" 상태의 계약 조회
+	 * @param memberNo
+	 * @param homeNo
+	 * @return s3에 저장된 파일명
+	 */
+	@Override
+	public String getContractInProgress(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+
+		Contract contract = contractRepository.findByHomeNoProgress(IN_PROGRESS, homeNo)
+			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
+
+		return contract.getContractUrl();
+	}
+
+	/**
+	 * "계약 완료" 상태의 계약 조회
+	 * @param memberNo
+	 * @param homeNo
+	 * @return s3에 저장된 파일명
+	 */
+	@Override
+	public String getContractDone(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+
+		Contract contract = contractRepository.findByHomeNoProgress(DONE, homeNo)
+			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
+
+		return contract.getContractUrl();
+	}
+
+	/**
+	 * 학생이 작성한 전체 계약서 조회
+	 * @param memberNo
+	 * @return 계약서 리스트
+	 */
+	@Override
+	public List<Contract> getContracts(Long memberNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+
+		return contractRepository.findAllByMemberNo(memberNo)
+			.orElseThrow(() -> new ContractNotExistException("memberNo",memberNo));
+	}
+
+	/**
+	 * 계약서 싸인
+	 * @param memberNo 싸인한 사람의 id
+	 * @param contractNo 싸인한 계약서 pk
+	 */
+	@Override
+	public void signContract(Long memberNo, Long contractNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+		Contract contract = contractRepository.findById(contractNo)
+			.orElseThrow(() -> new ContractNotExistException("contractNo",contractNo));
+
+		if (member.getRole() == MemberRoleType.MEMBER) contract.setStudentSign(true);
+		if (member.getRole() == MemberRoleType.MANAGER) contract.setHostSign(true);
+
+		contract.setProgress(IN_PROGRESS);
 	}
 
 	public static String getCurrentWeekOfMonth(LocalDate localDate) {
