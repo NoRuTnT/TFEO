@@ -1,5 +1,9 @@
 package com.tfeo.backend.domain.contract.service;
 
+import java.util.List;
+
+import com.tfeo.backend.domain.contract.model.entity.Contract;
+
 public interface ContractService {
 	void creationContract(Long memberNo, Long homeNo);
 
@@ -9,4 +13,5 @@ public interface ContractService {
 
 	String getContractDone(Long memberNo, Long homeNo);
 
+	List<Contract> getContracts(Long memberNo);
 }
