@@ -42,6 +42,11 @@ pipeline {
                         sh 'cp $testdbFile backend/env/test-db.env'
                     }
                 }
+                withCredentials([file(credentialsId: 'security', variable: 'securityFile')]) {
+                    script {
+                        sh 'cp $securityFile backend/env/security.env'
+                    }
+                }
                 echo 'Setting up build environment...'
                 sh 'chmod +x ./backend/gradlew'
                 sh './backend/gradlew build -p backend'
