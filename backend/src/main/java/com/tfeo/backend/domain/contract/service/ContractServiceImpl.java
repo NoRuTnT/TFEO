@@ -43,12 +43,12 @@ public class ContractServiceImpl implements ContractService {
 
 	//계약서 승인
 	@Override
-	public void creationContract(Long memberNo, Long contractNo) {
+	public void creationContract(Long memberNo) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 
-		Contract contract =contractRepository.findById(contractNo)
-			.orElseThrow(()->new ContractNotExistException(contractNo));
+		Contract contract = contractRepository.findByMember(memberNo)
+			.orElseThrow(()->new ContractNotExistException("memberNo", memberNo));
 
 		// 계약완료로 변경
 		contract.setProgress(DONE);
@@ -57,7 +57,7 @@ public class ContractServiceImpl implements ContractService {
 		LocalDate expiredAt = contract.getExpiredAt();
 
 		if(startAt==null || expiredAt==null){
-			throw new ContractDayNotExistException(contractNo);
+			throw new ContractDayNotExistException(contract.getContractNo());
 		}
 
 		//활동인증글 생성

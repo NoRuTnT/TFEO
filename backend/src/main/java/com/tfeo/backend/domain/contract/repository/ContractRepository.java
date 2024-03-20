@@ -21,7 +21,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 
 	List<Contract> findAllByMemberAndProgressNot(Member member,
 		ContractProgressType contractProgressType);
-	Optional<Contract> findById(Long contractNo);
 
 	@Query("select c from Contract c where c.member.memberNo = :memberNo and c.expiredAt >= NOW()")
 	Optional<Contract> findByMember(@Param("memberNo") Long memberNo);
