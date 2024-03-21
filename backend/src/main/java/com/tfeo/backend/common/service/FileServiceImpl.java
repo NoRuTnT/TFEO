@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.Headers;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.tfeo.backend.common.model.dto.FileNotExistException;
@@ -33,6 +34,8 @@ public class FileServiceImpl implements FileService {
 	 */
 	@Override
 	public String createPresignedUrlToUpload(String prefix) {
+		// s3에 해당 폴더가 존재하는 지 검증
+		validateFileExists(prefix);
 		// fileName의 고유 UUID를 부여합니다.
 		String filePath = createPath(prefix, createFileId());
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, filePath)
@@ -65,7 +68,10 @@ public class FileServiceImpl implements FileService {
 	}
 
 	private void validateFileExists(String filePath) {
-		if (s3.getObject(bucket, filePath) == null) {
+		try {
+			s3.getObject(bucket, filePath);
+		} catch(AmazonS3Exception e){
+			e.printStackTrace();
 			throw new FileNotExistException(filePath);
 		}
 	}
