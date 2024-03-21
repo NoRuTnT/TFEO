@@ -5,8 +5,6 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +13,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.tfeo.backend.common.model.dto.FileNotExistException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,12 +29,12 @@ public class FileServiceImpl implements FileService {
 	/**
 	 * 파일 업로드(PUT) presigned url 생성
 	 * @param prefix 폴더 이름
-	 * @param fileName s3 업로드 파일 이름
 	 * @return url
 	 */
 	@Override
-	public String createPresignedUrlToUpload(String prefix, String fileName) {
-		String filePath = createPath(prefix, fileName);
+	public String createPresignedUrlToUpload(String prefix) {
+		// fileName의 고유 UUID를 부여합니다.
+		String filePath = createPath(prefix, createFileId());
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, filePath)
 			.withMethod(HttpMethod.PUT)
 			.withExpiration(getPreSignedUrlExpiration());
@@ -49,12 +48,11 @@ public class FileServiceImpl implements FileService {
 
 	/**
 	 * 파일 다운로드(GET) presigned url 생성
-	 * @param prefix 폴더 이름
-	 * @param fileName s3 다운로드 파일 이름
 	 * @return url
 	 */
-	public String createPresignedUrlToDownload(String prefix, String fileName) {
-		String filePath = createPath(prefix, fileName);
+	public String createPresignedUrlToDownload(String filePath) {
+		// s3에 파일이 저장되어 있는 지 검증
+		validateFileExists(filePath);
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, filePath)
 			.withMethod(HttpMethod.GET)
 			.withExpiration(getPreSignedUrlExpiration());
@@ -66,6 +64,11 @@ public class FileServiceImpl implements FileService {
 		return url.toString();
 	}
 
+	private void validateFileExists(String filePath) {
+		if (s3.getObject(bucket, filePath) == null) {
+			throw new FileNotExistException(filePath);
+		}
+	}
 
 	/**
 	 * presigned url 유효 기간 설정
