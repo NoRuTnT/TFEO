@@ -159,6 +159,18 @@ public class ContractServiceImpl implements ContractService {
 		contractRepository.save(contract);
 	}
 
+
+	/**
+	 * 계약서 삭제
+	 * @param contractNo 싸인한 계약서 pk
+	 */
+	@Override
+	public void deleteContract(Long contractNo) {
+		Contract contract = contractRepository.findById(contractNo)
+				.orElseThrow(() -> new ContractNotExistException("contractNo",contractNo));
+		contractRepository.delete(contract);
+	}
+
 	public static String getCurrentWeekOfMonth(LocalDate localDate) {
 		// 한 주의 시작은 월요일이고, 첫 주에 4일이 포함되어있어야 첫 주 취급 (목/금/토/일)
 		WeekFields weekFields = WeekFields.of(DayOfWeek.MONDAY, 4);
