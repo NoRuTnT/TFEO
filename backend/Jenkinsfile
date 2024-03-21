@@ -16,14 +16,19 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
+        stage('Get Merge Request and preBuildMerge') {
             steps {
-                checkout scm
-//                  git branch: 'develop',
-//                     credentialsId: 'gitlab_access_token',
-//                     url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707'
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "origin/${env.gitlabSourceBranch}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${env.gitlabTargetBranch}"]]],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
+                    ])
+                }
             }
-
         }
 
         stage('Run Container') {
@@ -37,6 +42,7 @@ pipeline {
         stage('Setup build environment') {
             steps {
                 script {
+                        sh 'rm -rf backend/env'
                         sh 'mkdir -p backend/env'
                         sh "chown -R jenkins:jenkins backend/env"
                         sh "chmod -R 755 backend/env"
@@ -58,7 +64,6 @@ pipeline {
                         sh 'cp $securityFile backend/env/security.env'
                     }
                 }
-                echo 'Setting up build environment...'
                 sh 'chmod +x ./backend/gradlew'
                 sh './backend/gradlew build -p backend'
             }
