@@ -2,7 +2,7 @@ import csv
 from random import randrange
 from kiwipiepy import Kiwi
 
-file = open('./naver_4_utf8.csv','r',encoding='UTF8')
+file = open('../data/naver_4_utf8.csv', 'r', encoding='UTF8')
 fReader = csv.reader(file)
 data_csv = []
 kiwi = Kiwi()
@@ -78,7 +78,7 @@ file.close()
 print(data_csv)
 
 
-newFile = open('naver_data_final_utf8.csv','w',encoding='UTF8', newline='')
+newFile = open('../data/naver_data_final_utf8.csv', 'w', encoding='UTF8', newline='')
 writer = csv.writer(newFile)
 writer.writerows(data_csv)
 newFile.close()

@@ -1,7 +1,7 @@
 import csv
 from random import randrange
 
-file = open('./naver_1_utf8.csv','r',encoding='UTF8')
+file = open('../data/naver_1_utf8.csv', 'r', encoding='UTF8')
 fReader = csv.reader(file)
 data_csv = []
 
@@ -84,7 +84,7 @@ file.close()
 print(data_csv)
 
 
-newFile = open('naver_2_ansi.csv','w',encoding='ANSI', newline='')
+newFile = open('../data/naver_2_ansi.csv', 'w', encoding='ANSI', newline='')
 writer = csv.writer(newFile)
 writer.writerows(data_csv)
 newFile.close()
