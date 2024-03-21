@@ -23,19 +23,19 @@ const Footer: React.FC = () => {
   const icons = {
     Home: styled(HomeIcon)({
       color: getIconColor('/'),
-      fontSize: '70px',
+      fontSize: '28px',
     }),
     Heart: styled(FavoriteIcon)({
       color: getIconColor('/wish-list'),
-      fontSize: '70px',
+      fontSize: '28px',
     }),
     Contract: styled(ContentPasteIcon)({
       color: getIconColor('/contract'),
-      fontSize: '70px',
+      fontSize: '28px',
     }),
     Profile: styled(AccountCircleIcon)({
       color: getIconColor('/my-info'),
-      fontSize: '70px',
+      fontSize: '28px',
     }),
   };
 
