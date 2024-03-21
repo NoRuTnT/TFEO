@@ -1,7 +1,18 @@
 import random
 import csv
+import enum
+
+
 from faker import Faker
 
+
+class BuildingType(enum.Enum):
+    APT = 0
+    OPST = 1
+    VL = 2
+    JT = 3
+    DDDGG = 4
+    OR = 5
 """
 class Home(BaseModel):
     # 집
@@ -96,11 +107,10 @@ if __name__ == '__main__':
     # 주의
     # 이미 csv 데이터가 존재하는 상태에서 프로그램을 작동시키면
     # 아래에 추가로 더미데이터가 기입됨
-    # f = open('home_info.csv', 'a', encoding='UTF-8', newline='')
-    # wr = csv.writer(f)
+    f = open('data_csv/home_info.csv', 'a', encoding='UTF-8', newline='')
+    wr = csv.writer(f)
     fake = Faker('ko_KR')
     Faker.seed()
-    print(fake.name())
     for i in range(data_number):
         host_no = i+offset
         host_name = fake.name() # 이름
@@ -123,7 +133,6 @@ if __name__ == '__main__':
         introduce = '좋은 집' # 소개 (넣을 데이터가 없으면 빈 문자열로 남겨야)
         host_personality_no = i+offset # 식별키
         host_option_no = i+offset # 식별자
-        maintenance_fee = 40 # 관리비
         ##############
         # 집별 옵션
         ##############
@@ -141,24 +150,35 @@ if __name__ == '__main__':
         station = True # 역세권 여부
         move_in_date = True # 즉시입주가능 여부
         sink = True # 싱크대 여부
-        # type = Buinding # 건축물 종류 (상단 enum 형태 정의하기)
+        type = random.choice(list(BuildingType)) # 건축물 종류 (상단 enum 형태 정의하기)
+
+        smoke = random.choices(boolean, weights=smoking_weight)
+        pet= random.choices(boolean, weights=pet_weight)
+        clean = random.choices(boolean, weights=clean_weight)
+        daytime = random.choices(boolean, weights=daytime_weight)
+        nighttime = random.choices(boolean, weights=nighttime_weight)
+        extrovert = random.choices(boolean, weights=extro_weight)
+        introvert = random.choices(boolean, weights=intro_weight)
+        cold = random.choices(boolean, weights=cold_weight)
+        hot = random.choices(boolean, weights=hot_weight)
+        no_touch = random.choices(boolean, weights=no_touch_weight)
+
+        home_no = host_no
+        home_image_no = home_no
+        home_image_url = '이후에 format 수정'
 
 
-        # smoke = random.choices(boolean, weights=smoking_weight)
-        # pet= random.choices(boolean, weights=pet_weight)
-        # clean = random.choices(boolean, weights=clean_weight)
-        # daytime = random.choices(boolean, weights=daytime_weight)
-        # nighttime = random.choices(boolean, weights=nighttime_weight)
-        # extrovert = random.choices(boolean, weights=extro_weight)
-        # introvert = random.choices(boolean, weights=intro_weight)
-        # cold = random.choices(boolean, weights=cold_weight)
-        # hot = random.choices(boolean, weights=hot_weight)
-        # no_touch = random.choices(boolean, weights=no_touch_weight)
-        # wr.writerow([host_personality_no, smoke[0],
-        #              pet[0], clean[0], daytime[0], nighttime[0],
-        #              extrovert[0], introvert[0], cold[0], hot[0],
-        #              no_touch[0]])
-    # f.close()
+        wr.writerow([host_no, host_name, host_age, host_phone,
+                     host_gender, guardian_name, guardian_phone,
+                     relation, host_register_no, host_account_no, host_bank,
+                     address, rent, lat, lng, noneRegisterMember, introduce,
+                     host_personality_no, host_option_no, internet, gas, washing_machine,
+                     air_conditioner, refrigerator, elevator, microwave,
+                     toilet, breakfast, heating, parking, station,
+                     move_in_date, sink, type, smoke[0], pet[0], clean[0], daytime[0],
+                     nighttime[0], extrovert[0], introvert[0], cold[0], hot[0],
+                     no_touch[0], home_no, home_image_no, home_image_url])
+    f.close()
 
 # host_personality_no : int
 # smoke : bool
