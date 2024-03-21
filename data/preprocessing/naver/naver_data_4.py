@@ -68,7 +68,7 @@ for line in fReader:
         # 주차 가능
         data.append(line[10])
 
-        data.append(0)  # 10
+        data.append(0)  # 10 인터넷
         data.append(0)  # 11
         data.append(0)  # 12
         data.append(0)  # 13
@@ -99,27 +99,28 @@ for line in fReader:
             data[17] = randrange(0,2,1)
             for token in tokens:
                 val = token.form
-                if "풀" in val:
-                    data[7] = data[10] = data[11] = data[12] = data[13] = data[14] = data[15] = data[16] = data[17] = data[18] = data[19] = data[20] = 1
+                if "풀" in val or "리모델링" in val or "신축":
+                    data[7] = data[10] = data[11] = data[12] = data[13] = data[14] = data[15] = data[16] = data[19] = data[20] = 1
                 if val == "인터넷":
                     data[10] = 1
                 if "가스" in val or "난방" in val:
                     data[11] = data[18] = 1
                 if "세탁" in val:
                     data[12] = 1
-                if val == "에어컨":
+                if val == "에어컨" or "냉" in val:
                     data[13] = 1
                 if val == "냉장고":
                     data[14] = 1
-                if val == "엘리베이터":
+                if val == "엘리베이터" or val == "엘베":
                     data[15] = 1
                 if val == "전자렌지" or val == "전자레인지":
                     data[16] = 1
-                if "즉시" in val or "입주" in val:
+                if "즉시" in val or ("입주" in val and "중순" not in val and "협의" not in val):
                     data[19] = 1
                 if "씽크대" in val or "싱크대" in val:
                     data[20] = 1
-
+                if "주차" in val:
+                    data[9] = 1
 
         data_csv.append(data)
 
