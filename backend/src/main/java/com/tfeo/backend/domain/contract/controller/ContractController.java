@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
 import com.tfeo.backend.domain.contract.model.dto.ContractsResponse;
@@ -112,5 +108,14 @@ public class ContractController {
 		return ResponseEntity.ok(response);
 	}
 
-
+	// 계약서 삭제
+	@DeleteMapping("/delete/{homeNo}")
+	public ResponseEntity<SuccessResponse> deleteContract(@PathVariable Long contractNo){
+		contractService.deleteContract(contractNo);
+		SuccessResponse successResponse = SuccessResponse.builder()
+				.status(HttpStatus.OK)
+				.message("계악서가 삭제되었습니다.")
+				.build();
+		return ResponseEntity.ok(successResponse);
+	}
 }
