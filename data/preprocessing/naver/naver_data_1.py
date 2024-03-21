@@ -23,7 +23,7 @@ for line in fReader:
         data.append(line[22])  # 경도 22
         data.append(line[23])  # 소개 23
         data.append(line[24])  # 태그 리스트 24
-        data_csv.append(data)
+
     data_csv.append(data)
 
 
