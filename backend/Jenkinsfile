@@ -3,6 +3,17 @@ pipeline {
     tools {
         gradle 'gradle'
     }
+    post {
+        success {
+            // 빌드가 성공했을 때 GitLab에 성공 상태를 알립니다.
+            updateGitlabCommitStatus name: 'build', state: 'success'
+        }
+
+        failure {
+            // 빌드가 실패했을 때 GitLab에 실패 상태를 알립니다.
+            updateGitlabCommitStatus name: 'build', state: 'failed'
+        }
+    }
 
     stages {
         stage('Checkout') {
