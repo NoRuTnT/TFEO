@@ -7,6 +7,9 @@ import ActivityCertification from './pages/ActivityCertification';
 import ActivityContent from './pages/ActivityContent';
 import MakeActivity from './pages/MakeActivity';
 import FindHouse from './pages/FindHouse';
+import Contract from './pages/Contract';
+import ContractForm from './pages/ContractForm';
+
 function App() {
   return (
     <div className="App">
@@ -19,6 +22,8 @@ function App() {
           <Route path="/activity-content" element={<ActivityContent />} />
           <Route path="/make-activity" element={<MakeActivity />} />
           <Route path="/find-house" element={<FindHouse />} />
+          <Route path="/contract" element={<Contract />} />
+          <Route path="/contract-form" element={<ContractForm />} />
           {/* ... 여기에 더 많은 라우트를 추가할 수 있습니다 ... */}
         </Routes>
       </Router>
