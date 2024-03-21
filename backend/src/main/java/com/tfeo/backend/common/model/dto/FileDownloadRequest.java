@@ -1,13 +1,14 @@
 package com.tfeo.backend.common.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class FileDownloadRequest {
-	private final String prefix;
-	private final String fileName;
+	private String prefix;
 }

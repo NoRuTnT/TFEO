@@ -27,11 +27,10 @@ public class FileController {
 	public ResponseEntity<SuccessResponse> getPresignedUrlToUpload (
 		@RequestBody(required = false) FileUploadRequest request){
 		String prefix = request.getPrefix();
-		String fileName = request.getFileName();
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("파일 업로드 url 발급에 성공했습니다.")
-			.result(new PresignedUrlResponse(fileService.createPresignedUrlToUpload(prefix, fileName)))
+			.result(new PresignedUrlResponse(fileService.createPresignedUrlToUpload(prefix)))
 			.build();
 		return ResponseEntity.ok(response);
 	}
@@ -40,10 +39,9 @@ public class FileController {
 	public ResponseEntity<SuccessResponse> getPresignedUrlToUpload (
 		@RequestBody(required = false) FileDownloadRequest request){
 		String prefix = request.getPrefix();
-		String fileName = request.getFileName();
 		PresignedUrlResponse presignedUrlResponse = PresignedUrlResponse
 			.builder()
-			.url(fileService.createPresignedUrlToDownload(prefix, fileName))
+			.url(fileService.createPresignedUrlToDownload(prefix))
 			.build();
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
