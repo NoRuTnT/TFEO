@@ -250,7 +250,7 @@ def get_villa():
                         # json_res["item"],
                         "no_villa_name", # 빌라 매물은 이름 정보가 주어지지 않음
                         "no_region_code", # 빌라 매물은 지역코드 정보가 주어지지 않음
-                        "건축물종류", # 건축물 종류
+                        "VL", # 건축물 종류(빌라)
                         "아직 미정", # 아직 미정
                         "건축물 종류 이름", # 건축물 종류 이름
                         "건축물 거래 형태 코드", # 건축물 거래 형태 코드
@@ -262,12 +262,16 @@ def get_villa():
                         "총면적", # 총 면적
                         json_res["item"]["roomDirection"], # 창 방향
                         "등록일자", # 등록일자
-                        "lat", # 위도
-                        "lng", # 경도
-                        "atclFetrDesc",  # 매물 소개
-                        "tagList",  # 매물 태그
+                        json_res["item"]["randomLocation"]["lat"], # 위도
+                        json_res["item"]["randomLocation"]["lng"], # 경도
+                        "매물소개",  # 매물 소개 (json_res["item"]["description"])
+                        "tagList", # 매물 태그
                     ]
                 )
+                ##
+                print_json_info(json_res)
+                ##
+
                 # df = pd.json_normalize(json_res)
                 df = pd.DataFrame(data=villas, columns=house_columns)
                 df.to_csv('data/villaDetail2.csv', mode='a', index=False,
@@ -309,6 +313,7 @@ def get_oneroom():
                 df = pd.json_normalize(json_res)
                 df.to_csv('data/villaDetail.csv', mode='a', index=False, header=not os.path.exists('data/villaDetail.csv'),
                           encoding="utf-8-sig")
+    ## 원룸 구현부 마무리
 
 def get_officetel():
 
@@ -367,6 +372,6 @@ if __name__ == "__main__":
     print("직방 매물 정보를 크롤링")
     # main()
     # get_aparts()
-    get_villa()
+    # get_villa()
     # get_officetel()
-    # get_oneroom()
+    get_oneroom()
