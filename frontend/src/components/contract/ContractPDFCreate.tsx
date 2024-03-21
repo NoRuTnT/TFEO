@@ -3,6 +3,7 @@ import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/rendere
 import NotoSansKRRegular from '../../assets/fonts/NotoSansKR-Regular.ttf';
 import NotoSansKRBold from '../../assets/fonts/NotoSansKR-Bold.ttf';
 import { IAddress } from '../../interfaces/AddressInterface';
+import { IContractForm } from '../../interfaces/ContractFormInterface';
 
 Font.register({
   family: 'NotoSansKRRegular',
@@ -48,34 +49,6 @@ const styles = StyleSheet.create({
   underTableInfo: { flexBasis: '90%' },
   underTableSign: { flexBasis: '10%' },
 });
-
-interface IContractForm {
-  host: IHostContractForm;
-  member: IMemberContractForm;
-  contract: IContractContractForm;
-}
-
-interface IHostContractForm {
-  hostName: string;
-  address: IAddress;
-  rent: number;
-  hostAccountNo: string;
-  hostBank: string;
-  registerNo: string;
-  phone: string;
-}
-
-interface IMemberContractForm {
-  name: string;
-  address: IAddress;
-  registerNo: string;
-  phone: string;
-}
-
-interface IContractContractForm {
-  startAt: string;
-  expiredAt: string;
-}
 
 interface ContractPdfProps {
   person: string;
