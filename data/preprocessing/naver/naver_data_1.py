@@ -13,25 +13,35 @@ for line in fReader:
     data.append(line[14]) # 전체 면적
     data.append(line[15]) # 실제 면적
 
-    if isinstance(line[18], float):
+    if line[18] == 'lat':
         data.append(line[18])  # 위도 21
         data.append(line[19])  # 경도 22
         data.append(line[20])  # 소개 23
         data.append(line[21])  # 태그 리스트 24
+        data_csv.append(data)
     else:
-        data.append(line[21])  # 위도 21
-        data.append(line[22])  # 경도 22
-        data.append(line[23])  # 소개 23
-        data.append(line[24])  # 태그 리스트 24
+        try:
+            float(line[18])
+            data.append(line[18])  # 위도 21
+            data.append(line[19])  # 경도 22
+            data.append(line[20])  # 소개 23
+            data.append(line[21])  # 태그 리스트 24
+        except:
+            data.append(line[21])  # 위도 21
+            data.append(line[22])  # 경도 22
+            data.append(line[23])  # 소개 23
+            data.append(line[24])  # 태그 리스트 24
+        data_csv.append(data)
 
-    data_csv.append(data)
+
+
 
 
 file.close()
 print(data_csv)
 
 
-newFile = open('naver_1.csv','w',encoding='UTF8', newline='')
+newFile = open('naver_1_utf8.csv','w',encoding='UTF8', newline='')
 writer = csv.writer(newFile)
 writer.writerows(data_csv)
 newFile.close()
