@@ -153,6 +153,12 @@ geo_json = {
     ]
 }
 
+# 참고 : https://jamdol.tistory.com/91
+apart_gu_code = [11110, 11140, 11200, 11215, 11230, 11260,
+                 11290,11305, 11320, 11350, 11380, 11410,
+                 11440, 11470, 11500, 11530, 11545, 11560,
+                 11590, 11620, 11740]
+
 
 def main():
     # print(geo_json["data"])
@@ -167,6 +173,9 @@ def main():
 # 추후 수정 필요!!
 # 단지 번호 관련해서 mapping 포맷이 다르다.
 def get_aparts():
+    # 충분한 매물 데이터 확보로
+    # 아파트 매물 정보 획득은 더 이상 진행하지 않는다.
+    pass
     url = "https://www.zigbang.com/_next/data/ZHqQnhZil26j9bfVZPk6o/home/apt_danjis_detail.json?area_danji_id=17983"
     user_agent = "Mozilla/5.0 (Windows; U; Windows NT 5.1;)"
     resp = requests.get(url, headers={"User-Agent": user_agent})
@@ -178,37 +187,96 @@ def get_aparts():
     print("아파트 정보 탐색 시작!")
     aparts_list = []  # 위도, 경도, 아파트id정보
     aparts_id_list = []  # 아파트id정보
-    aparts_detail = []  # 아파트의 상세정보
 
-    # 아래부터 진짜 코드 구현
+    ##########
+
+    # gu_code -> apart고유 id 획득
+    # -> 매물 정보획득
+
+    # for gu_code in apart_gu_code:
+    #     url = "https://apis.zigbang.com/property/biglab/apartments/list?type=local&id={localId}"
+    #     req = requests.get(url.format(localId=guId))
+    #     info = req.json()
+    #
+    #     result = info['ids']
+    #     print(info['count'])
+
+    ##########
+
     # url = "https://apis.zigbang.com/v2/aparts/items?domain=zigbang&rentMin=0&rentMax=70&salesTypes%5B0%5D=월세&geohash={wydm}"
     url = "https://apis.zigbang.com/v2/aparts/items?geohash={geohash}&rentMin=0&rentMax={rentMax}&salesTypes%5B0%5D=%EC%9B%94%EC%84%B8&domain=zigbang&checkAnyItemWithoutFilter=true"
-    for geocode in seoul_geocode_list:
-        for char in geocode_char:
-            print("현재 탐색중인 geocode: ", geocode + char)
-            response = requests.get(url.format(geohash=geocode + char, rentMax=70))
-            json_data = response.json()
-            df = pd.json_normalize(json_data)
 
-            print(df)
-            df.to_csv('data/apartsInfo.csv', mode='a', index=False, header=not os.path.exists('data/apartsInfo.csv'),
-                      encoding="CP949")
+    # file_url = 'data/aparts.json'
+    # with open(file_url, 'a', encoding='UTF-8') as f:
+    #     f.write('[')
+    #     for idx1, gu in enumerate(geo_json["data"]):
+    #         for idx2, geohash in enumerate(gu["geocode"]):
+    #             print('현재 탐색중인 지역구 코드: ', geohash)
+    #             response = requests.get(url.format(geohash=geohash, depositMax=gu["price"][0], rentMax=gu["price"][1]))
+    #             json_data = response.json()
+    #
+    #             df = pd.json_normalize(json_data)
+    #
+    #             print(df)
+    #
+    #             for item in json_data["items"]:
+    #                 aparts_list.append(item)
+    #                 aparts_id_list.append(item["itemId"])
+    #
+    #             for idx3, officetel_id in enumerate(aparts_id_list):
+    #                 detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(officetel_id)
+    #                 res = requests.get(detail_url)
+    #                 json_res = res.json()
+    #
+    #                 print(idx3)
+    #                 # print_json_info(json_res)
+    #                 # 건물의 종류마다 오류가 다르게 발생하는 이유는
+    #                 # 특정 특수문자에서 발생하는 인코딩 오류로 추정됨
+    #
+    #                 # df = pd.json_normalize(json_res)
+    #                 # df.to_csv('data/officetelDetail.csv', mode='a', index=False, header=not os.path.exists('data/officetelDetail.csv'),
+    #                 #           encoding="utf-8-sig")
+    #
+    #                 json.dump(json_res, f, indent=4, ensure_ascii=False)
+    #                 # 맨 마지막 json이 아닌 경우
+    #                 if(idx1 != len(geo_json["data"])-1 or idx2 != len(gu["geocode"])-1 or idx3 != len(officetel_id_list)-1):
+    #                     f.write(',')
+    #                 f.write('\n')
+    #     # , 제거
+    #     f.write(']')
+    #     f.close()
 
-            for item in json_data["vrItems"]: # items -> vrItems
-                aparts_list.append(item)
-                aparts_id_list.append(item["areaDanjiId"])
 
-            print(aparts_id_list)
-            # areaDanjiId
-            for aparts_id in aparts_id_list:
-                detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(aparts_id)
-                res = requests.get(detail_url)
-                json_res = res.json()
-                print("--------------------------")
-                print(json_res)
-                df = pd.json_normalize(json_res)
-                df.to_csv('data/apartsDetail.csv', mode='a', index=False, header=not os.path.exists('data/apartsDetail.csv'),
-                          encoding="utf-8-sig")
+
+
+
+
+    # for geocode in seoul_geocode_list:
+    #     for char in geocode_char:
+    #         print("현재 탐색중인 geocode: ", geocode + char)
+    #         response = requests.get(url.format(geohash=geocode + char, rentMax=70))
+    #         json_data = response.json()
+    #         df = pd.json_normalize(json_data)
+    #
+    #         print(df)
+    #         df.to_csv('data/apartsInfo.csv', mode='a', index=False, header=not os.path.exists('data/apartsInfo.csv'),
+    #                   encoding="CP949")
+    #
+    #         for item in json_data["vrItems"]: # items -> vrItems
+    #             aparts_list.append(item)
+    #             aparts_id_list.append(item["areaDanjiId"])
+    #
+    #         print(aparts_id_list)
+    #         # areaDanjiId
+    #         for aparts_id in aparts_id_list:
+    #             detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(aparts_id)
+    #             res = requests.get(detail_url)
+    #             json_res = res.json()
+    #             print("--------------------------")
+    #             print(json_res)
+    #             df = pd.json_normalize(json_res)
+    #             df.to_csv('data/apartsDetail.csv', mode='a', index=False, header=not os.path.exists('data/apartsDetail.csv'),
+    #                       encoding="utf-8-sig")
 
 def get_villa():
     print("빌라정보 탐색 시작!")
@@ -219,139 +287,139 @@ def get_villa():
     # 아래부터 진짜 코드 구현
     url = "https://apis.zigbang.com/v2/items/villa?geohash={geohash}&depositMin=0&depositMax={depositMax}&rentMin=0&rentMax={rentMax}&salesTypes%5B0%5D=%EC%9B%94%EC%84%B8&domain=zigbang&checkAnyItemWithoutFilter=true"
 
-    # print(geo_json["data"])
-    for gu in geo_json["data"]:
-        for geohash in gu["geocode"]:
-            print(f"현재 탐색중인 구는 {gu['region']} 입니다")
-            ###############################
-            response = requests.get(url.format(geohash=geohash, depositMax=gu["price"][0], rentMax=gu["price"][1]))
-            json_data = response.json()
+    file_url = 'data/villa.json'
+    with open(file_url, 'a', encoding='UTF-8') as f:
+        f.write('[')
+        for idx1, gu in enumerate(geo_json["data"]):
+            for idx2, geohash in enumerate(gu["geocode"]):
+                # print("현재 탐색중인 geocode: ", geocode + char)
+                print('현재 탐색중인 지역구 코드: ', geohash)
+                response = requests.get(url.format(geohash=geohash, depositMax=gu["price"][0], rentMax=gu["price"][1]))
+                json_data = response.json()
 
-            df = pd.json_normalize(json_data)
+                df = pd.json_normalize(json_data)
 
-            print(df)
-            # df.to_csv('villaInfo.csv', index=False, encoding="CP949")
-            df.to_csv('data/villaInfo.csv', mode='a', index=False, header=not os.path.exists('data/villaInfo.csv'),
-                      encoding="CP949")
+                print(df)
 
-            for item in json_data["items"]:
-                villa_list.append(item)
-                villa_id_list.append(item["itemId"])
+                for item in json_data["items"]:
+                    villa_list.append(item)
+                    villa_id_list.append(item["itemId"])
 
-            for villa_id in villa_id_list:
-                detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(villa_id)
-                res = requests.get(detail_url)
-                json_res = res.json()
-                print("---------------------")
-                print(f'{json_res["item"]["floor"]["floor"]}층. 전체 층은? {json_res["item"]["floor"]["allFloors"]}')
-                print("---------------------")
-                villas.append(
-                    [
-                        # json_res["item"],
-                        "no_villa_name", # 빌라 매물은 이름 정보가 주어지지 않음
-                        "no_region_code", # 빌라 매물은 지역코드 정보가 주어지지 않음
-                        "VL", # 건축물 종류(빌라)
-                        "아직 미정", # 아직 미정
-                        "건축물 종류 이름", # 건축물 종류 이름
-                        "건축물 거래 형태 코드", # 건축물 거래 형태 코드
-                        "건축물 거래 형태 이름", # 건축물 거래 형태 이름
-                        json_res["item"]["floor"]["floor"]+'/'+json_res["item"]["floor"]["allFloors"], # 층수
-                        json_res["item"]["price"]["deposit"], # 보증금
-                        json_res["item"]["price"]["rent"], # 월세
-                        "사용면적", # 사용 면적
-                        "총면적", # 총 면적
-                        json_res["item"]["roomDirection"], # 창 방향
-                        "등록일자", # 등록일자
-                        json_res["item"]["randomLocation"]["lat"], # 위도
-                        json_res["item"]["randomLocation"]["lng"], # 경도
-                        "매물소개",  # 매물 소개 (json_res["item"]["description"])
-                        "tagList", # 매물 태그
-                    ]
-                )
-                ##
-                print_json_info(json_res)
-                ##
+                for idx3, villa_id in enumerate(villa_id_list):
+                    # print('-------------------')
+                    # print('officetel_id:', officetel_id)
+                    # print('-------------------')
+                    detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(villa_id)
+                    res = requests.get(detail_url)
+                    json_res = res.json()
 
-                # df = pd.json_normalize(json_res)
-                df = pd.DataFrame(data=villas, columns=house_columns)
-                df.to_csv('data/villaDetail2.csv', mode='a', index=False,
-                          header=not os.path.exists('data/villaDetail2.csv'),
-                          encoding="utf-8-sig")
-    # get_review()
+                    print(idx3)
+                    json.dump(json_res, f, indent=4, ensure_ascii=False)
+                    # 맨 마지막 json이 아닌 경우
+                    if (idx1 != len(geo_json["data"]) - 1 or idx2 != len(gu["geocode"]) - 1 or idx3 != len(
+                            villa_id_list) - 1):
+                        f.write(',')
+                    f.write('\n')
+        # , 제거
+        f.write(']')
+        f.close()
+
 
 def get_oneroom():
     print("원룸정보 탐색 시작!")
     oneroom_list = []  # 위도, 경도, 빌라id정보
     oneroom_id_list = []  # 빌라id정보
-    oneroom_detail = []  # 빌라의 상세정보
 
-    # 아래부터 진짜 코드 구현
-    url = "https://apis.zigbang.com/v2/items/oneroom?geohash={geohash}&depositMin=0&depositMax={depositMax}&rentMin=0&rentMax={rentMax}&salesTypes%5B0%5D=%EC%9B%94%EC%84%B8&domain=zigbang&checkAnyItemWithoutFilter=true"
-    for geocode in seoul_geocode_list:
-        for char in geocode_char:
-            print("현재 탐색중인 geocode: ", geocode + char)
-            response = requests.get(url.format(geohash=geocode + char, depositMax=1000, rentMax=70))
-            json_data = response.json()
+    url = "https://apis.zigbang.com/v2/items/oneroom?depositMin=0&depositMax={depositMax}&rentMin=0&rentMax={rentMax}&salesTypes%5B0%5D=%EC%9B%94%EC%84%B8&geohash={geohash}&domain=zigbang&checkAnyItemWithoutFilter=true&withBuildings=true"
 
-            df = pd.json_normalize(json_data)
+    file_url = 'data/oneroom.json'
+    with open(file_url, 'a', encoding='UTF-8') as f:
+        f.write('[')
+        for idx1, gu in enumerate(geo_json["data"]):
+            for idx2, geohash in enumerate(gu["geocode"]):
+                # print("현재 탐색중인 geocode: ", geocode + char)
+                print('현재 탐색중인 지역구 코드: ', geohash)
+                response = requests.get(url.format(geohash=geohash, depositMax=gu["price"][0], rentMax=gu["price"][1]))
+                json_data = response.json()
 
-            print(df)
-            df.to_csv('data/oneroomInfo.csv', mode='a', index=False, header=not os.path.exists('data/oneroomInfo.csv'),
-                      encoding="CP949")
+                df = pd.json_normalize(json_data)
 
-            for item in json_data["items"]:
-                oneroom_list.append(item)
-                oneroom_id_list.append(item["itemId"])
+                print(df)
 
-            for oneroom_id in oneroom_id_list:
-                detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(oneroom_id)
-                res = requests.get(detail_url)
-                json_res = res.json()
+                for item in json_data["items"]:
+                    oneroom_list.append(item)
+                    oneroom_id_list.append(item["itemId"])
 
-                print_json_info(json_res)
+                for idx3, oneroom_id in enumerate(oneroom_id_list):
+                    detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(oneroom_id)
+                    res = requests.get(detail_url)
+                    json_res = res.json()
 
-                df = pd.json_normalize(json_res)
-                df.to_csv('data/villaDetail.csv', mode='a', index=False, header=not os.path.exists('data/villaDetail.csv'),
-                          encoding="utf-8-sig")
-    ## 원룸 구현부 마무리
+                    print(idx3)
+
+                    json.dump(json_res, f, indent=4, ensure_ascii=False)
+                    # 맨 마지막 json이 아닌 경우
+                    if(idx1 != len(geo_json["data"])-1 or idx2 != len(gu["geocode"])-1 or idx3 != len(oneroom_id_list)-1):
+                        f.write(',')
+                    f.write('\n')
+        # , 제거
+        f.write(']')
+        f.close()
+
+
 
 def get_officetel():
 
     print("오피스텔정보 탐색 시작!")
     officetel_list = []  # 위도, 경도, 오피스텔id정보
     officetel_id_list = []  # 오피스텔id정보
-    officetel_detail = []  # 오피스텔의 상세정보
 
     # 아래부터 진짜 코드 구현
     url = "https://apis.zigbang.com/v2/items/officetel?depositMin=0&depositMax={depositMax}&rentMin=0&rentMax={rentMax}&salesTypes%5B0%5D=%EC%9B%94%EC%84%B8&geohash={geohash}&domain=zigbang&checkAnyItemWithoutFilter=true&withBuildings=true"
-    for geocode in seoul_geocode_list:
-        for char in geocode_char:
-            print("현재 탐색중인 geocode: ", geocode + char)
-            response = requests.get(url.format(depositMax=1000, rentMax=70, geohash=geocode + char))
-            json_data = response.json()
 
-            df = pd.json_normalize(json_data)
+    file_url = 'data/officetel.json'
+    with open(file_url, 'a', encoding='UTF-8') as f:
+        f.write('[')
+        for idx1, gu in enumerate(geo_json["data"]):
+            for idx2, geohash in enumerate(gu["geocode"]):
+                # print("현재 탐색중인 geocode: ", geocode + char)
+                print('현재 탐색중인 지역구 코드: ', geohash)
+                response = requests.get(url.format(geohash=geohash, depositMax=gu["price"][0], rentMax=gu["price"][1]))
+                json_data = response.json()
 
-            print(df)
-            df.to_csv('data/officetelInfo.csv', mode='a', index=False, header=not os.path.exists('data/officetelInfo.csv'),
-                      encoding="CP949")
+                df = pd.json_normalize(json_data)
 
-            for item in json_data["items"]:
-                officetel_list.append(item)
-                officetel_id_list.append(item["itemId"])
+                print(df)
 
-            for officetel_id in officetel_id_list:
-                detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(officetel_id)
-                res = requests.get(detail_url)
-                json_res = res.json()
+                for item in json_data["items"]:
+                    officetel_list.append(item)
+                    officetel_id_list.append(item["itemId"])
 
-                # print_json_info(json_res)
-                # 건물의 종류마다 오류가 다르게 발생하는 이유는
-                # 특정 특수문자에서 발생하는 인코딩 오류로 추정됨
+                for idx3, officetel_id in enumerate(officetel_id_list):
+                    # print('-------------------')
+                    # print('officetel_id:', officetel_id)
+                    # print('-------------------')
+                    detail_url = "https://apis.zigbang.com/v3/items/{}?version=&domain=zigbang".format(officetel_id)
+                    res = requests.get(detail_url)
+                    json_res = res.json()
 
-                df = pd.json_normalize(json_res)
-                df.to_csv('data/officetelDetail.csv', mode='a', index=False, header=not os.path.exists('data/officetelDetail.csv'),
-                          encoding="utf-8-sig")
+                    print(idx3)
+                    # print_json_info(json_res)
+                    # 건물의 종류마다 오류가 다르게 발생하는 이유는
+                    # 특정 특수문자에서 발생하는 인코딩 오류로 추정됨
+
+                    # df = pd.json_normalize(json_res)
+                    # df.to_csv('data/officetelDetail.csv', mode='a', index=False, header=not os.path.exists('data/officetelDetail.csv'),
+                    #           encoding="utf-8-sig")
+
+                    json.dump(json_res, f, indent=4, ensure_ascii=False)
+                    # 맨 마지막 json이 아닌 경우
+                    if(idx1 != len(geo_json["data"])-1 or idx2 != len(gu["geocode"])-1 or idx3 != len(officetel_id_list)-1):
+                        f.write(',')
+                    f.write('\n')
+        # , 제거
+        f.write(']')
+        f.close()
 
 def get_review():
     # id = 80
