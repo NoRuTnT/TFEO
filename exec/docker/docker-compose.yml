@@ -56,7 +56,7 @@ services:
     depends_on:
       - tfeo-mysql
       - tfeo-redis
-    restart: no
+    restart: "no"
 
 #  tfro-front:
 #    container_name: "front"
