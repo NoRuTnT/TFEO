@@ -48,11 +48,13 @@ pipeline {
                         sh "chmod -R 755 backend/env"
                 }
 
+
                 withCredentials([file(credentialsId: 'db', variable: 'dbFile')]) {
                     script {
                         sh 'cp $dbFile backend/env/db.env'
                     }
                 }
+
 
                 withCredentials([file(credentialsId: 'test-db', variable: 'testdbFile')]) {
                     script {
