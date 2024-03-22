@@ -9,6 +9,7 @@ import MakeActivity from './pages/MakeActivity';
 import FindHouse from './pages/FindHouse';
 import Contract from './pages/Contract';
 import ContractForm from './pages/ContractForm';
+import Survey from './pages/Survey';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
           <Route path="/find-house" element={<FindHouse />} />
           <Route path="/contract" element={<Contract />} />
           <Route path="/contract-form" element={<ContractForm />} />
+          <Route path="/survey" element={<Survey />} />
           {/* ... 여기에 더 많은 라우트를 추가할 수 있습니다 ... */}
         </Routes>
       </Router>
