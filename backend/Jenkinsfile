@@ -3,14 +3,20 @@ pipeline {
     tools {
         gradle 'gradle'
     }
+    environment {
+        // 환경 변수를 선언하고 초기화
+        imageName = "norutnt/develop"
+        registryCredential = "tfeo-docker"
+        dockerImage = ''
+        GITLAB_SOURCE_BRANCH = "$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
+        GITLAB_TARGET_BRANCH = "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+    }
     post {
         success {
-            // 빌드가 성공했을 때 GitLab에 성공 상태를 알립니다.
             updateGitlabCommitStatus name: 'build', state: 'success'
         }
 
         failure {
-            // 빌드가 실패했을 때 GitLab에 실패 상태를 알립니다.
             updateGitlabCommitStatus name: 'build', state: 'failed'
         }
     }
@@ -18,18 +24,20 @@ pipeline {
     stages {
         stage('Get Merge Request and preBuildMerge') {
             steps {
-
-
-                script {
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "origin/${env.gitlabSourceBranch}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${env.gitlabTargetBranch}"]]],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[credentialsId: '10ca8b51-edb6-4416-8a72-7786a6af4be2', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
-                    ])
-                }
+                cleanWs()
+//                 script {
+//                     echo "The GitLab source branch is: ${GITLAB_SOURCE_BRANCH}"
+//                     echo "The GitLab target branch is: ${GITLAB_TARGET_BRANCH}"
+//                     checkout([
+//                         $class: 'GitSCM',
+//                         branches: [[name: "origin/${GITLAB_SOURCE_BRANCH}"]],
+//                         doGenerateSubmoduleConfigurations: false,
+//                         extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${GITLAB_TARGET_BRANCH}"]]],
+//                         submoduleCfg: [],
+//                         userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
+//                     ])
+//                 }
+                checkout scm
             }
         }
 
@@ -50,11 +58,13 @@ pipeline {
                         sh "chmod -R 755 backend/env"
                 }
 
+
                 withCredentials([file(credentialsId: 'db', variable: 'dbFile')]) {
                     script {
                         sh 'cp $dbFile backend/env/db.env'
                     }
                 }
+
 
                 withCredentials([file(credentialsId: 'test-db', variable: 'testdbFile')]) {
                     script {
@@ -66,8 +76,7 @@ pipeline {
                         sh 'cp $securityFile backend/env/security.env'
                     }
                 }
-                sh 'chmod +x ./backend/gradlew'
-                sh './backend/gradlew build -p backend'
+
             }
         }
 
@@ -77,7 +86,8 @@ pipeline {
                  // 빌드 실행
                  dir('backend') {
                     // backend 디렉토리 안에서 빌드 실행
-                    sh './gradlew build'
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean bootJar'
                 }
             }
         }
@@ -92,5 +102,21 @@ pipeline {
                 }
             }
         }
+        stage('Image Build & DockerHub Push') {
+            steps {
+                dir('Backend') {
+                    script {
+                        docker.withRegistry('', registryCredential) {
+                            sh "docker buildx create --name mybuilder"
+                            sh "docker buildx use mybuilder"
+                            sh "docker buildx build --platform linux/amd64,linux/arm64 -t $imageName:$BUILD_NUMBER --push ."
+                            sh "docker buildx build --platform linux/amd64,linux/arm64 -t $imageName:latest --push ."
+                        }
+                    }
+                }
+            }
+        }
+
+
     }
 }
