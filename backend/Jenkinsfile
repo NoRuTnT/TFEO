@@ -18,6 +18,7 @@ pipeline {
     stages {
         stage('Get Merge Request and preBuildMerge') {
             steps {
+                cleanWs()
                 script {
                     checkout([
                         $class: 'GitSCM',
