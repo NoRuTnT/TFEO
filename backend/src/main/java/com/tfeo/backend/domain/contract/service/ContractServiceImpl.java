@@ -47,13 +47,9 @@ public class ContractServiceImpl implements ContractService {
 
 	//계약 완료 승인 -> 완성된 계약서 저장
 	@Override
-	public void creationContract(Long memberNo, Long homeNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-		Home home = homeRepository.findById(homeNo)
-			.orElseThrow(() -> new HomeNotExistException(homeNo));
-		Contract contract = contractRepository.findByHomeAndMember(home,member)
-			.orElseThrow(()->new ContractNotExistException("memberNo", memberNo));
+	public void completionContract(Long contractNo) {
+		Contract contract = contractRepository.findById(contractNo)
+			.orElseThrow(()->new ContractNotExistException("contractNo", contractNo));
 
 		// 계약 완료로 변경
 		contract.setProgress(DONE);

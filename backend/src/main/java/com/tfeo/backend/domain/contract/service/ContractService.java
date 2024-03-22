@@ -5,7 +5,7 @@ import java.util.List;
 import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 
 public interface ContractService {
-	void creationContract(Long memberNo, Long homeNo);
+	void completionContract(Long contractNo);
 
 	String creationContractForm(Long memberNo, Long homeNo);
 

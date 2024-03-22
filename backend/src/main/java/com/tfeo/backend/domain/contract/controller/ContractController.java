@@ -34,12 +34,12 @@ public class ContractController {
 
 	}
 
-	//계약서 승인
-	@PutMapping(value = "/creation/{homeNo}")
-	public ResponseEntity<SuccessResponse> contractCreation(
-		@PathVariable Long homeNo){
+	// 계약 완료
+	@PutMapping(value = "/completion/{contractNo}")
+	public ResponseEntity<SuccessResponse> contractCompletion(
+		@PathVariable Long contractNo){
 		Long memberNo = 1L;
-		contractService.creationContract(memberNo,homeNo);
+		contractService.completionContract(contractNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "성공적으로 계약서가 생성되었습니다.", null));
 	}
 
@@ -91,6 +91,7 @@ public class ContractController {
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("계악서가 삭제되었습니다.")
+			.result(null)
 			.build();
 		return ResponseEntity.ok(successResponse);
 	}
