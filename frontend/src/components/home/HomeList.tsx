@@ -22,7 +22,7 @@ const HomeList: React.FC = () => {
 
   const handleButtonClick = () => {
     setIsButtonVisible(false); // 버튼 숨기기
-    setContainerMarginTop('175%'); // margin-top 변경
+    setContainerMarginTop('70%'); // margin-top 변경. 모바일 테스트 시 175%로 변경
   };
 
   // 다른 동작을 위한 함수 예시
