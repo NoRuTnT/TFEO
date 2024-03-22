@@ -19,7 +19,7 @@ import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
 import com.tfeo.backend.domain.contract.common.exception.ContractDayNotExistException;
 import com.tfeo.backend.domain.contract.common.exception.ContractNotExistException;
-import com.tfeo.backend.domain.contract.model.dto.ContractUrlDto;
+import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
 import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
@@ -45,7 +45,7 @@ public class ContractServiceImpl implements ContractService {
 	private final FileService fileService;
 
 
-	//계약서 승인
+	//계약 완료 승인 -> 완성된 계약서 저장
 	@Override
 	public void creationContract(Long memberNo, Long homeNo) {
 		Member member = memberRepository.findById(memberNo)
@@ -55,7 +55,7 @@ public class ContractServiceImpl implements ContractService {
 		Contract contract = contractRepository.findByHomeAndMember(home,member)
 			.orElseThrow(()->new ContractNotExistException("memberNo", memberNo));
 
-		// 계약완료로 변경
+		// 계약 완료로 변경
 		contract.setProgress(DONE);
 		// 변경 내용 반영
 		contractRepository.save(contract);
@@ -81,13 +81,9 @@ public class ContractServiceImpl implements ContractService {
 		}
 	}
 
-	/**
-	 * 계약서 폼 생성 (담당자가 집 신청한 학생 승인 시 호출하는 메서드)
-	 * @param memberNo
-	 * @param homeNo
-	 */
+	// 계약서 폼 생성 (담당자가 집 신청한 학생 승인 시 호출하는 메서드)
 	@Override
-	public void creationContractForm(Long memberNo, Long homeNo) {
+	public String creationContractForm(Long memberNo, Long homeNo) {
 		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Home home = homeRepository.findById(homeNo)
@@ -99,91 +95,35 @@ public class ContractServiceImpl implements ContractService {
 
 		// 파일 이름 설정
 		String filePath = fileService.createPath("contract");
-		// 계약서를 업로드할 url을 반환하고 파일 이름을 저장
-		fileService.createPresignedUrlToUpload(filePath);
-		// 계약서 url 등록
+
+		// 계약서 url
 		contract.setContractUrl(filePath);
 		// repository 변경 사항 반영
 		contractRepository.save(contract);
+		// 계약서를 업로드할 url 반환, 파일 이름 저장
+		return fileService.createPresignedUrlToUpload(filePath);
 	}
 
-	/**
-	 * "신청 중" 상태의 계약 조회
-	 * @param memberNo
-	 * @param homeNo
-	 * @return s3에 저장된 파일명
-	 */
+	// 계약 상세 조회
 	@Override
-	public String getContractApplied(Long memberNo, Long homeNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
-		Contract contract = contractRepository.findByHomeNoProgress(APPLIED, homeNo)
-			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
-
-		return fileService.createPresignedUrlToDownload(contract.getContractUrl());
+	public ContractResponseDto getContract(Long contractNo) {
+		return new ContractResponseDto(contractRepository.findById(contractNo)
+			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo)));
 	}
 
-	/**
-	 * "계약 중" 상태의 계약 조회
-	 * @param memberNo
-	 * @param homeNo
-	 * @return s3에 저장된 파일명
-	 */
+	// 계약서 목록 조회 (학생)
 	@Override
-	public String getContractInProgress(Long memberNo, Long homeNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
-		Contract contract = contractRepository.findByHomeNoProgress(IN_PROGRESS, homeNo)
-			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
-
-		return fileService.createPresignedUrlToDownload(contract.getContractUrl());
-	}
-
-	/**
-	 * "계약 완료" 상태의 계약 조회
-	 * @param memberNo
-	 * @param homeNo
-	 * @return s3에 저장된 파일명
-	 */
-	@Override
-	public String getContractDone(Long memberNo, Long homeNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
-		Contract contract = contractRepository.findByHomeNoProgress(DONE, homeNo)
-			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
-
-		return fileService.createPresignedUrlToDownload(contract.getContractUrl());
-	}
-
-	/**
-	 * 학생이 작성한 전체 계약서 url 조회
-	 * @param memberNo
-	 * @return 계약서 url 리스트
-	 */
-	@Override
-	public List<ContractUrlDto> getContracts(Long memberNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
+	public List<ContractResponseDto> getContracts(Long memberNo) {
 		List<Contract> contracts = contractRepository.findAllByMemberNo(memberNo)
 			.orElseThrow(() -> new ContractNotExistException("memberNo", memberNo));
-
 		return contracts.stream()
-			.map(contract -> new ContractUrlDto(String.valueOf(contract.getContractNo()), contract.getContractUrl()))
+			.map(ContractResponseDto::new)
 			.collect(Collectors.toList());
-
 	}
 
-	/**
-	 * 계약서 싸인
-	 * @param memberNo 싸인한 사람의 id
-	 * @param contractNo 싸인한 계약서 pk
-	 */
+	// 계약서 싸인
 	@Override
-	public void signContract(Long memberNo, Long contractNo) {
+	public String signContract(Long memberNo, Long contractNo) {
 		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Contract contract = contractRepository.findById(contractNo)
@@ -194,17 +134,16 @@ public class ContractServiceImpl implements ContractService {
 
 		contract.setProgress(IN_PROGRESS);
 		contractRepository.save(contract);
+
+		return fileService.createPresignedUrlToUpload(contract.getContractUrl());
 	}
 
 
-	/**
-	 * 계약서 삭제
-	 * @param contractNo 싸인한 계약서 pk
-	 */
+	// 계약서 삭제
 	@Override
 	public void deleteContract(Long contractNo) {
 		Contract contract = contractRepository.findById(contractNo)
-				.orElseThrow(() -> new ContractNotExistException("contractNo",contractNo));
+				.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
 		contractRepository.delete(contract);
 	}
 

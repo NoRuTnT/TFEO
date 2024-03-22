@@ -7,8 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
-import com.tfeo.backend.domain.contract.model.dto.ContractUrlDto;
-import com.tfeo.backend.domain.contract.model.dto.ContractsResponse;
+import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.service.ContractService;
 
 import lombok.RequiredArgsConstructor;
@@ -25,11 +24,11 @@ public class ContractController {
 	public ResponseEntity<SuccessResponse> contractFormCreation(
 		@PathVariable Long homeNo){
 		Long memberNo = 1L;
-		contractService.creationContractForm(memberNo, homeNo);
+		String contractUrl = contractService.creationContractForm(memberNo, homeNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서 폼이 생성되었습니다.")
-			.result(null)
+			.result(contractUrl)
 			.build();
 		return ResponseEntity.ok(response);
 
@@ -44,55 +43,28 @@ public class ContractController {
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "성공적으로 계약서가 생성되었습니다.", null));
 	}
 
-	// 계약서 url 조회 (신청 중)
-	@GetMapping("/applied/{homeNo}")
-	public ResponseEntity<SuccessResponse> getContractApplied(
-		@PathVariable Long homeNo){
-		Long memberNo = 1L;
-		String contractFileUrl = contractService.getContractApplied(memberNo, homeNo);
+	// 계약서 상세 조회
+	@GetMapping("/detail/{contractNo}")
+	public ResponseEntity<SuccessResponse> getContract(
+		@PathVariable Long contractNo){
+		ContractResponseDto contract = contractService.getContract(contractNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서가 조회되었습니다.")
-			.result(contractFileUrl)
+			.result(contract)
 			.build();
 			return ResponseEntity.ok(response);
 	}
-	// 계약서 url 조회 (진행 중)
-	@GetMapping("/in-progress/{homeNo}")
-	public ResponseEntity<SuccessResponse> getContractInProgress(
-		@PathVariable Long homeNo){
-		Long memberNo = 1L;
-		String contractFileUrl = contractService.getContractInProgress(memberNo, homeNo);
-		SuccessResponse response = SuccessResponse.builder()
-			.status(HttpStatus.OK)
-			.message("성공적으로 계약서가 조회되었습니다.")
-			.result(contractFileUrl)
-			.build();
-		return ResponseEntity.ok(response);
-	}
-	// 계약서 url 조회 (계약 완료)
-	@GetMapping("/done/{homeNo}")
-	public ResponseEntity<SuccessResponse> getContractDone(
-		@PathVariable Long homeNo){
-		Long memberNo = 1L;
-		String contractFileUrl = contractService.getContractDone(memberNo, homeNo);
-		SuccessResponse response = SuccessResponse.builder()
-			.status(HttpStatus.OK)
-			.message("성공적으로 계약서가 조회되었습니다.")
-			.result(contractFileUrl)
-			.build();
-		return ResponseEntity.ok(response);
-	}
 
-	// 학생이 작성한 모든 계약서 목록 조회
+	// 계약서 목록 조회 (학생)
 	@GetMapping
 	public ResponseEntity<SuccessResponse> getContracts(){
 		Long memberNo = 1L;
-		List<ContractUrlDto> contracts = contractService.getContracts(memberNo);
+		List<ContractResponseDto> contracts = contractService.getContracts(memberNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서 목록이 조회되었습니다.")
-			.result(new ContractsResponse(contracts))
+			.result(contracts)
 			.build();
 		return ResponseEntity.ok(response);
 	}
@@ -100,26 +72,26 @@ public class ContractController {
 	// 계약서 싸인
 	@PutMapping("/sign/{contractNo}")
 	public ResponseEntity<SuccessResponse> signContract(
-		@PathVariable Long contractNo
-	){
+		@PathVariable Long contractNo){
 		Long memberNo = 1L;
-		contractService.signContract(memberNo,contractNo);
+		String contractPresignedUrl = contractService.signContract(memberNo, contractNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("계약서 싸인이 완료되었습니다.")
-			.result(null)
+			.result(contractPresignedUrl)
 			.build();
 		return ResponseEntity.ok(response);
 	}
 
 	// 계약서 삭제
-	@DeleteMapping("/delete/{homeNo}")
-	public ResponseEntity<SuccessResponse> deleteContract(@PathVariable Long contractNo){
+	@DeleteMapping("/delete/{contractNo}")
+	public ResponseEntity<SuccessResponse> deleteContract(
+		@PathVariable Long contractNo){
 		contractService.deleteContract(contractNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
-				.status(HttpStatus.OK)
-				.message("계악서가 삭제되었습니다.")
-				.build();
+			.status(HttpStatus.OK)
+			.message("계악서가 삭제되었습니다.")
+			.build();
 		return ResponseEntity.ok(successResponse);
 	}
 }
