@@ -96,13 +96,13 @@ def main():
             # pandas 모듈을 이용해 크롤링한 결과를 dataframe 형식으로 변환합니다.
             df = pd.json_normalize(result_list)
             # csv 파일에 데이터를 저장합니다. (수정모드)
-            df.to_csv('result_naver.csv', mode='a', header=False, index=False, encoding='UTF-8')
+            df.to_csv('naver_crawling.csv', mode='a', header=False, index=False, encoding='UTF-8')
 
     except:
         # pandas 모듈을 이용해 크롤링한 결과를 dataframe 형식으로 변환합니다.
         df = pd.json_normalize(result_list)
         # csv 파일에 데이터를 저장합니다. (수정모드)
-        df.to_csv('result_naver.csv', mode='a', header=False, index=False, encoding='UTF-8')
+        df.to_csv('naver_crawling.csv', mode='a', header=False, index=False, encoding='UTF-8')
 
 
 
