@@ -4,4 +4,6 @@ export interface IContract {
   progress: string;
   studentSign: boolean;
   hostSign: boolean;
+  startAt: string;
+  expiredAt: string;
 }
