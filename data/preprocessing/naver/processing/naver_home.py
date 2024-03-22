@@ -30,17 +30,14 @@ for line in fReader:
         road_address = documents.get("road_address")
         if road_address is None:
             address = documents.get("address").get("address_name")
-            data[0] = address.get("region_1depth_name")
-            data[1] = address.get("region_2depth_name")
-            data[2] = address.get("region_3depth_name")
-            data[9] = address.get("address_name")
+            data[9] = address
         else:
             data[0] = road_address.get("region_1depth_name")
             data[1] = road_address.get("region_2depth_name")
             data[2] = road_address.get("region_3depth_name")
             data[3] = road_address.get("road_name") + " " + road_address.get("main_building_no")
-            data[9] = road_address.get("address_name")
-    data[4] = line[1]
+
+    data[4] = line[1] + "층"
     data[5] = line[2]
     data[6] = line[5]
     data[7] = line[6]
@@ -50,7 +47,7 @@ file.close()
 print(data_csv)
 
 
-newFile = open('../data/naver_home_utf8=.csv', 'w', encoding='UTF8', newline='')
+newFile = open('../data/naver_home_utf8.csv', 'w', encoding='UTF8', newline='')
 writer = csv.writer(newFile)
 writer.writerows(data_csv)
 newFile.close()
