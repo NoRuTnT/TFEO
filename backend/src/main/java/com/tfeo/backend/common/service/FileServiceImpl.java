@@ -2,6 +2,7 @@ package com.tfeo.backend.common.service;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.StringTokenizer;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -29,15 +30,14 @@ public class FileServiceImpl implements FileService {
 
 	/**
 	 * 파일 업로드(PUT) presigned url 생성
-	 * @param prefix 폴더 이름
 	 * @return url
 	 */
 	@Override
-	public String createPresignedUrlToUpload(String prefix) {
+	public String createPresignedUrlToUpload(String filePath) {
+		String folder = new StringTokenizer(filePath, "/").nextToken();
 		// s3에 해당 폴더가 존재하는 지 검증
-		validateFileExists(prefix);
-		// fileName의 고유 UUID를 부여합니다.
-		String filePath = createPath(prefix, createFileId());
+		validateFileExists(folder);
+
 		GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(bucket, filePath)
 			.withMethod(HttpMethod.PUT)
 			.withExpiration(getPreSignedUrlExpiration());
@@ -94,7 +94,8 @@ public class FileServiceImpl implements FileService {
 	 * @param fileName  파일 이름
 	 * @return 파일의 전체 경로
 	 */
-	private String createPath(String prefix, String fileName) {
+	@Override
+	public String createPath(String prefix, String fileName) {
 		String fileId = createFileId();
 		return String.format("%s/%s", prefix, fileName);
 	}
@@ -103,7 +104,8 @@ public class FileServiceImpl implements FileService {
 	 * 파일 고유 ID 생성
 	 * @return UUID
 	 */
-	private String createFileId() {
+	@Override
+	public String createFileId() {
 		return UUID.randomUUID().toString();
 	}
 
