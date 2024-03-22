@@ -57,6 +57,8 @@ public class ContractServiceImpl implements ContractService {
 
 		// 계약완료로 변경
 		contract.setProgress(DONE);
+		// 변경 내용 반영
+		contractRepository.save(contract);
 
 		LocalDate startAt = contract.getStartAt();
 		LocalDate expiredAt = contract.getExpiredAt();
@@ -77,6 +79,32 @@ public class ContractServiceImpl implements ContractService {
 				.build();
 			activityRepository.save(activity);
 		}
+	}
+
+	/**
+	 * 계약서 폼 생성 (담당자가 집 신청한 학생 승인 시 호출하는 메서드)
+	 * @param memberNo
+	 * @param homeNo
+	 */
+	@Override
+	public void creationContractForm(Long memberNo, Long homeNo) {
+		Member member = memberRepository.findById(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+		Home home = homeRepository.findById(homeNo)
+			.orElseThrow(() -> new HomeNotExistException(homeNo));
+
+		// 계약서 폼을 저장할 계약 찾기
+		Contract contract = contractRepository.findByHomeAndMember(home, member)
+			.orElseThrow(() -> new ContractNotExistException("memberNo", memberNo));
+
+		// 파일 이름 설정
+		String filePath = fileService.createPath("contract");
+		// 계약서를 업로드할 url을 반환하고 파일 이름을 저장
+		fileService.createPresignedUrlToUpload(filePath);
+		// 계약서 url 등록
+		contract.setContractUrl(filePath);
+		// repository 변경 사항 반영
+		contractRepository.save(contract);
 	}
 
 	/**

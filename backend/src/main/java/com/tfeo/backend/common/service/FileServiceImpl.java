@@ -91,21 +91,19 @@ public class FileServiceImpl implements FileService {
 	/**
 	 * 파일 경로 생성
 	 * @param prefix 디렉토리 경로
-	 * @param fileName  파일 이름
 	 * @return 파일의 전체 경로
 	 */
 	@Override
-	public String createPath(String prefix, String fileName) {
+	public String createPath(String prefix) {
 		String fileId = createFileId();
-		return String.format("%s/%s", prefix, fileName);
+		return String.format("%s/%s", prefix, fileId);
 	}
 
 	/**
 	 * 파일 고유 ID 생성
 	 * @return UUID
 	 */
-	@Override
-	public String createFileId() {
+	private String createFileId() {
 		return UUID.randomUUID().toString();
 	}
 
