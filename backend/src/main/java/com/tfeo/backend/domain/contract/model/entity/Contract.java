@@ -43,6 +43,7 @@ public class Contract {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long contractNo;
 
+	@Setter
 	private String contractUrl;
 
 	@CreatedDate

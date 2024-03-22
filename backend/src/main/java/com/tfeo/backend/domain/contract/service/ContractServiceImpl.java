@@ -8,15 +8,18 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
 import com.tfeo.backend.domain.contract.common.exception.ContractDayNotExistException;
 import com.tfeo.backend.domain.contract.common.exception.ContractNotExistException;
+import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
 import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
@@ -39,20 +42,19 @@ public class ContractServiceImpl implements ContractService {
 	private final HomeRepository homeRepository;
 	private final ContractRepository contractRepository;
 	private final ActivityRepository activityRepository;
+	private final FileService fileService;
 
 
-	//계약서 승인
+	//계약 완료 승인 -> 완성된 계약서 저장
 	@Override
-	public void creationContract(Long memberNo, Long homeNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-		Home home = homeRepository.findById(homeNo)
-			.orElseThrow(() -> new HomeNotExistException(homeNo));
-		Contract contract = contractRepository.findByHomeAndMember(home,member)
-			.orElseThrow(()->new ContractNotExistException("memberNo", memberNo));
+	public void completionContract(Long contractNo) {
+		Contract contract = contractRepository.findById(contractNo)
+			.orElseThrow(()->new ContractNotExistException("contractNo", contractNo));
 
-		// 계약완료로 변경
+		// 계약 완료로 변경
 		contract.setProgress(DONE);
+		// 변경 내용 반영
+		contractRepository.save(contract);
 
 		LocalDate startAt = contract.getStartAt();
 		LocalDate expiredAt = contract.getExpiredAt();
@@ -75,78 +77,49 @@ public class ContractServiceImpl implements ContractService {
 		}
 	}
 
-	/**
-	 * "신청 중" 상태의 계약 조회
-	 * @param memberNo
-	 * @param homeNo
-	 * @return s3에 저장된 파일명
-	 */
+	// 계약서 폼 생성 (담당자가 집 신청한 학생 승인 시 호출하는 메서드)
 	@Override
-	public String getContractApplied(Long memberNo, Long homeNo) {
+	public String creationContractForm(Long memberNo, Long homeNo) {
 		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
+		Home home = homeRepository.findById(homeNo)
+			.orElseThrow(() -> new HomeNotExistException(homeNo));
 
-		Contract contract = contractRepository.findByHomeNoProgress(APPLIED, homeNo)
-			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
+		// 계약서 폼을 저장할 계약 찾기
+		Contract contract = contractRepository.findByHomeAndMember(home, member)
+			.orElseThrow(() -> new ContractNotExistException("memberNo", memberNo));
 
-		return contract.getContractUrl();
+		// 파일 이름 설정
+		String filePath = fileService.createPath("contract");
+
+		// 계약서 url
+		contract.setContractUrl(filePath);
+		// repository 변경 사항 반영
+		contractRepository.save(contract);
+		// 계약서를 업로드할 url 반환, 파일 이름 저장
+		return fileService.createPresignedUrlToUpload(filePath);
 	}
 
-	/**
-	 * "계약 중" 상태의 계약 조회
-	 * @param memberNo
-	 * @param homeNo
-	 * @return s3에 저장된 파일명
-	 */
+	// 계약 상세 조회
 	@Override
-	public String getContractInProgress(Long memberNo, Long homeNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
-		Contract contract = contractRepository.findByHomeNoProgress(IN_PROGRESS, homeNo)
-			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
-
-		return contract.getContractUrl();
+	public ContractResponseDto getContract(Long contractNo) {
+		return new ContractResponseDto(contractRepository.findById(contractNo)
+			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo)));
 	}
 
-	/**
-	 * "계약 완료" 상태의 계약 조회
-	 * @param memberNo
-	 * @param homeNo
-	 * @return s3에 저장된 파일명
-	 */
+	// 계약서 목록 조회 (학생)
 	@Override
-	public String getContractDone(Long memberNo, Long homeNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
-		Contract contract = contractRepository.findByHomeNoProgress(DONE, homeNo)
-			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
-
-		return contract.getContractUrl();
+	public List<ContractResponseDto> getContracts(Long memberNo) {
+		List<Contract> contracts = contractRepository.findAllByMemberNo(memberNo)
+			.orElseThrow(() -> new ContractNotExistException("memberNo", memberNo));
+		return contracts.stream()
+			.map(ContractResponseDto::new)
+			.collect(Collectors.toList());
 	}
 
-	/**
-	 * 학생이 작성한 전체 계약서 조회
-	 * @param memberNo
-	 * @return 계약서 리스트
-	 */
+	// 계약서 싸인
 	@Override
-	public List<Contract> getContracts(Long memberNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-
-		return contractRepository.findAllByMemberNo(memberNo)
-			.orElseThrow(() -> new ContractNotExistException("memberNo",memberNo));
-	}
-
-	/**
-	 * 계약서 싸인
-	 * @param memberNo 싸인한 사람의 id
-	 * @param contractNo 싸인한 계약서 pk
-	 */
-	@Override
-	public void signContract(Long memberNo, Long contractNo) {
+	public String signContract(Long memberNo, Long contractNo) {
 		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Contract contract = contractRepository.findById(contractNo)
@@ -157,6 +130,17 @@ public class ContractServiceImpl implements ContractService {
 
 		contract.setProgress(IN_PROGRESS);
 		contractRepository.save(contract);
+
+		return fileService.createPresignedUrlToUpload(contract.getContractUrl());
+	}
+
+
+	// 계약서 삭제
+	@Override
+	public void deleteContract(Long contractNo) {
+		Contract contract = contractRepository.findById(contractNo)
+				.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
+		contractRepository.delete(contract);
 	}
 
 	public static String getCurrentWeekOfMonth(LocalDate localDate) {
