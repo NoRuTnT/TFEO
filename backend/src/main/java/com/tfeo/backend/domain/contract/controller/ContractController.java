@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
+import com.tfeo.backend.domain.contract.model.dto.ContractUrlDto;
 import com.tfeo.backend.domain.contract.model.dto.ContractsResponse;
-import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.service.ContractService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,62 +30,62 @@ public class ContractController {
 	}
 
 	/**
-	 *  계약서 파일(신청 중) 이름 조회
+	 *  계약서 파일(신청 중) url 조회
 	 * @return s3에 저장된 파일명
 	 */
 	@GetMapping("/applied/{homeNo}")
 	public ResponseEntity<SuccessResponse> getContractApplied(
 		@PathVariable Long homeNo){
 		Long memberNo = 1L;
-		String contractFileName = contractService.getContractApplied(memberNo, homeNo);
+		String contractFileUrl = contractService.getContractApplied(memberNo, homeNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서가 조회되었습니다.")
-			.result(contractFileName)
+			.result(contractFileUrl)
 			.build();
 			return ResponseEntity.ok(response);
 	}
 	/**
-	 *  계약서 파일(계약 중) 이름 조회
+	 *  계약서 파일(계약 중) url 조회
 	 * @return s3에 저장된 파일명
 	 */
 	@GetMapping("/in-progress/{homeNo}")
 	public ResponseEntity<SuccessResponse> getContractInProgress(
 		@PathVariable Long homeNo){
 		Long memberNo = 1L;
-		String contractFileName = contractService.getContractInProgress(memberNo, homeNo);
+		String contractFileUrl = contractService.getContractInProgress(memberNo, homeNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서가 조회되었습니다.")
-			.result(contractFileName)
+			.result(contractFileUrl)
 			.build();
 		return ResponseEntity.ok(response);
 	}
 	/**
-	 *  계약서 파일(계약 완료) 이름 조회
+	 *  계약서 파일(계약 완료) url 조회
 	 * @return s3에 저장된 파일명
 	 */
 	@GetMapping("/done/{homeNo}")
 	public ResponseEntity<SuccessResponse> getContractDone(
 		@PathVariable Long homeNo){
 		Long memberNo = 1L;
-		String contractFileName = contractService.getContractDone(memberNo, homeNo);
+		String contractFileUrl = contractService.getContractDone(memberNo, homeNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서가 조회되었습니다.")
-			.result(contractFileName)
+			.result(contractFileUrl)
 			.build();
 		return ResponseEntity.ok(response);
 	}
 
 	/**
-	 *  학생이 작성한 모든 계약서 조회
+	 *  학생이 작성한 모든 계약서 url 조회
 	 * @return s3에 저장된 파일명
 	 */
 	@GetMapping
 	public ResponseEntity<SuccessResponse> getContracts(){
 		Long memberNo = 1L;
-		List<Contract> contracts = contractService.getContracts(memberNo);
+		List<ContractUrlDto> contracts = contractService.getContracts(memberNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서가 조회되었습니다.")

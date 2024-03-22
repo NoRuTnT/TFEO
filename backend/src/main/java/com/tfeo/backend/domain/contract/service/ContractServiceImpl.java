@@ -8,15 +8,18 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
 import com.tfeo.backend.domain.contract.common.exception.ContractDayNotExistException;
 import com.tfeo.backend.domain.contract.common.exception.ContractNotExistException;
+import com.tfeo.backend.domain.contract.model.dto.ContractUrlDto;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
 import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
@@ -39,6 +42,7 @@ public class ContractServiceImpl implements ContractService {
 	private final HomeRepository homeRepository;
 	private final ContractRepository contractRepository;
 	private final ActivityRepository activityRepository;
+	private final FileService fileService;
 
 
 	//계약서 승인
@@ -89,7 +93,7 @@ public class ContractServiceImpl implements ContractService {
 		Contract contract = contractRepository.findByHomeNoProgress(APPLIED, homeNo)
 			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
 
-		return contract.getContractUrl();
+		return fileService.createPresignedUrlToDownload(contract.getContractUrl());
 	}
 
 	/**
@@ -106,7 +110,7 @@ public class ContractServiceImpl implements ContractService {
 		Contract contract = contractRepository.findByHomeNoProgress(IN_PROGRESS, homeNo)
 			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
 
-		return contract.getContractUrl();
+		return fileService.createPresignedUrlToDownload(contract.getContractUrl());
 	}
 
 	/**
@@ -123,21 +127,26 @@ public class ContractServiceImpl implements ContractService {
 		Contract contract = contractRepository.findByHomeNoProgress(DONE, homeNo)
 			.orElseThrow(() -> new ContractNotExistException("homeNo", homeNo));
 
-		return contract.getContractUrl();
+		return fileService.createPresignedUrlToDownload(contract.getContractUrl());
 	}
 
 	/**
-	 * 학생이 작성한 전체 계약서 조회
+	 * 학생이 작성한 전체 계약서 url 조회
 	 * @param memberNo
-	 * @return 계약서 리스트
+	 * @return 계약서 url 리스트
 	 */
 	@Override
-	public List<Contract> getContracts(Long memberNo) {
+	public List<ContractUrlDto> getContracts(Long memberNo) {
 		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 
-		return contractRepository.findAllByMemberNo(memberNo)
-			.orElseThrow(() -> new ContractNotExistException("memberNo",memberNo));
+		List<Contract> contracts = contractRepository.findAllByMemberNo(memberNo)
+			.orElseThrow(() -> new ContractNotExistException("memberNo", memberNo));
+
+		return contracts.stream()
+			.map(contract -> new ContractUrlDto(String.valueOf(contract.getContractNo()), contract.getContractUrl()))
+			.collect(Collectors.toList());
+
 	}
 
 	/**

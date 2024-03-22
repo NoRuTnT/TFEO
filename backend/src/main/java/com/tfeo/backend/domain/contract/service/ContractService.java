@@ -2,10 +2,7 @@ package com.tfeo.backend.domain.contract.service;
 
 import java.util.List;
 
-import com.tfeo.backend.domain.contract.model.entity.Contract;
-import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
-import com.tfeo.backend.domain.member.model.entity.Member;
-import org.springframework.transaction.annotation.Transactional;
+import com.tfeo.backend.domain.contract.model.dto.ContractUrlDto;
 
 public interface ContractService {
 	void creationContract(Long memberNo, Long homeNo);
@@ -16,7 +13,7 @@ public interface ContractService {
 
 	String getContractDone(Long memberNo, Long homeNo);
 
-	List<Contract> getContracts(Long memberNo);
+	List<ContractUrlDto> getContracts(Long memberNo);
 
 	void signContract(Long memberNo, Long contractNo);
 
