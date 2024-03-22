@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import React from 'react';
+import '../../styles/home/MapBox.css';
 
 declare global {
   interface Window {
@@ -7,7 +8,7 @@ declare global {
   }
 }
 
-export default function Mapbox() {
+export default function MapBox() {
   const [map, setMap] = useState<any>();
   const [marker, setMarker] = useState<any>();
 
@@ -24,5 +25,5 @@ export default function Mapbox() {
     });
   }, []);
 
-  return <div id="map" style={{ width: '100%', height: '400px' }}></div>;
+  return <div className="mapbox-container" id="map"></div>;
 }

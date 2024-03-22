@@ -4,7 +4,7 @@ import '../styles/MainPage.css';
 import ImageSlider from '../components/ImageSlider';
 import Footer from '../components/footer/Footer';
 import '../styles/Footer.css';
-import Mapbox from '../components/Mapbox';
+import MapBox from '../components/home/MapBox';
 const MainPage: React.FC = () => {
   return (
     <div className="main-page">
@@ -13,7 +13,7 @@ const MainPage: React.FC = () => {
       </div>
 
       <button>지도로 보기</button>
-      <Mapbox />
+      <MapBox />
       <Footer />
     </div>
   );
