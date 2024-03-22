@@ -5,8 +5,8 @@ pipeline {
     }
     environment {
         // 환경 변수를 선언하고 초기화
-        GITLAB_SOURCE_BRANCH = "${env.gitlabSourceBranch}"
-        GITLAB_TARGET_BRANCH = "${env.gitlabTargetBranch}"
+        GITLAB_SOURCE_BRANCH = "$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
+        GITLAB_TARGET_BRANCH = "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
     }
     post {
         success {
