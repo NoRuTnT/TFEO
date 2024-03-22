@@ -24,18 +24,19 @@ pipeline {
         stage('Get Merge Request and preBuildMerge') {
             steps {
                 cleanWs()
-                script {
-                    echo "The GitLab source branch is: ${GITLAB_SOURCE_BRANCH}"
-                    echo "The GitLab target branch is: ${GITLAB_TARGET_BRANCH}"
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "origin/${GITLAB_SOURCE_BRANCH}"]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${GITLAB_TARGET_BRANCH}"]]],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
-                    ])
-                }
+//                 script {
+//                     echo "The GitLab source branch is: ${GITLAB_SOURCE_BRANCH}"
+//                     echo "The GitLab target branch is: ${GITLAB_TARGET_BRANCH}"
+//                     checkout([
+//                         $class: 'GitSCM',
+//                         branches: [[name: "origin/${GITLAB_SOURCE_BRANCH}"]],
+//                         doGenerateSubmoduleConfigurations: false,
+//                         extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${GITLAB_TARGET_BRANCH}"]]],
+//                         submoduleCfg: [],
+//                         userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
+//                     ])
+//                 }
+                checkout scm
             }
         }
 
