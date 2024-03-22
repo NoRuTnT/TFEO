@@ -51,6 +51,7 @@ services:
     env_file:
       - tfeo-back/env/db.env
       - tfeo-back/env/test-db.env
+      - tfeo-back/env/security.env
     environment:
       TZ: Asia/Seoul
     depends_on:
