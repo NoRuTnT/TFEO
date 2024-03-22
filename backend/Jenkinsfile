@@ -3,6 +3,11 @@ pipeline {
     tools {
         gradle 'gradle'
     }
+    environment {
+        // 환경 변수를 선언하고 초기화
+        GITLAB_SOURCE_BRANCH = "${env.gitlabSourceBranch}"
+        GITLAB_TARGET_BRANCH = "${env.gitlabTargetBranch}"
+    }
     post {
         success {
             // 빌드가 성공했을 때 GitLab에 성공 상태를 알립니다.
@@ -20,13 +25,15 @@ pipeline {
             steps {
                 cleanWs()
                 script {
+                    echo "The GitLab source branch is: ${GITLAB_SOURCE_BRANCH}"
+                    echo "The GitLab source branch is: ${GITLAB_TARGET_BRANCH}"
                     checkout([
                         $class: 'GitSCM',
-                        branches: [[name: "origin/${env.gitlabSourceBranch}"]],
+                        branches: [[name: "origin/${GITLAB_SOURCE_BRANCH}"]],
                         doGenerateSubmoduleConfigurations: false,
-                        extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${env.gitlabTargetBranch}"]]],
+                        extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${GITLAB_TARGET_BRANCH}"]]],
                         submoduleCfg: [],
-                        userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707']]
+                        userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
                     ])
                 }
             }
