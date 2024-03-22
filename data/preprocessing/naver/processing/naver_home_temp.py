@@ -1,6 +1,6 @@
 import csv
 
-file = open('../data/naver_home_ansi.csv', 'r', encoding='ANSI')
+file = open('../data/naver_home_utf8.csv', 'r', encoding='UTF8')
 fReader = csv.reader(file)
 data_csv = []
 for line in fReader:
@@ -9,7 +9,7 @@ file.close()
 print(data_csv)
 
 
-newFile = open('../data/naver_home_utf8.csv', 'w', encoding='UTF8', newline='')
+newFile = open('../data/naver_home_ansi.csv', 'w', encoding='ANSI', newline='')
 writer = csv.writer(newFile)
 writer.writerows(data_csv)
 newFile.close()

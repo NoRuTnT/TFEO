@@ -3,7 +3,7 @@ import requests
 
 # kakao api (도로명주소)
 url = "https://dapi.kakao.com/v2/local/geo/coord2address.json"
-REST_API_KEY = "b5d75b7ac5b0138157e2ee46717e396c"
+REST_API_KEY = ""
 headers = {"Authorization": "KakaoAK {}".format(REST_API_KEY)}
 
 file = open('../data/naver_data_final_utf8.csv', 'r', encoding='UTF8')
@@ -41,6 +41,8 @@ for line in fReader:
             data[3] = road_address.get("road_name") + " " + road_address.get("main_building_no")
             data[9] = road_address.get("address_name")
     data[4] = line[1]
+
+    data[4] = line[1] + "층"
     data[5] = line[2]
     data[6] = line[5]
     data[7] = line[6]
@@ -50,7 +52,7 @@ file.close()
 print(data_csv)
 
 
-newFile = open('../data/naver_home_utf8=.csv', 'w', encoding='UTF8', newline='')
+newFile = open('../data/naver_home_utf8.csv', 'w', encoding='UTF8', newline='')
 writer = csv.writer(newFile)
 writer.writerows(data_csv)
 newFile.close()
