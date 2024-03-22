@@ -63,7 +63,7 @@ services:
     container_name: "front"
     build:
       dockerfile: "dockerfile"
-      context: "../../Frontend"
+      context: "../../frontend"
     image: tfeo-front-image
     networks:
       - tfeo-network
