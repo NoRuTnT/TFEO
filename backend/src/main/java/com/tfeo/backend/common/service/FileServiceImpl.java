@@ -34,7 +34,7 @@ public class FileServiceImpl implements FileService {
 	 */
 	@Override
 	public String createPresignedUrlToUpload(String filePath) {
-		String folder = new StringTokenizer(filePath, "/").nextToken();
+		String folder = new StringTokenizer(filePath, "/").nextToken() + "/";
 		// s3에 해당 폴더가 존재하는 지 검증
 		validateFileExists(folder);
 
