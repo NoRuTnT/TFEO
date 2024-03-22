@@ -8,6 +8,9 @@ from starlette.responses import JSONResponse
 from enum import Enum
 from bson.json_util import dumps
 
+from recommend_house import Recommendation
+
+
 import uvicorn
 import json
 import traceback
