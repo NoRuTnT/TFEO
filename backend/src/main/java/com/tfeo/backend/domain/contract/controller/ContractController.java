@@ -38,7 +38,6 @@ public class ContractController {
 	@PutMapping(value = "/completion/{contractNo}")
 	public ResponseEntity<SuccessResponse> contractCompletion(
 		@PathVariable Long contractNo){
-		Long memberNo = 1L;
 		contractService.completionContract(contractNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "성공적으로 계약서가 생성되었습니다.", null));
 	}
