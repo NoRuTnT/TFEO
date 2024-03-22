@@ -5,7 +5,9 @@ pipeline {
     }
     environment {
         // 환경 변수를 선언하고 초기화
+        imageName = "norutnt/develop"
         registryCredential = "tfeo-docker"
+        dockerImage = ''
         GITLAB_SOURCE_BRANCH = "$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
         GITLAB_TARGET_BRANCH = "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
     }
