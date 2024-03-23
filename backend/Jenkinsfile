@@ -24,8 +24,6 @@ pipeline {
             steps {
                 cleanWs()
                 script {
-                    echo "The GitLab source branch is: ${env.gitlabSourceBranch}"
-                    echo "The GitLab target branch is: ${env.gitlabTargetBranch}"
                     checkout([
                         $class: 'GitSCM',
                         branches: [[name: "origin/${env.gitlabSourceBranch}"]],
