@@ -1,3 +1,4 @@
+DROP USER IF EXISTS 'tfeo'@'%';
 CREATE USER 'tfeo'@'%' IDENTIFIED BY 'tfeo123';
 GRANT CREATE ON *.* TO 'tfeo'@'%';
 
