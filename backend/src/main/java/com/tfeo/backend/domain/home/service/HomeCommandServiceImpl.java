@@ -11,12 +11,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tfeo.backend.common.model.type.ContractProgressType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.common.service.FileService;
+import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
 import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
 import com.tfeo.backend.domain.home.common.exception.HomeNotRegisteredByNoneMember;
 import com.tfeo.backend.domain.home.common.exception.HomeOptionNotExistException;
 import com.tfeo.backend.domain.home.common.exception.HostPersonalityNotExistException;
+import com.tfeo.backend.domain.home.model.dto.CreateFormResponseDto;
 import com.tfeo.backend.domain.home.model.dto.HomeApplicationRequestDto;
 import com.tfeo.backend.domain.home.model.dto.HomeDto;
 import com.tfeo.backend.domain.home.model.dto.HomeOptionDto;
@@ -35,6 +37,7 @@ import com.tfeo.backend.domain.home.repository.HostImageRepository;
 import com.tfeo.backend.domain.home.repository.HostPersonalityRepository;
 import com.tfeo.backend.domain.member.common.exception.ApplicationNotExistException;
 import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
+import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 
@@ -160,7 +163,7 @@ public class HomeCommandServiceImpl implements HomeCommandService {
 	}
 
 	@Override
-	public void approveHomeApplication(HomeApplicationRequestDto homeApplicationRequest) {
+	public CreateFormResponseDto approveHomeApplication(HomeApplicationRequestDto homeApplicationRequest) {
 		Member member = memberRepository.findById(homeApplicationRequest.getMemberNo())
 			.orElseThrow(() -> new MemberNotExistException(homeApplicationRequest.getMemberNo()));
 		Home home = homeRepository.findById(homeApplicationRequest.getHomeNo())
@@ -169,7 +172,11 @@ public class HomeCommandServiceImpl implements HomeCommandService {
 			.orElseThrow(() -> new ApplicationNotExistException(homeApplicationRequest.getHomeNo(),
 				homeApplicationRequest.getMemberNo()));
 		contract.setProgress(ContractProgressType.IN_PROGRESS);
+		ContractResponseDto contractResponseDto = new ContractResponseDto(contract);
+		HomeDto homeDto = new HomeDto(home);
+		MemberResponseDto memberResponseDto = new MemberResponseDto(member);
 		contractRepository.save(contract);
+		return new CreateFormResponseDto(homeDto, contractResponseDto, memberResponseDto);
 	}
 
 	@Override

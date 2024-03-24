@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,11 +25,9 @@ import lombok.RequiredArgsConstructor;
 public class HomeCommandController {
 	private final HomeCommandServiceImpl homeCommandService;
 
-	//Todo: Security 적용, Home 관련 crud에 image 관련도 추가
-
 	//담당자가 집 등록 - 담당자
 	@PostMapping("")
-	public ResponseEntity<SuccessResponse> homeAdd(HomeRequestDto request) {
+	public ResponseEntity<SuccessResponse> homeAdd(@RequestBody HomeRequestDto request) {
 		HomeResponseDto homeResponseDto = homeCommandService.addHome(request);
 		return ResponseEntity.ok(
 			SuccessResponse.builder()
@@ -40,7 +39,7 @@ public class HomeCommandController {
 
 	//비회원 등록 - 비회원
 	@PostMapping("/none-member")
-	public ResponseEntity<SuccessResponse> homeAppliedByNoneMemberAdd(HomeDto request) {
+	public ResponseEntity<SuccessResponse> homeAppliedByNoneMemberAdd(@RequestBody HomeDto request) {
 		//Todo: 최후순위 개발
 		homeCommandService.addHomeAppliedByNoneMember(request);
 		return null;
@@ -48,7 +47,8 @@ public class HomeCommandController {
 
 	//등록된 집 정보 수정 - 담당자
 	@PutMapping("homeNo")
-	public ResponseEntity<SuccessResponse> homeModify(@PathVariable("homeNo") Long homeNo, HomeRequestDto request) {
+	public ResponseEntity<SuccessResponse> homeModify(@PathVariable("homeNo") Long homeNo,
+		@RequestBody HomeRequestDto request) {
 		HomeResponseDto homeResponseDto = homeCommandService.modifyHome(homeNo, request);
 		return ResponseEntity.ok(
 			SuccessResponse.builder()
@@ -83,14 +83,19 @@ public class HomeCommandController {
 
 	//학생 룸쉐어링 신청 승인 - 담당자
 	@PutMapping("/apply-approval")
-	public ResponseEntity<SuccessResponse> homeApplicationApproval(HomeApplicationRequestDto homeApplicationRequest) {
-		homeCommandService.approveHomeApplication(homeApplicationRequest);
-		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).message("해당 학생이 승인되었습니다.").build());
+	public ResponseEntity<SuccessResponse> homeApplicationApproval(
+		@RequestBody HomeApplicationRequestDto homeApplicationRequest) {
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.status(HttpStatus.OK)
+			.message("해당 학생이 승인되었습니다.")
+			.result(homeCommandService.approveHomeApplication(homeApplicationRequest))
+			.build());
 	}
 
 	//학생 룸쉐어링 신청 거절 - 담당자
 	@DeleteMapping("/apply-refusal")
-	public ResponseEntity<SuccessResponse> homeApplicationRefusal(HomeApplicationRequestDto homeApplicationRequest) {
+	public ResponseEntity<SuccessResponse> homeApplicationRefusal(
+		@RequestBody HomeApplicationRequestDto homeApplicationRequest) {
 		homeCommandService.refuseHomeApplication(homeApplicationRequest);
 		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).message("해당 학생이 거절되었습니다.").build());
 	}
