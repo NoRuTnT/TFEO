@@ -102,59 +102,62 @@ pipeline {
                 }
             }
         }
+        // Merge Request에서는 여기까지만 실행하고, 실제 Merge에서는 나머지 스테이지도 실행
+        stage('Conditional Steps'){
+            when{
+                expression { env.CI_MERGE_REQUEST_ID == null }
+            }
 
-        stage('Image Build & DockerHub Push') {
-            steps {
-                dir('backend') {
-                    script {
-                        docker.withRegistry('', registryCredential) {
-                            // 이미지 빌드
-                            sh "docker build -t $imageName:$BUILD_NUMBER ."
-                            sh "docker build -t $imageName:latest ."
+            stage('Image Build & DockerHub Push') {
+                steps {
+                    dir('backend') {
+                        script {
+                            docker.withRegistry('', registryCredential) {
+                                // 이미지 빌드
+                                sh "docker build -t $imageName:$BUILD_NUMBER ."
+                                sh "docker build -t $imageName:latest ."
 
-                            // Docker Hub에 푸시
-                            sh "docker push $imageName:$BUILD_NUMBER"
-                            sh "docker push $imageName:latest"
+                                // Docker Hub에 푸시
+                                sh "docker push $imageName:$BUILD_NUMBER"
+                                sh "docker push $imageName:latest"
+                            }
                         }
                     }
                 }
             }
-        }
 
-        stage('Before Service Stop') {
-            steps {
-                sshagent(credentials: ['ubuntu']) {
-                    sh '''
-                    containers=$(ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker ps -aq --filter ancestor=$imageName:latest")
-                    if [ ! -z "$containers" ]; then
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker stop $containers"
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rm -f $containers"
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rmi $imageName:latest"
-                    fi
-                    '''
+            stage('Before Service Stop') {
+                steps {
+                    sshagent(credentials: ['ubuntu']) {
+                        sh '''
+                        containers=$(ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker ps -aq --filter ancestor=$imageName:latest")
+                        if [ ! -z "$containers" ]; then
+                            ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker stop $containers"
+                            ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rm -f $containers"
+                            ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rmi $imageName:latest"
+                        fi
+                        '''
+                    }
+                }
+            }
+
+            stage('DockerHub Pull') {
+                steps {
+                    sshagent(credentials: ['ubuntu']) {
+                        sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $imageName:latest'"
+                    }
+                }
+            }
+
+            stage('Service Start') {
+                steps {
+                    sshagent(credentials: ['ubuntu']) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=set1" --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
+                        '''
+                    }
                 }
             }
         }
-
-        stage('DockerHub Pull') {
-            steps {
-                sshagent(credentials: ['ubuntu']) {
-                    sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $imageName:latest'"
-                }
-            }
-        }
-
-        stage('Service Start') {
-            steps {
-                sshagent(credentials: ['ubuntu']) {
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=set1" --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
-                    '''
-                }
-            }
-        }
-
-
-
     }
 }
