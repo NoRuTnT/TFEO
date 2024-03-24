@@ -102,6 +102,7 @@ pipeline {
                 }
             }
         }
+
         // Merge Request에서는 여기까지만 실행하고, 실제 Merge에서는 나머지 스테이지도 실행
         stage('Conditional Steps'){
             when{
