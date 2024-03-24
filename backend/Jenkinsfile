@@ -125,10 +125,11 @@ pipeline {
             steps {
                 sshagent(credentials: ['ubuntu']) {
                     sh '''
-                    if test "`ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker ps -aq --filter ancestor=$imageName:latest"`"; then
-                    ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker stop $(docker ps -aq --filter ancestor=$imageName:latest)"
-                    ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rm -f $(docker ps -aq --filter ancestor=$imageName:latest)"
-                    ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rmi $imageName:latest"
+                    containers=$(ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker ps -aq --filter ancestor=$imageName:latest")
+                    if [ ! -z "$containers" ]; then
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker stop $containers"
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rm -f $containers"
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rmi $imageName:latest"
                     fi
                     '''
                 }
