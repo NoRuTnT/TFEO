@@ -7,7 +7,7 @@ from typing import Union # 예제 구현용
 from starlette.responses import JSONResponse
 from enum import Enum
 from bson.json_util import dumps
-
+from faker import Faker
 from recommend_house import Recommendation
 
 
@@ -24,7 +24,10 @@ port = 27017
 
 ###########
 client = MongoClient(host, port)
-db = client.example
+# db = client.example # 과일이름 crud 예시
+db = client.test # 집 정보가 담겨있는 DB
+
+
 """
 public enum BuildingType {
 	APT,				// 아파트
@@ -34,6 +37,16 @@ public enum BuildingType {
 	DDDGG,				// 단독, 다가구
 }
 """
+
+gender = ['M', 'F']
+bank = ['국민', '우리', '신한',
+        '하나', '농협', '기업',
+        '씨티', 'SC제일', '우체국',
+        '산업', '토스', '부산',
+        '경남', '대구', '전북',
+        '광주', '수협', '제주',
+        '케이', '카카오']
+
 class BuildingType(Enum):
     APT = 1
     OPST = 2
@@ -78,7 +91,6 @@ class Home(BaseModel):
     introduce: str # 소개
     host_personality_no: int # 식별키
     home_option_no: int # 식별자
-    maintenance_fee: int # 관리비
     image_url: str # 이미지 URL (저장된 서버 URL)
     # 호스트
     smoke: bool  # 흡연 여부
@@ -91,6 +103,36 @@ class Home(BaseModel):
     cold: bool  # 추위잘타는
     hot: bool  # 더위잘타는
     no_touch: bool  # 간섭안하는
+    # 집별 옵션
+    internet: bool # 인터넷 여부
+    gas: bool # 가스레인지 여부
+    washing_machine: bool # 세탁기 여부
+    air_conditioner: bool # 에어컨 여부
+    refrigerator: bool # 냉장고 여부
+    elevator: bool # 엘리베이터 여부
+    microwave: bool # 전자레인지 여부
+    breakfast: bool # 조식 여부
+    toilet: bool # 개인화장실 여부
+    heating: bool # 난방 여부
+    parking: bool # 주차 여부
+    station: bool # 역세권 여부
+    move_in_date: bool
+    sink: bool # 싱크대
+    type: BuildingType  # 건축물 종류(ENUM)
+    # 집 사진
+    home_image_no: int
+    home_image_url: str
+    # 호스트 사진
+    host_image_no: int
+    host_image_url: str
+
+
+
+
+
+###############################
+# 아래부터 검색에 필요한 2개의 DTO #
+###############################
 
 class Home_Option(BaseModel): # 집별 옵션
     home_option_no: int # 식별자
@@ -109,6 +151,25 @@ class Home_Option(BaseModel): # 집별 옵션
     move_in_date: bool # 즉시입주가능 여부
     sink: bool # 싱크대 여부
     type: BuildingType # 건축물 종류(ENUM)
+
+class Member_Personality(BaseModel): # 집추천 설문내용 DTO
+    member_personality_no: int # 식별키
+    daytime: bool # 주간형
+    nighttime: bool # 야간형
+    fast: bool # 빠른 귀가
+    last: bool # 늦은 귀가
+    dinner: bool # 함께 저녁
+    smoke: bool # 흡연
+    drink: bool # 술 자주 마시는
+    outside: bool # 집을 잘 비우는
+    inside: bool # 집돌이/집순이
+    quite: bool # 조용한
+    live_long: bool # 장기거주
+    live_short: bool # 단기거주
+    pet: bool # 반려동물
+    cold: bool # 추위잘타는
+    hot: bool # 더위잘타는
+    host_house_prefer: int # 호스트 집 선호도
 
 
 ##########################################
@@ -141,10 +202,14 @@ def update_house():
 
 
 
+
+
 # 사용자 맞춤형 추천이 반영된 결과를 반환
 @app.get("/recommend")
-def get_recommended_list():
-    weight = 100 # 0-10사이의 값을 적당하게 mapping
+def get_recommended_list(home_option: Home_Option, member_personality: Member_Personality):
+
+    weight = member_personality.host_house_prefer # 0-10사이의 값을 적당하게 mapping
+    print(weight)
     # 1. 입력으로 주어진 좌표 범위 내 주택만 filtering
 
     # Ex)
@@ -186,6 +251,25 @@ def delete_house(item_name):
     dicted_item = None
     return "complete"
     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
+
+# for test
+@app.get("/select/one/{home_no}")
+def get_one_home(home_no: int, q: Union[Home, None] = None):
+    data = db.home.find({'home_no': home_no})
+    # data = db.home.find({'home_no': 12},{'_id': False})
+    # print(data)
+    # print(list(data)[0])
+
+
+    # find().limit(7) # 7개로 출력할 횟수 제한
+
+
+    return data.dict()
+
+# @app.get("/items/{item_id}")
+# def read_item(item_id: int, q: Union[str, None] = None):
+#     return {"item_id": item_id, "q": q}
+
 
 
 def init():

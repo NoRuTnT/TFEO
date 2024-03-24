@@ -19,9 +19,11 @@ host = 'localhost'
 port = 27017
 # db = None
 
-###########
 client = MongoClient(host, port)
-db = client.example
+
+# db = client.example # 과일이름 crud 예시
+db = client.test # 집 정보가 담겨있는 DB
+
 """
 public enum BuildingType {
 	APT,				// 아파트
@@ -112,14 +114,29 @@ def get_all_list():
     # print(list(data))
     return list(data)
 
+# for test
+@app.get("/select/one")
+def get_one_home():
+    data = db.home.find({'home_no':12}, {'_id': False})
+    print(data)
+    # print(list(data))
+    json_format = {
+        'id': 2300,
+        'pw': 'qwerty'
+    }
+    return json_format
+
+
 # 등록된 집 추가
-@app.post("/insert/")
-def insert_house(item: Item):
-    db.items.insert_one(item.dict())
-    return "complete"
+# @app.post("/insert/")
+# def insert_house(item: Item):
+#     db.items.insert_one(item.dict())
+#     return "complete"
 
 
 # 터미널창에
 # python -m uvicorn main:app --reload
+
 if __name__ == '__main__':
+    print('FastAPI server')
     # init() # mongoDB 연결
