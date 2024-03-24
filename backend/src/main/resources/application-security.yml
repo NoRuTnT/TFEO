@@ -9,5 +9,3 @@ coolsms:
   api:
     key: ${COOLSMS_API_KEY}
     secret: ${COOLSMS_API_SECRET_KEY}
-server:
-  port: 8081
