@@ -105,7 +105,7 @@ pipeline {
 
         stage('Image Build & DockerHub Push') {
             steps {
-                dir('Backend') {
+                dir('backend') {
                     script {
                         docker.withRegistry('', registryCredential) {
                             // 이미지 빌드
