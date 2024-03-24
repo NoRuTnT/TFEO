@@ -8,6 +8,10 @@ pipeline {
         imageName = "norutnt/develop"
         registryCredential = "tfeo-docker"
         dockerImage = ''
+
+        releaseServerAccount = 'ubuntu'
+        releaseServerUri = 'j10a707.p.ssafy.io'
+        releasePort = '8081'
     }
     post {
         success {
@@ -103,15 +107,48 @@ pipeline {
                 dir('Backend') {
                     script {
                         docker.withRegistry('', registryCredential) {
-                            sh "docker buildx create --name mybuilder"
-                            sh "docker buildx use mybuilder"
-                            sh "docker buildx build --platform linux/amd64,linux/arm64 -t $imageName:$BUILD_NUMBER --push ."
-                            sh "docker buildx build --platform linux/amd64,linux/arm64 -t $imageName:latest --push ."
+                            // 이미지 빌드
+                            sh "docker build -t $imageName:$BUILD_NUMBER ."
+                            sh "docker build -t $imageName:latest ."
+
+                            // Docker Hub에 푸시
+                            sh "docker push $imageName:$BUILD_NUMBER"
+                            sh "docker push $imageName:latest"
                         }
                     }
                 }
             }
         }
+        stage('Before Service Stop') {
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh '''
+                    if test "`ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker ps -aq --filter ancestor=$imageName:latest"`"; then
+                    ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker stop $(docker ps -aq --filter ancestor=$imageName:latest)"
+                    ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rm -f $(docker ps -aq --filter ancestor=$imageName:latest)"
+                    ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rmi $imageName:latest"
+                    fi
+                    '''
+                }
+            }
+        }
+        stage('DockerHub Pull') {
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $imageName:latest'"
+                }
+            }
+        }
+        stage('Service Start') {
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=set1" --name back -p $releasePort:$releasePort -d $imageName:latest"
+                    '''
+                }
+            }
+        }
+
 
 
     }
