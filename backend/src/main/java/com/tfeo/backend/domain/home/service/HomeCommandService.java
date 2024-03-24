@@ -1,5 +1,6 @@
 package com.tfeo.backend.domain.home.service;
 
+import com.tfeo.backend.domain.home.model.dto.CreateFormResponseDto;
 import com.tfeo.backend.domain.home.model.dto.HomeApplicationRequestDto;
 import com.tfeo.backend.domain.home.model.dto.HomeDto;
 import com.tfeo.backend.domain.home.model.dto.HomeRequestDto;
@@ -18,7 +19,7 @@ public interface HomeCommandService {
 
 	public void refuseHomeNoneMemberRegistration(Long homeNo);
 
-	public void approveHomeApplication(HomeApplicationRequestDto homeApplicationRequest);
+	public CreateFormResponseDto approveHomeApplication(HomeApplicationRequestDto homeApplicationRequest);
 
 	public void refuseHomeApplication(HomeApplicationRequestDto homeApplicationRequest);
 }
