@@ -17,6 +17,7 @@ import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
 import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
+import com.tfeo.backend.domain.member.model.dto.MemberHomeApplicationRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 import com.tfeo.backend.domain.member.model.dto.MyHomeResponseDto;
@@ -79,8 +80,9 @@ public class MemberController {
 
 	//회원이 집을 신청한다
 	@PostMapping("/home/{homeNo}")
-	public ResponseEntity<SuccessResponse> homeApplicationAdd(@PathVariable Long homeNo) {
-		memberService.addHomeApplication(homeNo, temporaryMemberNo);
+	public ResponseEntity<SuccessResponse> homeApplicationAdd(@PathVariable Long homeNo,
+		@RequestBody MemberHomeApplicationRequestDto memberHomeApplicationRequestDto) {
+		memberService.addHomeApplication(homeNo, temporaryMemberNo, memberHomeApplicationRequestDto);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("집 신청이 성공했습니다.")
