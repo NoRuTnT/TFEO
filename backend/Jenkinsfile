@@ -143,7 +143,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['ubuntu']) {
                     sh '''
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=set1" --name back -p $releasePort:$releasePort -d $imageName:latest"
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=set1" --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
                     '''
                 }
             }
