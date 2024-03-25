@@ -23,6 +23,14 @@ class BuildingType(Enum):
     JT = 4
     DDDGG = 5
 
+class MemberRoleType(Enum):
+    MEMBER = 1
+    UNAUTHORIZED_MEMBER = 2
+    MANAGER = 3
+
+
+member_role = ['MEMBER', 'UNAUTHORIZED_MEMBER']
+
 gender = ['M', 'F']
 bank = ['국민', '우리', '신한',
         '하나', '농협', '기업',
@@ -32,8 +40,7 @@ bank = ['국민', '우리', '신한',
         '광주', '수협', '제주',
         '케이', '카카오']
 
-
-
+boolean = [False, True]
 
 class Home(BaseModel):
     # 집
@@ -99,7 +106,23 @@ def merge_naver_home_csv():
     merge_df.to_csv('CSV_Data/naver_home_merged.csv', index=False) # 합친 df를 csv로 저장
 
 
-
+# For MySQL
+home_columns = ['home_no', 'host_name', 'host_age', 'host_phone',
+                'host_gender', 'guardian_name', 'guardian_phone',
+                'relation', 'host_register_no', 'host_account_no',
+                'host_bank', 'address', 'rent', 'lat', 'lng',
+                'MemberRoleType', 'introduce', 'host_personality_no',
+                'home_option_no']
+host_personality_columns = ['host_personality_no', 'smoke', 'pet',
+                            'clean', 'daytime', 'nighttime', 'extrovert',
+                            'introvert', 'cold', 'hot', 'no_touch']
+home_option_columns = ['home_option_no', 'internet', 'gas',
+                       'washing_machine', 'air_conditioner', 'refrigerator',
+                       'elevator', 'microwave', 'breakfast', 'toilet',
+                       'heating', 'parking', 'station', 'move_in_date',
+                       'sink', 'type']
+home_image_columns = ['home_image_no', 'home_image_url', 'home_no']
+host_image_columns = ['host_image_no', 'home_no', 'host_image_url']
 def init_MongoDB_Naver():
     print('MongoDB에 내용 입력')
     df = pd.read_csv('CSV_Data/naver_home_merged.csv', encoding='UTF-8')
@@ -107,27 +130,69 @@ def init_MongoDB_Naver():
     json_list = []
     fake = Faker('ko_KR')
     Faker.seed()
+    # MySQL에 들어갈 csv파일 작성
+    # (1) 집
+    # df_home = pd.DataFrame(data='데이터', columns=home_columns)
+    df_home = pd.DataFrame(columns=home_columns)
+    # (2) 호스트 성향조사
+    # df_host_personality = pd.DataFrame(data='데이터', columns=host_personality_columns)
+    df_host_personality = pd.DataFrame(columns=host_personality_columns)
+    # (3) 집별 옵션
+    # df_home_option = pd.DataFrame(data='데이터', columns=home_option_columns)
+    df_home_option = pd.DataFrame(columns=home_option_columns)
+    # (4) 집 사진
+    # df_home_image = pd.DataFrame(data='데이터', columns=home_image_columns)
+    df_home_image = pd.DataFrame(columns=home_image_columns)
+    # (5) 호스트 사진
+    # df_host_image = pd.DataFrame(data='데이터', columns=host_image_columns)
+    df_host_image = pd.DataFrame(columns=host_image_columns)
+
     with open('CSV_Data/naver_home_merged.csv', 'r', encoding='utf-8-sig') as f:
         csvReader = csv.DictReader(f)
 
         for idx, rows in enumerate(csvReader):
             json_data = {}
+
             # 집별 옵션
-            json_data['internet'] = True if rows['internet']==1 else False
-            json_data['gas'] = True if rows['gas']==1 else False
-            json_data['washing_machine'] = True if rows['washing_machine']==1 else False
-            json_data['air_conditioner'] = True if rows['air_conditioner']==1 else False
-            json_data['refrigerator'] = True if rows['refrigerator']==1 else False
-            json_data['elevator'] = True if rows['elevator']==1 else False
-            json_data['microwave'] = True if rows['microwave']==1 else False
-            json_data['breakfast'] = True if rows['breakfast']==1 else False
-            json_data['toilet'] = True if rows['toilet']==1 else False
-            json_data['heating'] = True if rows['heating']==1 else False
-            json_data['parking'] = True if rows['parking']==1 else False
-            json_data['station'] = True if rows['station']==1 else False
-            json_data['move_in_date'] = True if rows['move_in_date']==1 else False
-            json_data['sink'] = True if rows['sink']==1 else False
+            # json_data['internet'] = True if rows['internet']==1 else False
+
+
+            json_data['internet'] = boolean[int(rows['internet'])]
+            json_data['gas'] = boolean[int(rows['gas'])]
+            json_data['washing_machine'] = boolean[int(rows['washing_machine'])]
+            json_data['air_conditioner'] = boolean[int(rows['air_conditioner'])]
+            json_data['refrigerator'] = boolean[int(rows['refrigerator'])]
+            json_data['elevator'] = boolean[int(rows['elevator'])]
+            json_data['microwave'] = boolean[int(rows['microwave'])]
+            json_data['breakfast'] = boolean[int(rows['breakfast'])]
+            json_data['toilet'] = boolean[int(rows['toilet'])]
+            json_data['heating'] = boolean[int(rows['heating'])]
+            json_data['parking'] = boolean[int(rows['parking'])]
+            json_data['station'] = boolean[int(rows['station'])]
+            json_data['move_in_date'] = boolean[int(rows['move_in_date'])]
+            json_data['sink'] = boolean[int(rows['sink'])]
             json_data['type'] = rows['type'].strip()
+
+            new_row = {'home_option_no': idx, 'internet': json_data['internet'],
+                       'gas': json_data['gas'], 'washing_machine': json_data['washing_machine'],
+                       'air_conditioner': json_data['air_conditioner'],
+                       'refrigerator': json_data['refrigerator'],
+                       'elevator': json_data['elevator'],
+                       'microwave': json_data['microwave'],
+                       'breakfast': json_data['breakfast'],
+                       'toilet': json_data['toilet'],
+                       'heating': json_data['heating'],
+                       'parking': json_data['parking'],
+                       'station': json_data['station'],
+                       'move_in_date': json_data['move_in_date'],
+                       'sink': json_data['sink'],
+                       'type': json_data['type'],
+                       }
+            df_home_option = df_home_option._append(new_row, ignore_index=True)
+            # append(new_row, ignore_index=True)
+            # df = df.append(new_row, ignore_index=True)
+            # new_row = {'Name': 'John', 'Age': 30, 'City': 'New York'}
+
             # 호스트
             json_data['smoke'] = random.randint(0, 1) >= 0.5
             json_data['pet'] = random.randint(0, 1) >= 0.5
@@ -140,6 +205,20 @@ def init_MongoDB_Naver():
             json_data['hot'] = random.randint(0, 1) >= 0.5
             json_data['no_touch'] = random.randint(0, 1) >= 0.5
 
+            new_row = {
+                'host_personality_no': idx,
+                'smoke': json_data['smoke'],
+                'pet': json_data['pet'],
+                'clean': json_data['clean'],
+                'daytime': json_data['daytime'],
+                'nighttime': json_data['nighttime'],
+                'extrovert': json_data['extrovert'],
+                'introvert': json_data['introvert'],
+                'cold': json_data['cold'],
+                'hot': json_data['hot'],
+                'no_touch': json_data['no_touch'],
+            }
+            df_host_personality = df_host_personality._append(new_row, ignore_index=True)
             # 집
             json_data['home_no'] = idx
             json_data['host_name'] = fake.name()  # 이름
@@ -159,20 +238,67 @@ def init_MongoDB_Naver():
             json_data['lat']  = float(rows['lat'])  # 위도
             # json_data['lng']  = rows['lng'].strip()  # 경도
             json_data['lng']  = float(rows['lng'])  # 경도
-            json_data['noneRegisterMember'] = random.randint(0, 1) >= 0.5  # 비회원등록여부
+            # json_data['noneRegisterMember'] = random.randint(0, 1) >= 0.5  # 비회원등록여부
+            # json_data['noneRegisterMember'] = random.choice(list(MemberRoleType))  # 비회원등록여부
+            json_data['MemberRoleType'] = random.choice(list(member_role))  # 비회원등록여부
             json_data['introduce'] = rows['introduce'].strip()  # 주소
             json_data['host_personality_no'] = idx  # 식별키
             json_data['home_option_no'] = idx  # 식별자
+
+            new_row = {
+                'home_no': json_data['home_no'],
+                'host_name': json_data['host_name'],
+                'host_age': json_data['host_age'],
+                'host_phone': json_data['host_phone'],
+                'host_gender': json_data['host_gender'],
+                'guardian_name': json_data['guardian_name'],
+                'guardian_phone': json_data['guardian_phone'],
+                'relation': json_data['relation'],
+                'host_register_no': json_data['host_register_no'],
+                'host_account_no': json_data['host_account_no'],
+                'host_bank': json_data['host_bank'],
+                'address': json_data['address'],
+                'rent': json_data['rent'],
+                'lat': json_data['lat'],
+                'lng': json_data['lng'],
+                'MemberRoleType': json_data['MemberRoleType'],
+                'introduce': json_data['introduce'],
+                'host_personality_no': json_data['host_personality_no'],
+                'home_option_no': json_data['home_option_no']
+            }
+            df_home = df_home._append(new_row, ignore_index=True)
 
             # 집 사진
             json_data['home_image_no'] = idx
             json_data['home_image_url'] = 'home_image_url'
 
+            new_row = {
+                'home_image_no': json_data['home_image_no'],
+                'home_image_url': json_data['home_image_url'],
+                'home_no': json_data['home_no'],
+            }
+            df_home_image = df_home_image._append(new_row, ignore_index=True)
+
             # 호스트 사진
             json_data['host_image_no'] = idx
             json_data['host_image_url'] = 'host_image_url'
 
+            new_row = {
+                'host_image_no': json_data['host_image_no'],
+                'home_no': json_data['home_no'],
+                'host_image_url': json_data['host_image_url'],
+            }
+            df_host_image = df_host_image._append(new_row, ignore_index=True)
+
+            #############################
             json_list.append(json_data)
+
+        df_home_option.to_csv('MySQL/home_option.csv')
+        df_home.to_csv('MySQL/home.csv')
+        df_host_personality.to_csv('MySQL/host_personality.csv')
+
+        df_home_image.to_csv('MySQL/home_image.csv')
+        df_host_image.to_csv('MySQL/host_image.csv')
         db.home.insert_many(json_list)
 
 if __name__ == '__main__':
