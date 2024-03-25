@@ -21,6 +21,10 @@ pipeline {
         failure {
             updateGitlabCommitStatus name: 'build', state: 'failed'
         }
+        always {
+                    // 작업 종료 후 로그 파일을 Jenkins 작업의 아티팩트로 저장
+            archiveArtifacts artifacts: 'docker-compose-logs.txt', onlyIfSuccessful: true
+        }
     }
 
     stages {
@@ -44,7 +48,7 @@ pipeline {
         stage('Run Container') {
             steps {
                 dir('exec/docker') {
-                    sh 'docker-compose -f docker-compose.yml up -d'
+                    sh 'docker-compose -f docker-compose.yml up -d > docker-compose-logs.txt 2>&1'
                 }
             }
         }
