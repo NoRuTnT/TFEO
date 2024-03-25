@@ -3,9 +3,13 @@ package com.tfeo.backend.domain.home.model.dto;
 import com.tfeo.backend.common.model.type.BuildingType;
 import com.tfeo.backend.domain.home.model.entity.HomeOption;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class HomeOptionDto {
 	private Long homeOptionNo;
 	private Boolean internet;
