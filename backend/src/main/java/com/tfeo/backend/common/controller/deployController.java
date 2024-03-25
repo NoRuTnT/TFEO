@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class deployController {
 	private final Environment env;
 
-	@GetMapping("/status/profile")
+	@GetMapping("/profile")
 	public String getProfileName() {
 		return Arrays.stream(env.getActiveProfiles()).findFirst().orElse("");
 	}
