@@ -132,13 +132,8 @@ pipeline {
                 sshagent(credentials: ['ubuntu']) {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ubuntu@j10a707.p.ssafy.io "
-                    containers=\$(docker ps -aq --filter ancestor=norutnt/develop:latest)
-                    echo \$containers
-                    if [ ! -z \"\$containers\" ]; then
-                        docker stop \$containers
-                        docker rm -f \$containers
-                        docker rmi norutnt/develop:latest
-                    fi
+                    docker stop back || true
+                    docker rm -f back || true
                     "
                     '''
                 }
