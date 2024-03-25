@@ -11,7 +11,7 @@ interface HomeFilterState {
 }
 
 // 집 상세 정보
-interface Home {
+type Home = {
   // homeNo: number;
   // hostName: string;
   // hostAge: number;
@@ -51,7 +51,7 @@ interface Home {
   homeImg: string[];
   // -- host imageUrl
   hostImg: string[];
-}
+};
 
 // 집 리스트 상태 타입 정의
 interface HomeListState {
@@ -126,7 +126,6 @@ const initialListState: HomeListState = {
   selectHome: (homeNo: number) => {},
 };
 
-// zustand 스토어 생성
 export const useHomeStore = create<HomeFilterState & HomeListState>((set) => ({
   ...initialFilterState,
   ...initialListState,
