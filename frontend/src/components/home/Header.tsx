@@ -73,7 +73,7 @@ const Header: React.FC = () => {
   };
 
   const getIconStyle = (isActive: boolean): React.CSSProperties => ({
-    fontSize: '75px',
+    fontSize: '45px',
     color: isActive ? '#000000' : theme.palette.primary.contrastText,
   });
 
@@ -141,8 +141,8 @@ const Header: React.FC = () => {
             반려동물
           </span>
         </div>
-        <div className="circle-border" onClick={() => setModalOpen(true)}>
-          <TuneIcon fontSize="large" style={{ color: '#000000', cursor: 'pointer' }} />
+        <div className="circle-border">
+          <TuneIcon fontSize="medium" style={{ color: '#A0A0A0', cursor: 'pointer' }} />
         </div>
         {modalOpen && (
           <ModalContainer>
