@@ -130,14 +130,14 @@ pipeline {
             }
             steps {
                 sshagent(credentials: ['ubuntu']) {
-                    sh '''
-                    containers=$(ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker ps -aq --filter ancestor=$imageName:latest")
-                    if [ ! -z "$containers" ]; then
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker stop $containers"
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rm -f $containers"
+                    sh """
+                    containers=\$(ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker ps -aq --filter ancestor=$imageName:latest")
+                    if [ ! -z "\$containers" ]; then
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker stop \$containers"
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rm -f \$containers"
                         ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "docker rmi $imageName:latest"
                     fi
-                    '''
+                    """
                 }
             }
         }
@@ -159,9 +159,9 @@ pipeline {
             }
             steps {
                 sshagent(credentials: ['ubuntu']) {
-                    sh '''
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e "SPRING_PROFILES_ACTIVE=set1" --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
-                    '''
+                    sh """
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e \\"SPRING_PROFILES_ACTIVE=set1\\" --env-file=/home/ubuntu/env/db.env --env-file=/home/ubuntu/env/test-db.env --env-file=/home/ubuntu/env/security.env --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
+                    """
                 }
             }
         }
