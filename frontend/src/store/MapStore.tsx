@@ -2,20 +2,20 @@ import create from 'zustand';
 
 // 필터(header) 상태 타입 정의
 interface HomeFilterState {
-  nearUniv: boolean;
-  nearSubway: boolean;
-  apartment: boolean;
-  pet: boolean;
+  School: boolean;
+  Subway: boolean;
+  Apartment: boolean;
+  Pets: boolean;
   // 상태를 업데이트하는 함수
   selectFilter: (newState: Partial<HomeFilterState>) => void;
 }
 
 // 초기 상태
 const initialState: HomeFilterState = {
-  nearUniv: false,
-  nearSubway: false,
-  apartment: false,
-  pet: false,
+  School: false,
+  Subway: false,
+  Apartment: false,
+  Pets: false,
   selectFilter: (newState: Partial<HomeFilterState>) => {},
 };
 
