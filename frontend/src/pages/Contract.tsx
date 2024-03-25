@@ -22,14 +22,13 @@ const Contract = () => {
         ro: '흑석3로',
         detail: 'oo아파트 302동',
       },
-      homeImageList: [],
       guardianName: '',
       guardianPhone: '',
       hostAccountNo: '',
       hostAge: 64,
       hostBank: '',
       hostGender: 'M',
-      hostImageList: [],
+      hostPhone: '',
       hostName: '김복순',
       hostRegisterNo: '',
       lat: 36,
@@ -69,15 +68,17 @@ const Contract = () => {
       noTouch: false,
       smoke: false,
     },
+    homeImageList: [],
+    hostImageList: [],
   });
   const [contract, setContract] = useState<IContract>({
     contractNo: 1,
     contractUrl: 'asdf.url',
-    expiredAt: '2024-09-21T08:03:02',
+    expiredAt: '2024-09-21',
     hostSign: false,
     studentSign: false,
     progress: 'applied',
-    startAt: '2024-03-22T08:03:02',
+    startAt: '2024-03-22',
   });
   const setApplied = () => {
     setStatus('applied');
