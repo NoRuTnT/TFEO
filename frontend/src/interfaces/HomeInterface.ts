@@ -5,6 +5,7 @@ export interface IHome {
   hostName: string;
   hostAge: number;
   hostGender: string;
+  hostPhone: string;
   guardianName: string;
   guardianPhone: string;
   relation: string;
@@ -18,8 +19,6 @@ export interface IHome {
   noneRegisterMember: boolean;
   introduce: string;
   maintenanceFee: number;
-  hostImageList: string[];
-  homeImageList: string[];
 }
 
 export interface IHostPersonality {
@@ -57,4 +56,6 @@ export interface IHomeDetail {
   home: IHome;
   homeOption: IHomeOption;
   hostPersonality: IHostPersonality;
+  homeImageList: string[];
+  hostImageList: string[];
 }
