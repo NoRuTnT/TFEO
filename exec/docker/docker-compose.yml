@@ -59,19 +59,19 @@ services:
 #      - tfeo-redis
 #    restart: "no"
 
-  tfro-front:
-    container_name: "front"
-    build:
-      dockerfile: "dockerfile"
-      context: "../../frontend"
-    image: tfeo-front-image
-    networks:
-      - tfeo-network
-    ports:
-      - "3000:3000"
-    environment:
-      TZ: Asia/Seoul
-    restart: "no"
+#  tfro-front:
+#    container_name: "front"
+#    build:
+#      dockerfile: "dockerfile"
+#      context: "../../frontend"
+#    image: tfeo-front-image
+#    networks:
+#      - tfeo-network
+#    ports:
+#      - "3000:3000"
+#    environment:
+#      TZ: Asia/Seoul
+#    restart: "no"
 
   tfeo-nginx:
     container_name: "nginx"
@@ -88,7 +88,7 @@ services:
     depends_on:
       - tfeo-mysql
       - tfeo-redis
-#      - tfeo-back
+
     restart: always
 
 
