@@ -2,9 +2,13 @@ package com.tfeo.backend.domain.home.model.dto;
 
 import com.tfeo.backend.domain.home.model.entity.HostPersonality;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class HostPersonalityDto {
 	private Long hostPersonalityNo;
 	private Boolean smoke;

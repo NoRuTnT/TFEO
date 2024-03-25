@@ -9,6 +9,7 @@ import MakeActivity from './pages/MakeActivity';
 import FindHouse from './pages/FindHouse';
 import Contract from './pages/Contract';
 import ContractForm from './pages/ContractForm';
+import './styles/App.css';
 import Survey from './pages/Survey';
 
 function App() {

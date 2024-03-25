@@ -16,8 +16,8 @@ services:
     environment:
       TZ: Asia/Seoul
     volumes:
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline@2/exec/docker/tfeo-mysql:/var/lib/mysql
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline@2/exec/docker/initial:/docker-entrypoint-initdb.d
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-mysql:/var/lib/mysql
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial:/docker-entrypoint-initdb.d
     command:
       - "mysqld"
       - "--character-set-server=utf8mb4"
@@ -34,30 +34,30 @@ services:
     environment:
       TZ: Asia/Seoul
     volumes:
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline@2/exec/docker/tfeo-redis/data:/data
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline@2/exec/docker/tfeo-redis/conf:/etc/redis/redis.conf
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-redis/data:/data
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-redis/conf:/etc/redis/redis.conf
     restart: "no"
 
-  tfeo-back:
-    container_name: "back"
-    build:
-      dockerfile: "dockerfile"
-      context: "../../backend"
-    image: tfeo-back-image
-    networks:
-      - tfeo-network
-    ports:
-      - "8081:8081"
-    env_file:
-      - tfeo-back/env/db.env
-      - tfeo-back/env/test-db.env
-      - tfeo-back/env/security.env
-    environment:
-      TZ: Asia/Seoul
-    depends_on:
-      - tfeo-mysql
-      - tfeo-redis
-    restart: "no"
+#  tfeo-back:
+#    container_name: "back"
+#    build:
+#      dockerfile: "dockerfile"
+#      context: "../../backend"
+#    image: tfeo-back-image
+#    networks:
+#      - tfeo-network
+#    ports:
+#      - "8081:8081"
+#    env_file:
+#      - tfeo-back/env/db.env
+#      - tfeo-back/env/test-db.env
+#      - tfeo-back/env/security.env
+#    environment:
+#      TZ: Asia/Seoul
+#    depends_on:
+#      - tfeo-mysql
+#      - tfeo-redis
+#    restart: "no"
 
   tfro-front:
     container_name: "front"
@@ -77,10 +77,9 @@ services:
     container_name: "nginx"
     image: nginx:1.18.0
     volumes:
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline@tmp/exec/docker/tfeo-nginx/conf:/etc/nginx/conf.d
-      - /etc/letsencrypt/archive/j10a707.p.ssafy.io :/srv/ssl
-
-
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-nginx/conf:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt
+      - /var/lib/letsencrypt:/var/lib/letsencrypt
     networks:
       - tfeo-network
     ports:

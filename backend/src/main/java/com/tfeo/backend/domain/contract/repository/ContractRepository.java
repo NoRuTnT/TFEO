@@ -17,16 +17,21 @@ import com.tfeo.backend.domain.member.model.entity.Member;
 public interface ContractRepository extends JpaRepository<Contract, Long> {
 	Optional<Contract> findByHomeAndMember(Home home, Member member);
 
+	Optional<Contract> findByMember(Member member);
+
 	Optional<Contract> findByMemberAndProgress(Member member, ContractProgressType contractProgressType);
 
 	List<Contract> findAllByMemberAndProgressNot(Member member,
 		ContractProgressType contractProgressType);
 
+	@Query("SELECT c FROM Contract c LEFT JOIN FETCH c.home h LEFT JOIN FETCH c.member m WHERE c.progress = :contractProgressType AND c.expiredAt >= NOW()")
+	List<Contract> findAllByProgress(ContractProgressType contractProgressType);
+
 	@Query("select c from Contract c where c.progress = :progress and c.member.memberNo = :memberNo and c.expiredAt >= NOW()")
 	Optional<Contract> findByMember(@Param("progress") ContractProgressType progress, @Param("memberNo") Long memberNo);
 
-	@Query("select c from Contract c where c.progress = :progress and c.home.homeNo = :homeNo and c.expiredAt >= NOW()")
-	Optional<Contract> findByHomeNoProgress(@Param("progress") ContractProgressType progress, @Param("homeNo") Long homeNo);
+	@Query("select c from Contract c LEFT JOIN FETCH c.member WHERE c.home.homeNo = :homeNo and c.expiredAt >= NOW()")
+	Optional<Contract> findByHomeNo(Long homeNo);
 
 	@Query("select c from Contract c where c.member.memberNo = :memberNo and c.expiredAt >= NOW()")
 	Optional<List<Contract>> findAllByMemberNo(@Param("memberNo") Long memberNo);
