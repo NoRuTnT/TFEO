@@ -1,6 +1,21 @@
 spring:
   config:
+    activate:
+      on-profile: set1
     import:
       - application-db.yml
       - application-security.yml
       - application-s3.yml
+server:
+  port: ${SERVER_PORT1}
+---
+spring:
+  config:
+    activate:
+      on-profile: set2
+    import:
+      - application-db.yml
+      - application-security.yml
+      - application-s3.yml
+server:
+  port: ${SERVER_PORT2}

@@ -8,8 +8,10 @@ pipeline {
         imageName = "norutnt/develop"
         registryCredential = "tfeo-docker"
         dockerImage = ''
-        GITLAB_SOURCE_BRANCH = "$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME"
-        GITLAB_TARGET_BRANCH = "$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+
+        releaseServerAccount = 'ubuntu'
+        releaseServerUri = 'j10a707.p.ssafy.io'
+        releasePort = '8081'
     }
     post {
         success {
@@ -19,32 +21,35 @@ pipeline {
         failure {
             updateGitlabCommitStatus name: 'build', state: 'failed'
         }
+        always {
+                    // 작업 종료 후 로그 파일을 Jenkins 작업의 아티팩트로 저장
+            archiveArtifacts artifacts: 'exec/docker/docker-compose-logs.txt', onlyIfSuccessful: true
+        }
     }
 
     stages {
         stage('Get Merge Request and preBuildMerge') {
             steps {
                 cleanWs()
-//                 script {
-//                     echo "The GitLab source branch is: ${GITLAB_SOURCE_BRANCH}"
-//                     echo "The GitLab target branch is: ${GITLAB_TARGET_BRANCH}"
-//                     checkout([
-//                         $class: 'GitSCM',
-//                         branches: [[name: "origin/${GITLAB_SOURCE_BRANCH}"]],
-//                         doGenerateSubmoduleConfigurations: false,
-//                         extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${GITLAB_TARGET_BRANCH}"]]],
-//                         submoduleCfg: [],
-//                         userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
-//                     ])
-//                 }
-                checkout scm
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "origin/${env.gitlabSourceBranch}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${env.gitlabTargetBranch}"]]],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
+                    ])
+                }
+
             }
         }
+
 
         stage('Run Container') {
             steps {
                 dir('exec/docker') {
-                    sh 'docker-compose -f docker-compose.yml up -d'
+                    sh 'docker-compose -f docker-compose.yml up -d > docker-compose-logs.txt 2>&1'
                 }
             }
         }
@@ -102,21 +107,66 @@ pipeline {
                 }
             }
         }
+
         stage('Image Build & DockerHub Push') {
+            when {
+                expression { env.CI_MERGE_REQUEST_ID == null }
+            }
             steps {
-                dir('Backend') {
+                dir('backend') {
                     script {
                         docker.withRegistry('', registryCredential) {
-                            sh "docker buildx create --name mybuilder"
-                            sh "docker buildx use mybuilder"
-                            sh "docker buildx build --platform linux/amd64,linux/arm64 -t $imageName:$BUILD_NUMBER --push ."
-                            sh "docker buildx build --platform linux/amd64,linux/arm64 -t $imageName:latest --push ."
+                            // 이미지 빌드
+                            sh "docker build -t $imageName:$BUILD_NUMBER ."
+                            sh "docker build -t $imageName:latest ."
+
+                            // Docker Hub에 푸시
+                            sh "docker push $imageName:$BUILD_NUMBER"
+                            sh "docker push $imageName:latest"
                         }
                     }
                 }
             }
         }
 
+        stage('Before Service Stop') {
+            when {
+                expression { env.CI_MERGE_REQUEST_ID == null }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ubuntu@j10a707.p.ssafy.io "
+                    docker stop back || true
+                    docker rm -f back || true
+                    "
+                    '''
+                }
+            }
+        }
 
+        stage('DockerHub Pull') {
+            when {
+                expression { env.CI_MERGE_REQUEST_ID == null }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $imageName:latest'"
+                }
+            }
+        }
+
+        stage('Service Start') {
+            when {
+                expression { env.CI_MERGE_REQUEST_ID == null }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e \\"SPRING_PROFILES_ACTIVE=set1\\" --env-file=/home/ubuntu/env/db.env --env-file=/home/ubuntu/env/test-db.env --env-file=/home/ubuntu/env/security.env --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
+                    """
+                }
+            }
+        }
     }
 }

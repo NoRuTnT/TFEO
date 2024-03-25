@@ -1,0 +1,15 @@
+:root {
+    --primary-main: #E07068; /* 전역 테마 색상 설정 */
+    --primary-contrastText: #B7B7B7;
+    --secondary-main: #F9EAE1;
+}
+
+/*primary: {*/
+/*    main: '#E07068',*/
+/*    // light: main값을 통해 계산됨*/
+/*// dark: main값을 통해 계산됨*/
+/*    contrastText: '#B7B7B7',*/
+/*},*/
+/*secondary: {*/
+/*    main: '#F9EAE1',*/
+/*},*/

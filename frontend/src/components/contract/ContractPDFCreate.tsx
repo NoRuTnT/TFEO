@@ -4,6 +4,9 @@ import NotoSansKRRegular from '../../assets/fonts/NotoSansKR-Regular.ttf';
 import NotoSansKRBold from '../../assets/fonts/NotoSansKR-Bold.ttf';
 import { IAddress } from '../../interfaces/AddressInterface';
 import { IContractForm } from '../../interfaces/ContractFormInterface';
+import { getYear, getMonth, getDay } from '../../utils/timeUtils';
+import { getRoadNameAddress } from '../../utils/addressUtils';
+import { getRent } from '../../utils/moneyUtils';
 
 Font.register({
   family: 'NotoSansKRRegular',
@@ -57,28 +60,7 @@ interface ContractPdfProps {
   phone: string;
   address: IAddress;
 }
-
-const getAddress = (address: IAddress) => {
-  const response: string = address.si + ' ' + address.sgg + ' ' + address.ro + ' ' + address.detail;
-  return response;
-};
-const getRent = (rent: number) => {
-  return rent / 10000;
-};
-const getYear = (date: string) => {
-  console.log(date);
-  const [year, month, day] = date.split('T')[0].split('-');
-  return year;
-};
-const getMonth = (date: string) => {
-  const [year, month, day] = date.split('T')[0].split('-');
-  return month;
-};
-const getDay = (date: string) => {
-  const [year, month, day] = date.split('T')[0].split('-');
-  return day;
-};
-const getPhoneDash = (phone: string) => {
+const addPhoneDash = (phone: string) => {
   const first = phone.slice(0, 3);
   const second = phone.slice(3, 7);
   const end = phone.slice(7, 11);
@@ -100,7 +82,7 @@ const getContractJSX = ({ person, name, registerNo, phone, address }: ContractPd
             <Text style={styles.cell}>전화번호</Text>
           </View>
           <View style={styles.firstRowInfoCol}>
-            <Text style={styles.cell}>{getPhoneDash(phone)}</Text>
+            <Text style={styles.cell}>{addPhoneDash(phone)}</Text>
           </View>
           <View style={styles.TitleCol}>
             <Text style={styles.cell}>주민번호</Text>
@@ -114,7 +96,7 @@ const getContractJSX = ({ person, name, registerNo, phone, address }: ContractPd
             <Text style={styles.cell}>주소</Text>
           </View>
           <View style={styles.secondRowInfoCol}>
-            <Text style={styles.cell}>{getAddress(address)}</Text>
+            <Text style={styles.cell}>{getRoadNameAddress(address)}</Text>
           </View>
         </View>
       </View>
@@ -154,7 +136,7 @@ const ContractPDFCreate: React.FC<{ contractForm: IContractForm }> = ({ contract
                 <Text style={styles.cell}>주소</Text>
               </View>
               <View style={styles.homeInfoSecondCell}>
-                <Text style={styles.cell}>{getAddress(contractForm.host.address)}</Text>
+                <Text style={styles.cell}>{getRoadNameAddress(contractForm.host.address)}</Text>
               </View>
             </View>
           </View>

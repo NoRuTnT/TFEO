@@ -53,17 +53,8 @@ export interface IHomeOption {
   type: string; // 아파트 or 오피스텔 or 빌라 or 주택 or 단독/다가구
 }
 
-export interface IHomeContractCard {
-  homeNo: number;
-  address: IAddress;
-  hostName: string;
-  rent: number;
-  startAt: string;
-  expiredAt: string;
-  progress: string;
+export interface IHomeDetail {
+  home: IHome;
+  homeOption: IHomeOption;
   hostPersonality: IHostPersonality;
-  hostBank: string;
-  hostAccountNo: string;
-  hostImageList: string[];
-  homeImageList: string[];
 }

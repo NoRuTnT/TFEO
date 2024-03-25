@@ -32,6 +32,7 @@ import com.tfeo.backend.domain.member.common.exception.VerificationWrongExceptio
 import com.tfeo.backend.domain.member.model.dto.AppliedHomeContractResponseDto;
 import com.tfeo.backend.domain.member.model.dto.AppliedHomeHomeResponseDto;
 import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
+import com.tfeo.backend.domain.member.model.dto.MemberHomeApplicationRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 import com.tfeo.backend.domain.member.model.dto.MyHomeContractResponseDto;
@@ -76,18 +77,24 @@ public class MemberService {
 
 	//집 신청
 	@Transactional
-	public void addHomeApplication(Long homeNo, Long memberNo) {
+	public void addHomeApplication(Long homeNo, Long memberNo,
+		MemberHomeApplicationRequestDto memberHomeApplicationRequestDto) {
 		//Todo: memberNo auth로 받기
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Home home = homeRepository.findById(homeNo)
 			.orElseThrow(() -> new HomeNotExistException(homeNo));
-		// 이미 신청한 경우 제외해야 함
-		Optional<Contract> optionalContract = contractRepository.findByHomeAndMember(home, member);
+		// 이미 신청한 경우 제외해야 함 - 1학생 1신청만 가능
+		Optional<Contract> optionalContract = contractRepository.findByMember(member);
 		if (optionalContract.isPresent())
-			throw new ApplicationAlreadyExistException(homeNo, memberNo);
+			throw new ApplicationAlreadyExistException(memberNo);
 		Contract newContract = Contract.builder()
-			.home(home).member(member).progress(ContractProgressType.APPLIED)
+			.home(home)
+			.member(member)
+			.progress(ContractProgressType.APPLIED)
+			.startAt(memberHomeApplicationRequestDto.getStartAt())
+			.expiredAt(memberHomeApplicationRequestDto.getExpiredAt())
+			.studentSign(false).hostSign(false)
 			.build();
 		contractRepository.save(newContract);
 	}

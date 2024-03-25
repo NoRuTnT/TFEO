@@ -7,3 +7,11 @@
     z-index: 1; /* HomeList 뒤에 위치 */
     margin-top: 21%;
 }
+
+.custom-marker {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #E07068;
+    opacity: 0.7; /* 투명도 조절 */
+}
