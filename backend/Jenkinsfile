@@ -129,8 +129,6 @@ pipeline {
                         }
                     }
                 }
-            }
-            steps {
                 dir('frontend') {
                     script {
                         docker.withRegistry('', registryCredential) {
@@ -145,8 +143,6 @@ pipeline {
                     }
                 }
             }
-
-
         }
 
         stage('Before Service Stop') {
