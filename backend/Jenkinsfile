@@ -23,7 +23,7 @@ pipeline {
         }
         always {
                     // 작업 종료 후 로그 파일을 Jenkins 작업의 아티팩트로 저장
-            archiveArtifacts artifacts: 'docker-compose-logs.txt', onlyIfSuccessful: true
+            archiveArtifacts artifacts: 'exec/docker/docker-compose-logs.txt', onlyIfSuccessful: true
         }
     }
 
