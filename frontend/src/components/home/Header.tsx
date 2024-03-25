@@ -31,7 +31,7 @@ const Footer: React.FC = () => {
   };
 
   const getIconStyle = (isActive: boolean): React.CSSProperties => ({
-    fontSize: '75px',
+    fontSize: '45px',
     color: isActive ? '#000000' : theme.palette.primary.contrastText,
   });
 
@@ -63,7 +63,7 @@ const Footer: React.FC = () => {
           </span>
         </div>
         <div className="circle-border">
-          <TuneIcon fontSize="large" style={{ color: '#000000', cursor: 'pointer' }} />
+          <TuneIcon fontSize="medium" style={{ color: '#A0A0A0', cursor: 'pointer' }} />
         </div>
       </div>
     </header>

@@ -118,5 +118,5 @@ export default function MapBox() {
     });
   }, []);
 
-  return <div className="mapbox-container" id="map" style={{ width: '100%', height: '400px' }}></div>;
+  return <div className="mapbox-container" id="map" style={{ width: '100%', height: '700px' }}></div>;
 }
