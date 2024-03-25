@@ -120,6 +120,12 @@ const initialFilterState: HomeFilterState = {
   selectFilter: (newState: Partial<HomeFilterState>) => {},
 };
 
+const initialListState: HomeListState = {
+  homes: dummyHomes, // 초기 상태에 더미 데이터 적용
+  selectedHomeNo: null,
+  selectHome: (homeNo: number) => {},
+};
+
 // zustand 스토어 생성
 export const useHomeStore = create<HomeFilterState & HomeListState>((set) => ({
   ...initialFilterState,
