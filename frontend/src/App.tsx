@@ -11,6 +11,8 @@ import Contract from './pages/Contract';
 import ContractForm from './pages/ContractForm';
 import './styles/App.css';
 import Survey from './pages/Survey';
+import { IHomeDetail } from './interfaces/HomeInterface';
+import HomeDetail from './pages/HomeDetail';
 
 function App() {
   return (
@@ -24,6 +26,7 @@ function App() {
           <Route path="/activity-content" element={<ActivityContent />} />
           <Route path="/make-activity" element={<MakeActivity />} />
           <Route path="/find-house" element={<FindHouse />} />
+          <Route path="/home-detail" element={<HomeDetail />} />
           <Route path="/contract" element={<Contract />} />
           <Route path="/contract-form" element={<ContractForm />} />
           <Route path="/survey" element={<Survey />} />
