@@ -1,14 +1,15 @@
 package com.tfeo.backend.domain.review.service;
 
-import org.springframework.data.domain.Page;
+import java.util.List;
+
+
 import org.springframework.data.domain.Pageable;
 
 import com.tfeo.backend.common.model.type.MemberRoleType;
-import com.tfeo.backend.domain.activity.model.dto.ReadActivityRequestDto;
 import com.tfeo.backend.domain.review.model.dto.ReadReviewResponseDto;
 
 public interface ReviewQueryService {
-	Page<ReadReviewResponseDto> readReviewList(Long memberNo, MemberRoleType role,
-		ReadActivityRequestDto request, Pageable pageable);
+	List<ReadReviewResponseDto> readReviewList(Long memberNo, MemberRoleType role,
+		Long homeNo, Pageable pageable);
 
 	ReadReviewResponseDto readReview(Long memberNo, MemberRoleType role, Long activityNo);
