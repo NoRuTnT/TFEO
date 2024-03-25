@@ -11,6 +11,7 @@ import Contract from './pages/Contract';
 import ContractForm from './pages/ContractForm';
 import './styles/App.css';
 import Survey from './pages/Survey';
+import ContractTest from './components/contract/ContractTest';
 import { IHomeDetail } from './interfaces/HomeInterface';
 import HomeDetail from './pages/HomeDetail';
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="/contract-form" element={<ContractForm />} />
           <Route path="/survey" element={<Survey />} />
           {/* ... 여기에 더 많은 라우트를 추가할 수 있습니다 ... */}
+          <Route path="/contract-test" element={<ContractTest />} />
         </Routes>
       </Router>
     </div>
