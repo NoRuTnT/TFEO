@@ -5,7 +5,7 @@ import { useHomeStore } from '../../store/HomeStore';
 
 // 필터의 상태가 바뀌면 리렌더링 해야함
 // 필터 상태 바꾸는 메서드 호출될 때마다 집 리스트 계산 작업 수행해야함
-// 집 리스트에 대한 상태를 헤더, 지도가 공유해야함 -> HomeStore 내에서 집 리스트를 관리해야함
+// 집 리스트에 대한 상태를 헤더, 지도가 공유해야함 -> HomeStore 내에서 집 리스트를 관리해야 함
 
 declare global {
   interface Window {
@@ -20,7 +20,8 @@ interface Location {
 
 export default function MapBox() {
   const [map, setMap] = useState(null);
-  const { school, subway, apartment, pets, selectFilter, homes } = useHomeStore();
+  const { homes } = useHomeStore();
+
 
   useEffect(() => {
     window.kakao.maps.load(() => {
@@ -29,16 +30,13 @@ export default function MapBox() {
         center: new window.kakao.maps.LatLng(37.566535, 126.977969),
         level: 7,
         minLevel: 3,
+        draggable: true, // 여기서 드래그 가능하도록 설정
       };
 
       const newMap = new window.kakao.maps.Map(container, options);
       setMap(newMap);
 
-      const markers = homes.map((location) => {
-        return new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(location.lat, location.lng),
-        });
-      });
+      let markers = window.kakao.maps.Marker[] = [];
 
       const clusterer = new window.kakao.maps.MarkerClusterer({
         map: newMap,
@@ -103,12 +101,53 @@ export default function MapBox() {
 
       clusterer.addMarkers(markers);
 
-      // 클러스터를 클릭했을 때 아무 동작도 하지 않도록 빈 함수를 할당합니다.
-      window.kakao.maps.event.addListener(clusterer, 'clusterclick', function (cluster: any) {
-        // 클러스터 클릭 시 아무런 동작도 하지 않습니다.
+      // 지도에 표시할 마커 업데이트 함수
+      const updateMarkers = (filteredHomes: any[]) => {
+        // 기존 마커 제거
+        markers.forEach((marker) => marker.setMap(null));
+        markers = [];
+
+        // 필터링된 homes 기반으로 마커 생성
+        markers = filteredHomes.map((home) => {
+          const marker = new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(home.lat, home.lng),
+          });
+          marker.setMap(newMap); // 마커를 지도에 표시
+          return marker;
+        });
+      };
+      // 지도 영역 변경 시 필터링된 homes 업데이트
+      const updateHomesInMapArea = () => {
+        const bounds = newMap.getBounds();
+        const swLatLng = bounds.getSouthWest();
+        const neLatLng = bounds.getNorthEast();
+
+        const filteredHomes = homes.filter((home) => {
+          return (
+            home.lat >= swLatLng.getLat() &&
+            home.lat <= neLatLng.getLat() &&
+            home.lng >= swLatLng.getLng() &&
+            home.lng <= neLatLng.getLng()
+          );
+        });
+        updateMarkers(filteredHomes); // 마커 업데이트
+      };
+
+      window.kakao.maps.event.addListener(map, 'bounds_changed', updateHomesInMapArea);
+
+      // 클러스터 클릭 이벤트 리스너
+      window.kakao.maps.event.addListener(clusterer, 'clusterclick', function () {
+        alert('cluster clicked!');
       });
+
+      // 줌 이벤트 리스너
+      window.kakao.maps.event.addListener(clusterer, 'clusterclick', function () {
+        alert('cluster clicked!');
+      });
+
+      updateHomesInMapArea(); // 초기 로드 시 실행
     });
-  }, []);
+  }, [homes]);
 
   return <div className="mapbox-container" id="map" style={{ width: '100%', height: '700px' }}></div>;
 }
