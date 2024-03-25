@@ -6,12 +6,15 @@ pipeline {
     environment {
         // 환경 변수를 선언하고 초기화
         imageName = "norutnt/develop"
+        frontimageName = "norutnt/front"
         registryCredential = "tfeo-docker"
         dockerImage = ''
 
         releaseServerAccount = 'ubuntu'
         releaseServerUri = 'j10a707.p.ssafy.io'
+        frontreleasePort = '3000'
         releasePort = '8081'
+
     }
     post {
         success {
@@ -127,6 +130,23 @@ pipeline {
                     }
                 }
             }
+            steps {
+                dir('frontend') {
+                    script {
+                        docker.withRegistry('', registryCredential) {
+                            // 이미지 빌드
+                            sh "docker build -t $frontimageName:$BUILD_NUMBER ."
+                            sh "docker build -t $frontimageName:latest ."
+
+                            // Docker Hub에 푸시
+                            sh "docker push $frontimageName:$BUILD_NUMBER"
+                            sh "docker push $frontimageName:latest"
+                        }
+                    }
+                }
+            }
+
+
         }
 
         stage('Before Service Stop') {
@@ -138,7 +158,9 @@ pipeline {
                     sh '''
                     ssh -o StrictHostKeyChecking=no ubuntu@j10a707.p.ssafy.io "
                     docker stop back || true
+                    docker stop front || true
                     docker rm -f back || true
+                    docker rm -f front || true
                     "
                     '''
                 }
@@ -152,6 +174,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['ubuntu']) {
                     sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $imageName:latest'"
+                    sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $frontimageName:latest'"
                 }
             }
         }
@@ -164,6 +187,7 @@ pipeline {
                 sshagent(credentials: ['ubuntu']) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e \\"SPRING_PROFILES_ACTIVE=set1\\" --env-file=/home/ubuntu/env/db.env --env-file=/home/ubuntu/env/test-db.env --env-file=/home/ubuntu/env/security.env --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul --name front --network tfeo-network -p $frontreleasePort:$frontreleasePort -d $frontimageName:latest"
                     """
                 }
             }
