@@ -315,12 +315,41 @@ def filter_by_search_condition(search_condition: Search_Condition):
         building_option_list.append('OR')
 
     print(building_option_list)
+
+    internet_list = get_permit_list(search_condition.internet)
+    gas_list = get_permit_list(search_condition.gas)
+    washing_machine_list = get_permit_list(search_condition.washing_machine)
+    air_conditioner_list = get_permit_list(search_condition.air_conditioner)
+    refrigerator_list = get_permit_list(search_condition.refrigerator)
+    elevator_list = get_permit_list(search_condition.elevator)
+    microwave_list = get_permit_list(search_condition.microwave)
+    toilet_list = get_permit_list(search_condition.toilet)
+    breakfast_list = get_permit_list(search_condition.breakfast)
+    heating_list = get_permit_list(search_condition.heating)
+    parking_list = get_permit_list(search_condition.parking)
+    station_list = get_permit_list(search_condition.station)
+    move_in_date_list = get_permit_list(search_condition.move_in_date)
+
+    # DDDGG
+
+
     # type: BuildingType  # 건축물 종류(ENUM)
     data = db.home.find({'rent': {'$gte': search_condition.rent_min, '$lte': search_condition.rent_max}, # 월세 범위 내 검색
-                         # '$eq'
-                         # '$or': [{'type': 'APT'}, {'type': 'DDDGG'}]
+                        'internet': {'$in':internet_list},
+                        'gas': {'$in':gas_list},
+                        'washing_machine': {'$in':washing_machine_list},
+                        'air_conditioner': {'$in':air_conditioner_list},
+                        'refrigerator': {'$in':refrigerator_list},
+                        'elevator': {'$in':elevator_list},
+                        'microwave': {'$in':microwave_list},
+                        'toilet': {'$in':toilet_list},
+                        'breakfast': {'$in':breakfast_list},
+                        'heating': {'$in':heating_list},
+                        'parking': {'$in':parking_list},
+                        'station': {'$in':station_list},
+                        'move_in_date': {'$in':move_in_date_list},
+                        'type': {'$in':building_option_list},
                          })
-
     print(data)
     data_list = []
     for doc in data:
@@ -430,6 +459,12 @@ def get_member_vector(member_personality: Member_Personality):
                      host_related, pet_lover, cold, hot]
 
     return member_vector
+
+
+def get_permit_list(b):
+    if(b==False):
+        return [0, 1]
+    return [1]
 
 def get_host_vector(host_personality: Host_Personality):
     print('빅데이터의 벡터화')
