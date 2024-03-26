@@ -1,5 +1,5 @@
 import React from 'react';
-import '../../styles/ContractProgressBar.css';
+import '../../styles/contract/ContractProgressBar.css';
 import CheckIcon from '@mui/icons-material/Check';
 import { styled, useTheme } from '@mui/material/styles';
 
