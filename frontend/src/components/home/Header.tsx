@@ -8,13 +8,12 @@ import TuneIcon from '@mui/icons-material/Tune';
 import '../../styles/home/Header.css';
 import styled from '@emotion/styled';
 import { Modal, Slider, Box, Typography, Button, Grid } from '@mui/material';
+import { useHomeStore } from '../../store/HomeStore';
 
-const Footer: React.FC = () => {
+const Header: React.FC = () => {
   const theme = useTheme();
-  const { school, subway, apartment, pets, selectFilter } = useHomeStore();
+  const { school, subway, apartment, pets, selectFilter, options, types, toggleType, toggleOption } = useHomeStore();
 
-  const getDescriptionStyle = (filter: boolean): React.CSSProperties => {
-    return filter ? { fontWeight: 'bold' } : {};
   const marks = [
     {
       value: 0,
@@ -26,48 +25,12 @@ const Footer: React.FC = () => {
     },
   ];
 
-  const [options, setOptions] = useState<{ option: string; value: string; choice: boolean }[]>([
-    { option: '인터넷', value: 'internet', choice: false },
-    { option: '가스레인지', value: 'gas', choice: false },
-    { option: '세탁기', value: 'washing_machine', choice: false },
-    { option: '냉장고', value: 'refrigerator', choice: false },
-    { option: '에어컨', value: 'air_conditioner', choice: false },
-    { option: '엘리베이터', value: 'elevator', choice: false },
-    { option: '전자레인지', value: 'microwave', choice: false },
-    { option: '개인화장실', value: 'toilet', choice: false },
-    { option: '조식', value: 'breakfast', choice: false },
-    { option: '난방', value: 'heating', choice: false },
-    { option: '주차', value: 'parking', choice: false },
-    { option: '싱크대', value: 'sink', choice: false },
-  ]);
-
-  const [types, setTypes] = useState<{ type: string; value: string; choice: boolean }[]>([
-    { type: '아파트', value: 'apt', choice: false },
-    { type: '빌라', value: 'vl', choice: false },
-    { type: '오피스', value: 'opst', choice: false },
-    { type: '원룸', value: 'oneroom', choice: false },
-  ]);
-
-  const handleToggleColor = (criteriaName: CriteriaName) => {
-    setColorToggled((prevState) => ({
-      ...prevState,
-      [criteriaName]: !prevState[criteriaName],
-    }));
-
-    setOptions((prevOptions) =>
-      prevOptions.map((option) => (option.value === criteriaName ? { ...option, choice: !option.choice } : option)),
-    );
-    setTypes((prevTypes) =>
-      prevTypes.map((type) => (type.value === criteriaName ? { ...type, choice: !type.choice } : type)),
-    );
-  };
-
-  const getDescriptionStyle = (criteriaName: CriteriaName): React.CSSProperties => {
-    return colorToggled[criteriaName] ? { fontWeight: 'bold' } : {};
+  const getDescriptionStyle = (filter: boolean): React.CSSProperties => {
+    return filter ? { fontWeight: 'bold' } : {};
   };
 
   const getIconStyle = (isActive: boolean): React.CSSProperties => ({
-    fontSize: '45px',
+    fontSize: '75px',
     color: isActive ? '#000000' : theme.palette.primary.contrastText,
   });
 
@@ -108,6 +71,15 @@ const Footer: React.FC = () => {
     setValue(newValue as number[]);
   };
 
+  // Directly use toggleOption and toggleType from the Zustand store for toggling
+  const handleOptionClick = (value: string) => {
+    toggleOption(value);
+  };
+
+  const handleTypeClick = (value: string) => {
+    toggleType(value);
+  };
+
   return (
     <header>
       <div className="criteria-container">
@@ -136,7 +108,11 @@ const Footer: React.FC = () => {
           </span>
         </div>
         <div className="circle-border">
-          <TuneIcon fontSize="medium" style={{ color: '#A0A0A0', cursor: 'pointer' }} />
+          <TuneIcon
+            onClick={() => setModalOpen(true)}
+            fontSize="medium"
+            style={{ color: '#A0A0A0', cursor: 'pointer' }}
+          />
         </div>
         {modalOpen && (
           <ModalContainer>
@@ -162,7 +138,7 @@ const Footer: React.FC = () => {
                   {options.map((option) => (
                     <Grid item xs={6} key={option.option}>
                       <Button
-                        onClick={() => handleToggleColor(option.value as CriteriaName)}
+                        onClick={() => handleOptionClick(option.value)}
                         style={{ width: '120px', height: '40px' }}
                         variant={option.choice ? 'contained' : 'outlined'}
                       >
@@ -178,7 +154,7 @@ const Footer: React.FC = () => {
                   {types.map((type) => (
                     <Grid item xs={6} key={type.type}>
                       <Button
-                        onClick={() => handleToggleColor(type.value as CriteriaName)}
+                        onClick={() => handleTypeClick(type.value)}
                         style={{ width: '120px', height: '40px' }}
                         variant={type.choice ? 'contained' : 'outlined'}
                       >

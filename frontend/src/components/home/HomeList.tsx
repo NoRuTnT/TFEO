@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../../styles/home/HomeList.css';
@@ -11,10 +9,6 @@ import Home from './Home';
 const HomeList: React.FC = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const [containerMarginTop, setContainerMarginTop] = useState('0%');
-
-  const ownerImages = ['/test/owner1.png', '/test/owner2.png', '/test/owner3.png'];
-  const homeImages = ['/test/home1.png', '/test/home2.png', '/test/home3.png'];
-  const [containerMarginTop, setContainerMarginTop] = useState('5%');
   const { school, subway, apartment, pets, selectFilter, homes } = useHomeStore();
 
   const settings = {
