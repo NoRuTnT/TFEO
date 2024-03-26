@@ -7,12 +7,14 @@ import lombok.Getter;
 
 @Getter
 public class ApprovalMemberListDto {
+	private Long memberNo;
 	private String name;
 	private GenderType gender;
 	private String phone;
 	private String college;
 
 	public ApprovalMemberListDto(Member member) {
+		this.memberNo = member.getMemberNo();
 		this.name = member.getName();
 		this.gender = member.getGender();
 		this.phone = member.getPhone();
