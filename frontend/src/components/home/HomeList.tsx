@@ -9,7 +9,7 @@ import Home from './Home';
 const HomeList: React.FC = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const [containerMarginTop, setContainerMarginTop] = useState('0%');
-  const { school, subway, apartment, pets, selectFilter, homes } = useHomeStore();
+  const { visibleHomes } = useHomeStore(); // 현재 화면에 보이는 집들의 목록을 가져옴
 
   const settings = {
     dots: true,
@@ -40,9 +40,9 @@ const HomeList: React.FC = () => {
       )}
       <hr className="custom-hr" onClick={resetStyles} />
       <div className="home-count" onClick={resetStyles}>
-        어르신 {homes.length} 명
+        어르신 {visibleHomes.length} 명
       </div>
-      {homes.map((home, index) => (
+      {visibleHomes.map((home, index) => (
         <Home key={index} settings={settings} home={home} />
       ))}
     </div>
