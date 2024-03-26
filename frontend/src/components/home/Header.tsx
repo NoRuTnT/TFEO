@@ -10,17 +10,14 @@ import styled from '@emotion/styled';
 import { Modal, Slider, Box, Typography, Button, Grid } from '@mui/material';
 
 type CriteriaName = 'School' | 'Subway' | 'Apartment' | 'Pets';
+import { useMapStore } from '../../store/MapStore';
 
 const Header: React.FC = () => {
   const theme = useTheme();
+  const { School, Subway, Apartment, Pets, selectFilter } = useMapStore();
 
-  const [colorToggled, setColorToggled] = useState<Record<CriteriaName, boolean>>({
-    School: false,
-    Subway: false,
-    Apartment: false,
-    Pets: false,
-  });
-
+  const getDescriptionStyle = (filter: boolean): React.CSSProperties => {
+    return filter ? { fontWeight: 'bold' } : {};
   const marks = [
     {
       value: 0,
@@ -117,27 +114,27 @@ const Header: React.FC = () => {
   return (
     <header>
       <div className="criteria-container">
-        <div className="element-container" onClick={() => handleToggleColor('School')}>
-          <AccountBalanceIcon style={getIconStyle(colorToggled.School)} />
-          <span className="criteria-description" style={getDescriptionStyle('School')}>
+        <div className="element-container" onClick={() => selectFilter({ School: !School })}>
+          <AccountBalanceIcon style={getIconStyle(School)} />
+          <span className="criteria-description" style={getDescriptionStyle(School)}>
             학교 근처
           </span>
         </div>
-        <div className="element-container" onClick={() => handleToggleColor('Subway')}>
-          <DirectionsSubwayIcon style={getIconStyle(colorToggled.Subway)} />
-          <span className="criteria-description" style={getDescriptionStyle('Subway')}>
+        <div className="element-container" onClick={() => selectFilter({ Subway: !Subway })}>
+          <DirectionsSubwayIcon style={getIconStyle(Subway)} />
+          <span className="criteria-description" style={getDescriptionStyle(Subway)}>
             역세권
           </span>
         </div>
-        <div className="element-container" onClick={() => handleToggleColor('Apartment')}>
-          <ApartmentIcon style={getIconStyle(colorToggled.Apartment)} />
-          <span className="criteria-description" style={getDescriptionStyle('Apartment')}>
+        <div className="element-container" onClick={() => selectFilter({ Apartment: !Apartment })}>
+          <ApartmentIcon style={getIconStyle(Apartment)} />
+          <span className="criteria-description" style={getDescriptionStyle(Apartment)}>
             아파트
           </span>
         </div>
-        <div className="element-container" onClick={() => handleToggleColor('Pets')}>
-          <PetsIcon style={getIconStyle(colorToggled.Pets)} />
-          <span className="criteria-description" style={getDescriptionStyle('Pets')}>
+        <div className="element-container" onClick={() => selectFilter({ Pets: !Pets })}>
+          <PetsIcon style={getIconStyle(Pets)} />
+          <span className="criteria-description" style={getDescriptionStyle(Pets)}>
             반려동물
           </span>
         </div>
