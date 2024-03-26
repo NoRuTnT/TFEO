@@ -5,6 +5,7 @@ import static lombok.AccessLevel.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.List;
 
 import javax.persistence.Embedded;
@@ -27,6 +28,7 @@ import com.tfeo.backend.common.model.type.GenderType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.common.model.type.SocialType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
+import com.tfeo.backend.domain.member.model.dto.MemberRequestDto;
 import com.tfeo.backend.domain.member.model.dto.SurveyMemberRequestDto;
 import com.tfeo.backend.domain.review.model.entity.Review;
 
@@ -110,9 +112,41 @@ public class Member {
 
 	public void updateMemberSurvey(SurveyMemberRequestDto surveyMemberRequestDto) {
 		this.college = surveyMemberRequestDto.getCollege();
-		// college lat, lng 반영 필요
+		//Todo: college lat, lng 반영 필요
 		this.wakeAt = surveyMemberRequestDto.getWakeAt();
 		this.sleepAt = surveyMemberRequestDto.getSleepAt();
 		this.returnAt = surveyMemberRequestDto.getReturnAt();
+	}
+
+	public void updateMemberInfo(MemberRequestDto memberRequestDto, String profileUrl, String certificate) {
+		this.name = memberRequestDto.getName();
+		this.address = Address.builder().si(memberRequestDto.getAddress().getSi())
+			.sgg(memberRequestDto.getAddress().getSgg())
+			.emd(memberRequestDto.getAddress().getEmd())
+			.ro(memberRequestDto.getAddress().getRo())
+			.detail(memberRequestDto.getAddress().getDetail())
+			.build();
+		this.email = memberRequestDto.getEmail();
+		this.phone = memberRequestDto.getPhone();
+		this.profileUrl = profileUrl;
+		this.certificate = certificate;
+	}
+
+	public void updateMemberCertificateStatus(CertificateStatusType certificateStatusType) {
+		this.certificateStatus = certificateStatusType;
+		if (certificateStatusType.equals(CertificateStatusType.CERTIFICATED)) {
+			this.certificateRegisterDate = LocalDate.now();
+			// 8월 31일과 2월 28일 날짜 생성
+			LocalDate august31 = (LocalDate.now().getMonth().compareTo(Month.AUGUST) > 0) ?
+				LocalDate.of(LocalDate.now().getYear() + 1, 8, 31) : LocalDate.of(LocalDate.now().getYear(), 8, 31);
+			LocalDate february28 = (LocalDate.now().getMonth().compareTo(Month.FEBRUARY) > 0) ?
+				LocalDate.of(LocalDate.now().getYear() + 1, 8, 31) : LocalDate.of(LocalDate.now().getYear(), 2, 28);
+
+			// 현재 날짜 이후의 날짜와의 차이 계산
+			long daysUntilAugust31 = LocalDate.now().until(august31).getDays();
+			long daysUntilFebruary28 = LocalDate.now().until(february28).getDays();
+			// 더 가까운 날짜에 적용
+			this.certificateExpirationDate = (daysUntilAugust31 < daysUntilFebruary28) ? august31 : february28;
+		}
 	}
 }
