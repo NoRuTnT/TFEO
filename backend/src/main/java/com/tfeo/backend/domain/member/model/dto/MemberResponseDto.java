@@ -1,6 +1,6 @@
 package com.tfeo.backend.domain.member.model.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.tfeo.backend.common.model.entity.MemberPersonality;
 import com.tfeo.backend.common.model.type.Address;
@@ -25,8 +25,8 @@ public class MemberResponseDto {
 	private MemberRoleType role;
 	private String certificate;
 	private CertificateStatusType certificateStatus;
-	private LocalDateTime certificateRegisterDate;
-	private LocalDateTime certificateExpirationDate;
+	private LocalDate certificateRegisterDate;
+	private LocalDate certificateExpirationDate;
 	private MemberPersonality memberPersonality;
 
 	public MemberResponseDto(Member member) {
