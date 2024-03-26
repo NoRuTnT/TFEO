@@ -39,7 +39,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 
 	@Override
 	public Page<ReadActivityResponseDto> readActivityList(Long memberNo, MemberRoleType role,
-		@ModelAttribute("request") ReadActivityRequestDto request, Pageable pageable) {
+		ReadActivityRequestDto request, Pageable pageable) {
 		Specification<Activity> spce = null;
 		if(request.getSgg()!=null){
 			spce = ActivitySpecification.bySgg(request.getSgg());

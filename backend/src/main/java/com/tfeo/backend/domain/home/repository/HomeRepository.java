@@ -14,4 +14,6 @@ public interface HomeRepository extends JpaRepository<Home, Long> {
 	@Query("select h from Home h join fetch h.contracts c where c.member.memberNo = :memberNo and c.expiredAt >= NOW()")
 	Optional<Home> findByMemeber(@Param("memberNo") Long memberNo);
 
+	Optional<Home> findById(@Param("homeNo") Long homeNo);
+
 }
