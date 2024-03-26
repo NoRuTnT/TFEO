@@ -9,12 +9,9 @@ import '../../styles/home/Header.css';
 import styled from '@emotion/styled';
 import { Modal, Slider, Box, Typography, Button, Grid } from '@mui/material';
 
-type CriteriaName = 'School' | 'Subway' | 'Apartment' | 'Pets';
-import { useMapStore } from '../../store/MapStore';
-
-const Header: React.FC = () => {
+const Footer: React.FC = () => {
   const theme = useTheme();
-  const { School, Subway, Apartment, Pets, selectFilter } = useMapStore();
+  const { school, subway, apartment, pets, selectFilter } = useHomeStore();
 
   const getDescriptionStyle = (filter: boolean): React.CSSProperties => {
     return filter ? { fontWeight: 'bold' } : {};
@@ -114,27 +111,27 @@ const Header: React.FC = () => {
   return (
     <header>
       <div className="criteria-container">
-        <div className="element-container" onClick={() => selectFilter({ School: !School })}>
-          <AccountBalanceIcon style={getIconStyle(School)} />
-          <span className="criteria-description" style={getDescriptionStyle(School)}>
+        <div className="element-container" onClick={() => selectFilter({ school: !school })}>
+          <AccountBalanceIcon style={getIconStyle(school)} />
+          <span className="criteria-description" style={getDescriptionStyle(school)}>
             학교 근처
           </span>
         </div>
-        <div className="element-container" onClick={() => selectFilter({ Subway: !Subway })}>
-          <DirectionsSubwayIcon style={getIconStyle(Subway)} />
-          <span className="criteria-description" style={getDescriptionStyle(Subway)}>
+        <div className="element-container" onClick={() => selectFilter({ subway: !subway })}>
+          <DirectionsSubwayIcon style={getIconStyle(subway)} />
+          <span className="criteria-description" style={getDescriptionStyle(subway)}>
             역세권
           </span>
         </div>
-        <div className="element-container" onClick={() => selectFilter({ Apartment: !Apartment })}>
-          <ApartmentIcon style={getIconStyle(Apartment)} />
-          <span className="criteria-description" style={getDescriptionStyle(Apartment)}>
+        <div className="element-container" onClick={() => selectFilter({ apartment: !apartment })}>
+          <ApartmentIcon style={getIconStyle(apartment)} />
+          <span className="criteria-description" style={getDescriptionStyle(apartment)}>
             아파트
           </span>
         </div>
-        <div className="element-container" onClick={() => selectFilter({ Pets: !Pets })}>
-          <PetsIcon style={getIconStyle(Pets)} />
-          <span className="criteria-description" style={getDescriptionStyle(Pets)}>
+        <div className="element-container" onClick={() => selectFilter({ pets: !pets })}>
+          <PetsIcon style={getIconStyle(pets)} />
+          <span className="criteria-description" style={getDescriptionStyle(pets)}>
             반려동물
           </span>
         </div>
