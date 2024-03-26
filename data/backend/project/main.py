@@ -10,6 +10,7 @@ from bson.json_util import dumps
 from faker import Faker
 from recommend_house import Recommendation
 
+from bson import json_util
 
 import uvicorn
 import json
@@ -134,6 +135,35 @@ class Home(BaseModel):
 # 아래부터 검색에 필요한 2개의 DTO #
 ###############################
 
+# 둘 중에 하나 선택
+
+class Search_Condition(BaseModel): # 검색 조건, 피그마 기반으로 작성
+    internet: bool  # 인터넷 여부
+    gas: bool  # 가스레인지 여부
+    washing_machine: bool  # 세탁기 여부
+    air_conditioner: bool  # 에어컨 여부
+    refrigerator: bool  # 냉장고 여부
+    elevator: bool  # 엘리베이터 여부
+    microwave: bool  # 전자레인지 여부
+    toilet: bool  # 개인화장실 여부
+    breakfast: bool  # 조식 여부
+    heating: bool  # 난방 여부
+    parking: bool  # 주차 여부
+    station: bool  # 역세권 여부
+    move_in_date: bool  # 즉시입주가능 여부
+    sink: bool  # 싱크대 여부
+
+    # 건축물 종류
+    APT: bool
+    OPST: bool
+    VL: bool
+    JT: bool
+    DDDGG: bool
+    OR: bool
+
+    rent_max: int # 최고 가격
+    rent_min: int # 최저 가격
+
 class Home_Option(BaseModel): # 집별 옵션
     home_option_no: int # 식별자
     internet: bool # 인터넷 여부
@@ -157,7 +187,7 @@ class Member_Personality(BaseModel): # 집추천 설문내용 DTO
     daytime: bool # 주간형
     nighttime: bool # 야간형
     fast: bool # 빠른 귀가
-    last: bool # 늦은 귀가
+    late: bool # 늦은 귀가
     dinner: bool # 함께 저녁
     smoke: bool # 흡연
     drink: bool # 술 자주 마시는
@@ -171,6 +201,18 @@ class Member_Personality(BaseModel): # 집추천 설문내용 DTO
     hot: bool # 더위잘타는
     host_house_prefer: int # 호스트 집 선호도
 
+class Host_Personality(BaseModel):
+    host_personality_no: int  # 식별키
+    smoke: bool # 흡연 여부
+    pet: bool # 반려동물 여부
+    clean: bool # 청결한걸 좋아함
+    daytime: bool # 아침형
+    nighttime: bool # 저녁형
+    extrovert: bool # 외향적
+    introvert: bool # 내향적
+    cold: bool # 추위잘타는
+    hot: bool # 더위잘타는
+    no_touch: bool # 간섭안하는
 
 ##########################################
 
@@ -208,6 +250,9 @@ def update_house():
 @app.get("/recommend")
 def get_recommended_list(home_option: Home_Option, member_personality: Member_Personality):
 
+
+
+
     weight = member_personality.host_house_prefer # 0-10사이의 값을 적당하게 mapping
     print(weight)
     # 1. 입력으로 주어진 좌표 범위 내 주택만 filtering
@@ -219,6 +264,8 @@ def get_recommended_list(home_option: Home_Option, member_personality: Member_Pe
     # })
 
     # 2. 필터 column 기준으로 필터링
+    # (이 과정에서 vector cosine 유사도 연산)
+
     # 3. 추천 알고리즘 기반으로 sorting
     # 4. 우선순위가 높은 순서대로 json list 반환
 
@@ -231,17 +278,102 @@ def get_recommended_list(home_option: Home_Option, member_personality: Member_Pe
 
 
 
+@app.post("/testing/test")
+def filter_by_search_condition(search_condition: Search_Condition):
+    # min = 60
+    # max = 100
+
+    ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
+    # s_c 가 false 이면 그냥 전부 채택
+    # s_c 가 true 이면 s_c가 있는 것만 선택됨
+    # -> (~s_c)AND(매물 대상)
+
+    # { $ and: [
+    #     { $ or: [{조건1}, {조건2}]},
+    # { $ or: [{조건3}, {조건4}]}
+    # ]}
+
+    # APT: bool
+    # OPST: bool
+    # VL: bool
+    # JT: bool
+    # DDDGG: bool
+    # OR: bool
+
+    building_option_list = []
+    if search_condition.APT:
+        building_option_list.append('APT')
+    if search_condition.OPST:
+        building_option_list.append('OPST')
+    if search_condition.VL:
+        building_option_list.append('VL')
+    if search_condition.JT:
+        building_option_list.append('JT')
+    if search_condition.DDDGG:
+        building_option_list.append('DDDGG')
+    if search_condition.OR:
+        building_option_list.append('OR')
+
+    print(building_option_list)
+    # type: BuildingType  # 건축물 종류(ENUM)
+    data = db.home.find({'rent': {'$gte': search_condition.rent_min, '$lte': search_condition.rent_max}, # 월세 범위 내 검색
+                         # '$eq'
+                         # '$or': [{'type': 'APT'}, {'type': 'DDDGG'}]
+                         })
+
+    print(data)
+    data_list = []
+    for doc in data:
+        data_list.append(doc)
+    # data_list = [doc for doc in data]
+
+    print(len(data_list))
+    print(data_list)
+    # data_list = data_list[:3]  # 3개만 추출
+    data_json = json.dumps(data_list, default=str, ensure_ascii=False)
+    data_json = data_json.replace("\"", "")
+    # return 'OK'
+    return data_json
+
+
+##############################
+# 사용자 맞춤형 추천이 반영된 결과를 반환
+# @app.get("/recommend")
+# def get_recommended_list(search_condition: Search_Condition, member_personality: Member_Personality):
+#
+#     weight = member_personality.host_house_prefer # 0-10사이의 값을 적당하게 mapping
+#     print(weight)
+#     return None
+##############################
+
+
 # 추천이 적용되지 않은 전체 집 정보를 반환
 @app.get("/select/all")
 def get_all_list():
-    data = db.items.find({},{'_id': False})
-    # print(list(data))
-    return list(data)
+    # data = db.items.find({},{'_id': False})
+    data = db.home.find({},{'_id': False})
+
+    data_list = [doc for doc in data]
+    data_list = data_list[:1] # 1개만 추출
+    data_json = json.dumps(data_list, default=str, ensure_ascii=False)
+    data_json = data_json.replace("\"","")
+    return data_json
+
+# 등록된 아이템 추가
+@app.post("/insert-item/")
+def insert_item(item: Item):
+    db.home.insert_one(item
+                       .dict())
+    return "complete"
 
 # 등록된 집 추가
 @app.post("/insert/")
-def insert_house(item: Item):
-    db.items.insert_one(item.dict())
+def insert_item(item: Home):
+    # db.items.insert_one(item.dict())
+    vector = get_host_vector(item)
+    db.home.insert_one(item.dict())
+    # 벡터화 해서 insert
+    db.host_vector.insert_one()
     return "complete"
 
 # 계약이 성사된 집 삭제
@@ -249,6 +381,9 @@ def insert_house(item: Item):
 def delete_house(item_name):
     db.items.delete_one({"name": item_name})
     dicted_item = None
+
+    # 벡터값 collection에서도 삭제한다.
+
     return "complete"
     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
 
@@ -270,6 +405,56 @@ def get_one_home(home_no: int, q: Union[Home, None] = None):
 # def read_item(item_id: int, q: Union[str, None] = None):
 #     return {"item_id": item_id, "q": q}
 
+
+# 호스트+집 정보를 벡터화 시키는 과정이 필요하고
+# insert가 들어올 때마다 이를 갱신하는 과정이 필요함
+
+
+def get_member_vector(member_personality: Member_Personality):
+    print('빅데이터의 벡터화')
+    """
+    <대학생>
+    주간지수, 야간지수, 흡연지수, 외향, 내향, 호스트 습관의 중요함, 동물애호가, 추위잘탐, 더위잘탐
+    """
+    index = 12
+    day = convert_bool_to_int(member_personality.daytime)+convert_bool_to_int(member_personality.fast)
+    night = convert_bool_to_int(member_personality.nighttime)+convert_bool_to_int(member_personality.late)
+    smoke = convert_bool_to_int(member_personality.smoke)
+    extro = convert_bool_to_int(member_personality.outside)
+    intro = convert_bool_to_int(member_personality.inside)+convert_bool_to_int(member_personality.quite)
+    host_related = convert_bool_to_int(member_personality.live_long)
+    pet_lover = convert_bool_to_int(member_personality.pet)
+    cold = convert_bool_to_int(member_personality.cold)
+    hot = convert_bool_to_int(member_personality.hot)
+    member_vector = [index, day, night, smoke, extro, intro,
+                     host_related, pet_lover, cold, hot]
+
+    return member_vector
+
+def get_host_vector(host_personality: Host_Personality):
+    print('빅데이터의 벡터화')
+    """
+    <노인>
+    주간지수, 야간지수, 흡연지수, 외향, 내향, 매너있는 호스트, 동물애호가, 추위잘탐, 더위잘탐
+    """
+    index = 12
+    day = convert_bool_to_int(host_personality.daytime)
+    night = convert_bool_to_int(host_personality.nighttime)
+    smoke = convert_bool_to_int(host_personality.smoke)
+    extro = convert_bool_to_int(host_personality.extrovert)
+    intro = convert_bool_to_int(host_personality.introvert)
+    mannered = convert_bool_to_int(host_personality.clean)+convert_bool_to_int(host_personality.no_touch)
+    pet_lover = convert_bool_to_int(host_personality.pet)
+    cold = convert_bool_to_int(host_personality.cold)
+    hot = convert_bool_to_int(host_personality.hot)
+    member_vector = [index, day, night, smoke, extro, intro,
+                     mannered, pet_lover, cold, hot]
+    return member_vector
+
+def convert_bool_to_int(bool):
+    if(bool==True):
+        return 1
+    return 0
 
 
 def init():

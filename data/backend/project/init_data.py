@@ -137,6 +137,14 @@ def get_one_home():
 # 터미널창에
 # python -m uvicorn main:app --reload
 
+def get_host_vector(host):
+    host_vector = []
+    day=host.day
+    pass
+
+def get_member_vector(member):
+    pass
+
 if __name__ == '__main__':
     print('FastAPI server')
     # init() # mongoDB 연결
