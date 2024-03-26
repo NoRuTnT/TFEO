@@ -1,15 +1,23 @@
 package com.tfeo.backend.domain.home.service;
 
+import java.util.List;
+
+import com.tfeo.backend.domain.home.model.dto.HomeByContractStatusResponseDto;
+import com.tfeo.backend.domain.home.model.dto.HomeDetailsResponseDto;
+import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
+
 public interface HomeQueryService {
 	public void findHomeList();
 
-	public void findHomeDetails();
+	public HomeDetailsResponseDto findHomeDetails(Long homeNo);
 
 	public void findHomeNoneMemberList();
 
-	public void findHomeInProgressList();
+	public List<HomeByContractStatusResponseDto> findHomeInProgressList();
 
-	public void findHomeCompletionList();
+	public List<HomeByContractStatusResponseDto> findHomeCompletionList();
 
-	public void findHomeAppliedMemberList();
+	public List<HomeByContractStatusResponseDto> findHomeAppliedList();
+
+	public List<MemberResponseDto> findHomeAppliedMemberList(Long homeNo);
 }

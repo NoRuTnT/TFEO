@@ -1,0 +1,87 @@
+.progressBarTitle{
+
+    .left{
+        position: absolute;
+        left: 20%;
+        top: 35px;
+        transform: translateX(-50%);
+        display: inline-block;
+    }
+    .center{
+        position: absolute;
+        left: 50%;
+        top: 35px;
+        transform: translateX(-50%);
+        display: inline-block;
+    }
+    .right{
+        position: absolute;
+        left: 80%;
+        top: 35px;
+        transform: translateX(-50%);
+        display: inline-block;
+    }
+}
+
+.progressBarCircle {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-color: var(--primary-main);
+    border-width: 2px;
+    border-radius: 50%;
+    display: inline-block;
+    z-index: 11;
+    transform: translateX(-50%);
+    top: 60px;
+    background-color: white;
+    color: white;
+}
+
+.progressBarCircleNot{
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background-color: white;
+    z-index: 16;
+    top: 64px;
+    color: white;
+    display: inline-block;
+    transform: translateX(-50%);
+    border-radius:50%;
+    border-color: white;
+}
+
+.progressBarCircleCheck{
+    width: 32px;
+    height: 32px;
+    background-color: var(--primary-main);
+    z-index: 16;
+    top: 64px;
+    color: white;
+}
+
+.applied{
+    left: 20%;
+}
+
+.inProgress{
+
+}
+
+.completed{
+    left: 80%;
+}
+
+.progressBarLine {
+    width: 40%;
+    height: 12px;
+    padding: 0px;
+    margin: 42px 0;
+    display: inline-block;
+    background-color:  var(--secondary-main);
+}
+
+.checkLine{
+    background-color: var(--primary-main);
+}

@@ -1,5 +1,7 @@
 package com.tfeo.backend.domain.activity.service;
 
+import static com.tfeo.backend.common.model.type.ContractProgressType.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import com.tfeo.backend.common.model.type.ActivityApproveType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.domain.activity.common.ActivityException;
 import com.tfeo.backend.domain.activity.common.ActivitySpecification;
@@ -75,7 +76,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 			Member student = memberRepository.findByMemberNo(studentNo)
 				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + studentNo));
 
-			Contract contract = contractRepository.findByMember(studentNo)
+			Contract contract = contractRepository.findByMember(IN_PROGRESS, studentNo)
 				.orElseThrow(() -> new ActivityException("해당 회원은 현재 진행중인 계약이 없습니다. id=" + studentNo));
 
 			List<Activity> activities = activityRepository.findByContractNo(contract.getContractNo());

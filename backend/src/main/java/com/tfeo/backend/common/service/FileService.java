@@ -2,7 +2,8 @@ package com.tfeo.backend.common.service;
 
 public interface FileService {
 
-	String createPresignedUrlToUpload(String prefix, String fileName);
-	String createPresignedUrlToDownload(String prefix, String fileName);
+	String createPresignedUrlToUpload(String filePath);
+	String createPresignedUrlToDownload(String filePath);
+	String createPath(String prefix) ;
 
 }

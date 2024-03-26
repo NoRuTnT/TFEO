@@ -2,6 +2,7 @@ spring:
   config:
     import:
       - optional:file:env/test-db.env[.properties]
+      - optional:file:env/security.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_TEST_URL}
@@ -17,4 +18,24 @@ spring:
         format_sql: true
       show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+coolsms:
+  api:
+    key: ${COOLSMS_API_KEY}
+    secret: ${COOLSMS_API_SECRET_KEY}
+
+cloud:
+  aws:
+    s3:
+      bucket: tfeo-bucket
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      accessKey: AKIA4QRMPZYRUH5IQSFJ
+      secretKey: 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

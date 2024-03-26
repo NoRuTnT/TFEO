@@ -3,7 +3,8 @@ package com.tfeo.backend.domain.member.model.entity;
 import static javax.persistence.CascadeType.*;
 import static lombok.AccessLevel.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import javax.persistence.Embedded;
@@ -26,6 +27,7 @@ import com.tfeo.backend.common.model.type.GenderType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.common.model.type.SocialType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
+import com.tfeo.backend.domain.member.model.dto.SurveyMemberRequestDto;
 import com.tfeo.backend.domain.review.model.entity.Review;
 
 import lombok.AllArgsConstructor;
@@ -59,6 +61,10 @@ public class Member {
 
 	private String college;
 
+	private double lat; // 대학 위도
+
+	private double lng; // 대학 경도
+
 	@Embedded
 	private Address address;
 
@@ -79,9 +85,15 @@ public class Member {
 	@Enumerated(value = EnumType.STRING)
 	private CertificateStatusType certificateStatus;
 
-	private LocalDateTime certificateRegisterDate;
+	private LocalDate certificateRegisterDate;
 
-	private LocalDateTime certificateExpirationDate;
+	private LocalDate certificateExpirationDate;
+
+	private LocalTime sleepAt;
+
+	private LocalTime wakeAt;
+
+	private LocalTime returnAt;
 
 	@OneToMany(mappedBy = "member", cascade = ALL)
 	private List<Wish> wishes;
@@ -92,4 +104,15 @@ public class Member {
 	@OneToMany(mappedBy = "member", cascade = ALL)
 	private List<Review> reviews;
 
+	public void updateMemberPersonality(MemberPersonality memberPersonality) {
+		this.memberPersonality = memberPersonality;
+	}
+
+	public void updateMemberSurvey(SurveyMemberRequestDto surveyMemberRequestDto) {
+		this.college = surveyMemberRequestDto.getCollege();
+		// college lat, lng 반영 필요
+		this.wakeAt = surveyMemberRequestDto.getWakeAt();
+		this.sleepAt = surveyMemberRequestDto.getSleepAt();
+		this.returnAt = surveyMemberRequestDto.getReturnAt();
+	}
 }

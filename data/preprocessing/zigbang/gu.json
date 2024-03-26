@@ -1,10 +1,10 @@
 {
 	"data": [
-		{
+	{
 		"region": "성동구",
 		"price": [1000, 70],
 		"geocode": ["wydmd", "wydme"],
-		},
+	},
     {
         "region": "마포구",
         "price": [900, 60],

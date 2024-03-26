@@ -6,6 +6,5 @@ public enum BuildingType {
 	VL,					// 빌라
 	JT,					// 주택
 	DDDGG,				// 단독, 다가구
-
-
+	OR                  // 원룸
 }
