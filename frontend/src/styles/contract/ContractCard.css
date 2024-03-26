@@ -1,0 +1,11 @@
+.cardContent{
+    text-align: justify;
+}
+
+.cardImg {
+    height: 200px;
+}
+
+.address {
+    font-weight: bold;
+}

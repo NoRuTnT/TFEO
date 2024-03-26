@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../styles/contract/ContractAppliedContent.css';
 
 const ContractAppliedContent = () => {
   const removeApplication = () => {
@@ -6,8 +7,10 @@ const ContractAppliedContent = () => {
   };
   return (
     <div className="contractContent">
-      <div>담당자의 승인을 기다려주세요</div>
-      <button onClick={removeApplication}>신청 취소</button>
+      <div className="authentication">담당자의 승인을 기다려주세요</div>
+      <div className="contractBtn">
+        <button onClick={removeApplication}>신청 취소</button>
+      </div>
     </div>
   );
 };

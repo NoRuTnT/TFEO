@@ -6,7 +6,7 @@ import ContractCompletedContent from '../components/contract/ContractCompletedCo
 import ContractAppliedContent from '../components/contract/ContractAppliedContent';
 import ContractInProgressContent from '../components/contract/ContractInProgressContent';
 import { IHome, IHomeDetail, IHomeOption, IHostPersonality } from '../interfaces/HomeInterface';
-import '../styles/Contract.css';
+import '../styles/contract/Contract.css';
 import { IContract } from '../interfaces/ContractInterface';
 import { IAddress } from '../interfaces/AddressInterface';
 
