@@ -62,9 +62,10 @@ public class MemberController {
 	//회원 상세정보 수정
 	@PutMapping("")
 	public ResponseEntity<SuccessResponse> memberModify(@RequestBody MemberRequestDto memberRequestDto) {
-		//Todo: 구현 해야 한다.
-		memberService.modifyMember(temporaryMemberNo, memberRequestDto);
-		return null;
+		return ResponseEntity.ok(SuccessResponse.builder()
+			.status(HttpStatus.OK)
+			.result(memberService.modifyMember(temporaryMemberNo, memberRequestDto))
+			.build());
 	}
 
 	//회원 탈퇴
@@ -100,6 +101,7 @@ public class MemberController {
 		return ResponseEntity.ok(successResponse);
 	}
 
+	//집 신청 취소
 	@DeleteMapping("/home/{homeNo}")
 	public ResponseEntity<SuccessResponse> memberRequestedHomeRemove(@PathVariable Long homeNo) {
 		memberService.deleteApplication(homeNo, temporaryMemberNo);
@@ -108,6 +110,27 @@ public class MemberController {
 			.message("집 신청이 취소되었습니다.")
 			.build();
 		return ResponseEntity.ok(successResponse);
+	}
+
+	// 담당자가 미승인 상태의 학생 확인
+	@GetMapping("/approve-list")
+	public ResponseEntity<SuccessResponse> memberApprovalList() {
+		return ResponseEntity.ok(
+			SuccessResponse.builder().status(HttpStatus.OK).result(memberService.findMemberApprovalList()).build());
+	}
+
+	// 담당자가 학생 승인상태로 바꿈
+	@PutMapping("/approve/{memberNo}")
+	public ResponseEntity<SuccessResponse> memberApprove(@PathVariable("memberNo") Long memberNo) {
+		memberService.approveMember(memberNo);
+		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).message("학생이 승인되었습니다.").build());
+	}
+
+	// 담당자가 학생 거절상태로 바꿈
+	@PutMapping("/reject/{memberNo}")
+	public ResponseEntity<SuccessResponse> memberReject(@PathVariable("memberNo") Long memberNo) {
+		memberService.rejectMember(memberNo);
+		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).message("학생이 거절되었습니다.").build());
 	}
 
 	//sms 인증번호 요청
