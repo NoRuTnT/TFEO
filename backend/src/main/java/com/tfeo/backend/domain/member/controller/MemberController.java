@@ -1,7 +1,5 @@
 package com.tfeo.backend.domain.member.controller;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,9 +18,9 @@ import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
 import com.tfeo.backend.domain.member.model.dto.MemberHomeApplicationRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
-import com.tfeo.backend.domain.member.model.dto.MyHomeResponseDto;
 import com.tfeo.backend.domain.member.model.dto.SmsRequestDto;
 import com.tfeo.backend.domain.member.model.dto.SmsVerifyDto;
+import com.tfeo.backend.domain.member.model.dto.SurveyRequestDto;
 import com.tfeo.backend.domain.member.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -49,6 +47,18 @@ public class MemberController {
 		return ResponseEntity.ok(successResponse);
 	}
 
+	//회원 설문조사 제출
+	@PostMapping("/survey")
+	public ResponseEntity<SuccessResponse> memberSurvey(@RequestBody SurveyRequestDto memberSurveyRequestDto) {
+		//Todo: Auth 적용 이후 memberNo 갱신
+		memberService.submitSurvey(memberSurveyRequestDto, temporaryMemberNo);
+		SuccessResponse successResponse = SuccessResponse.builder()
+			.status(HttpStatus.OK)
+			.message("설문 제출이 완료되었습니다.")
+			.build();
+		return ResponseEntity.ok(successResponse);
+	}
+
 	//회원 상세정보 수정
 	@PutMapping("")
 	public ResponseEntity<SuccessResponse> memberModify(@RequestBody MemberRequestDto memberRequestDto) {
@@ -67,13 +77,13 @@ public class MemberController {
 			.build());
 	}
 
-	// 회원이 신청한 집 리스트 조회
+	// 회원이 신청한 집(계약) 조회
 	@GetMapping("/home")
 	public ResponseEntity<SuccessResponse> AppliedHomeList() {
-		List<AppliedHomeResponseDto> appliedHomeResponseDtoList = memberService.findAppliedHomeList(temporaryMemberNo);
+		AppliedHomeResponseDto appliedHomeResponseDto = memberService.findAppliedHome(temporaryMemberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
-			.result(appliedHomeResponseDtoList)
+			.result(appliedHomeResponseDto)
 			.build();
 		return ResponseEntity.ok(successResponse);
 	}
@@ -96,18 +106,6 @@ public class MemberController {
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("집 신청이 취소되었습니다.")
-			.build();
-		return ResponseEntity.ok(successResponse);
-	}
-
-	// 회원이 계약 완료하여 현재 살고 있는 집 조회
-	@GetMapping("/home/myhome")
-	public ResponseEntity<SuccessResponse> myHomeDetails() {
-		//Todo: auth 적용 이후 memberNo
-		MyHomeResponseDto myHomeResponseDto = memberService.findMyHomeDetails(temporaryMemberNo);
-		SuccessResponse successResponse = SuccessResponse.builder()
-			.status(HttpStatus.OK)
-			.result(myHomeResponseDto)
 			.build();
 		return ResponseEntity.ok(successResponse);
 	}
