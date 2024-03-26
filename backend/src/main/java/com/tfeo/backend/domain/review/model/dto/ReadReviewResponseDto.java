@@ -9,9 +9,9 @@ import lombok.Data;
 @Builder
 @Data
 public class ReadReviewResponseDto {
-	private Long reviewNo;
-	private String memberName;
-	private LocalDateTime createdAt;
-	private String homeContent;
-	private Map<String, Boolean> keywordValues;
+	 Long reviewNo;
+	 String memberName;
+	 LocalDateTime createdAt;
+	 String homeContent;
+	 Map<String, Boolean> keywordValues;
 }

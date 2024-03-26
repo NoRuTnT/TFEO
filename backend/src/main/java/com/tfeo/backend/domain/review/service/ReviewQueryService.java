@@ -10,6 +10,7 @@ import com.tfeo.backend.domain.review.model.dto.ReadReviewResponseDto;
 
 public interface ReviewQueryService {
 	List<ReadReviewResponseDto> readReviewList(Long memberNo, MemberRoleType role,
-		Long homeNo, Pageable pageable);
+		Long homeNo);
 
-	ReadReviewResponseDto readReview(Long memberNo, MemberRoleType role, Long activityNo);
+	ReadReviewResponseDto readReview(Long memberNo, MemberRoleType role, Long reviewNo);
+}
