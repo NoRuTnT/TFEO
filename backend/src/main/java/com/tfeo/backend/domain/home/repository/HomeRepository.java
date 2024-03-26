@@ -15,4 +15,5 @@ public interface HomeRepository extends JpaRepository<Home, Long> {
 	Optional<Home> findByMemeber(@Param("memberNo") Long memberNo);
 
 	Optional<Home> findById(@Param("homeNo") Long homeNo);
+
 }

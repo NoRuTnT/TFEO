@@ -4,9 +4,13 @@ import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.GenderType;
 import com.tfeo.backend.domain.home.model.entity.Home;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class HomeDto {
 	private Long homeNo;
 	private String hostName;

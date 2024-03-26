@@ -2,7 +2,6 @@ package com.tfeo.backend.common.model.entity;
 
 import static lombok.AccessLevel.*;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -62,5 +61,7 @@ public class MemberPersonality {
 	private Boolean cold;
 
 	private Boolean hot;
+
+	private Integer hostHousePrefer;
 
 }
