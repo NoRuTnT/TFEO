@@ -1,17 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../../styles/home/HomeList.css';
 import MapIcon from '@mui/icons-material/Map';
+import { useHomeStore } from '../../store/HomeStore';
+import Home from './Home';
 
 const HomeList: React.FC = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const [containerMarginTop, setContainerMarginTop] = useState('0%');
-
-  const ownerImages = ['/test/owner1.png', '/test/owner2.png', '/test/owner3.png'];
-  const homeImages = ['/test/home1.png', '/test/home2.png', '/test/home3.png'];
+  const { school, subway, apartment, pets, selectFilter, homes } = useHomeStore();
 
   const settings = {
     dots: true,
@@ -42,115 +40,11 @@ const HomeList: React.FC = () => {
       )}
       <hr className="custom-hr" onClick={resetStyles} />
       <div className="home-count" onClick={resetStyles}>
-        나와 함께할 공유자 count 명
+        어르신 {homes.length} 명
       </div>
-      {/*집주인의 사진을 보여줄 캐러셀*/}
-      <div className="list-container">
-        <div className="left-carousel-container">
-          <Slider {...settings}>
-            {ownerImages.map((img, index) => (
-              <div key={index} className="slide-left">
-                <img src={img} alt={`Owner ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-        {/* 집의 사진을 보여줄 캐러셀 */}
-        <div className="right-carousel-container">
-          <Slider {...settings}>
-            {homeImages.map((img, index) => (
-              <div key={index} className="slide-right">
-                <img src={img} alt={`Home ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-      </div>
-
-      <div className="list-container">
-        <div className="left-carousel-container">
-          <Slider {...settings}>
-            {ownerImages.map((img, index) => (
-              <div key={index} className="slide-left">
-                <img src={img} alt={`Owner ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-        {/* 집의 사진을 보여줄 캐러셀 */}
-        <div className="right-carousel-container">
-          <Slider {...settings}>
-            {homeImages.map((img, index) => (
-              <div key={index} className="slide-right">
-                <img src={img} alt={`Home ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-      </div>
-      <div className="list-container">
-        <div className="left-carousel-container">
-          <Slider {...settings}>
-            {ownerImages.map((img, index) => (
-              <div key={index} className="slide-left">
-                <img src={img} alt={`Owner ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-        {/* 집의 사진을 보여줄 캐러셀 */}
-        <div className="right-carousel-container">
-          <Slider {...settings}>
-            {homeImages.map((img, index) => (
-              <div key={index} className="slide-right">
-                <img src={img} alt={`Home ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-      </div>
-      <div className="list-container">
-        <div className="left-carousel-container">
-          <Slider {...settings}>
-            {ownerImages.map((img, index) => (
-              <div key={index} className="slide-left">
-                <img src={img} alt={`Owner ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-        {/* 집의 사진을 보여줄 캐러셀 */}
-        <div className="right-carousel-container">
-          <Slider {...settings}>
-            {homeImages.map((img, index) => (
-              <div key={index} className="slide-right">
-                <img src={img} alt={`Home ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-      </div>
-      <div className="list-container">
-        <div className="left-carousel-container">
-          <Slider {...settings}>
-            {ownerImages.map((img, index) => (
-              <div key={index} className="slide-left">
-                <img src={img} alt={`Owner ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-        {/* 집의 사진을 보여줄 캐러셀 */}
-        <div className="right-carousel-container">
-          <Slider {...settings}>
-            {homeImages.map((img, index) => (
-              <div key={index} className="slide-right">
-                <img src={img} alt={`Home ${index + 1}`} />
-              </div>
-            ))}
-          </Slider>
-        </div>
-      </div>
+      {homes.map((home, index) => (
+        <Home key={index} settings={settings} home={home} />
+      ))}
     </div>
   );
 };
