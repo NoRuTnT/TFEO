@@ -7,7 +7,7 @@ import PetsIcon from '@mui/icons-material/Pets';
 import TuneIcon from '@mui/icons-material/Tune';
 import '../../styles/home/Header.css';
 import styled from '@emotion/styled';
-import { Modal, Slider, Box, Typography, Button, Grid } from '@mui/material';
+import { Slider, Box, Typography, Button, Grid } from '@mui/material';
 import { useHomeStore } from '../../store/HomeStore';
 
 const Header: React.FC = () => {
