@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import '../../styles/home/MapBox.css';
 import { theme } from '../../styles/Theme'; // 테마에서 기본 색상을 사용하기 위해 가져옵니다.
+import { useHomeStore } from '../../store/HomeStore';
+
+// 필터의 상태가 바뀌면 리렌더링 해야함
+// 필터 상태 바꾸는 메서드 호출될 때마다 집 리스트 계산 작업 수행해야함
+// 집 리스트에 대한 상태를 헤더, 지도가 공유해야함 -> HomeStore 내에서 집 리스트를 관리해야함
 
 declare global {
   interface Window {
@@ -13,22 +18,9 @@ interface Location {
   lng: number;
 }
 
-const dummyData = {
-  oneroom: [
-    { lat: 37.566022, lng: 126.977969 },
-    { lat: 37.568122, lng: 126.971969 },
-    { lat: 37.563222, lng: 126.980969 },
-    { lat: 37.560322, lng: 126.974469 },
-    { lat: 37.570422, lng: 126.978369 },
-    { lat: 37.566522, lng: 126.980269 },
-    { lat: 37.559622, lng: 126.979169 },
-    { lat: 37.563722, lng: 126.972069 },
-    // 나머지 위치 데이터...
-  ],
-};
-
 export default function MapBox() {
   const [map, setMap] = useState(null);
+  const { school, subway, apartment, pets, selectFilter, homes } = useHomeStore();
 
   useEffect(() => {
     window.kakao.maps.load(() => {
@@ -42,7 +34,7 @@ export default function MapBox() {
       const newMap = new window.kakao.maps.Map(container, options);
       setMap(newMap);
 
-      const markers = dummyData.oneroom.map((location) => {
+      const markers = homes.map((location) => {
         return new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(location.lat, location.lng),
         });
@@ -118,5 +110,5 @@ export default function MapBox() {
     });
   }, []);
 
-  return <div className="mapbox-container" id="map" style={{ width: '100%', height: '700px' }}></div>;
+  return <div className="mapbox-container" id="map" style={{ width: '100%', height: '400px' }}></div>;
 }
