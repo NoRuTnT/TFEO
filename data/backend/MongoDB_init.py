@@ -56,6 +56,12 @@ class Home(BaseModel):
     host_account_no: str # 계좌번호
     host_bank: str # 계좌은행
     address: str # 주소
+
+    si: str
+    sgg: str
+    emd: str
+    ro: str
+
     rent: int # 임대료
     lat: float # 위도
     lng: float # 경도
@@ -112,7 +118,7 @@ home_columns = ['home_no', 'host_name', 'host_age', 'host_phone',
                 'relation', 'host_register_no', 'host_account_no',
                 'host_bank', 'address', 'rent', 'lat', 'lng',
                 'MemberRoleType', 'introduce', 'host_personality_no',
-                'home_option_no']
+                'home_option_no', 'si', 'sgg', 'emd', 'ro'] # 시,군,구,도로명->추가 ('si', 'sgg', 'emd', 'ro')
 host_personality_columns = ['host_personality_no', 'smoke', 'pet',
                             'clean', 'daytime', 'nighttime', 'extrovert',
                             'introvert', 'cold', 'hot', 'no_touch']
@@ -147,6 +153,9 @@ def init_MongoDB_Naver():
     # df_host_image = pd.DataFrame(data='데이터', columns=host_image_columns)
     df_host_image = pd.DataFrame(columns=host_image_columns)
 
+
+    picture_index = 1
+
     with open('CSV_Data/naver_home_merged.csv', 'r', encoding='utf-8-sig') as f:
         csvReader = csv.DictReader(f)
 
@@ -157,20 +166,21 @@ def init_MongoDB_Naver():
             # json_data['internet'] = True if rows['internet']==1 else False
 
 
-            json_data['internet'] = boolean[int(rows['internet'])]
-            json_data['gas'] = boolean[int(rows['gas'])]
-            json_data['washing_machine'] = boolean[int(rows['washing_machine'])]
-            json_data['air_conditioner'] = boolean[int(rows['air_conditioner'])]
-            json_data['refrigerator'] = boolean[int(rows['refrigerator'])]
-            json_data['elevator'] = boolean[int(rows['elevator'])]
-            json_data['microwave'] = boolean[int(rows['microwave'])]
-            json_data['breakfast'] = boolean[int(rows['breakfast'])]
-            json_data['toilet'] = boolean[int(rows['toilet'])]
-            json_data['heating'] = boolean[int(rows['heating'])]
-            json_data['parking'] = boolean[int(rows['parking'])]
-            json_data['station'] = boolean[int(rows['station'])]
-            json_data['move_in_date'] = boolean[int(rows['move_in_date'])]
-            json_data['sink'] = boolean[int(rows['sink'])]
+            # json_data['internet'] = boolean[int(rows['internet'])]
+            json_data['internet'] = int(rows['internet'])
+            json_data['gas'] = int(rows['gas'])
+            json_data['washing_machine'] = int(rows['washing_machine'])
+            json_data['air_conditioner'] = int(rows['air_conditioner'])
+            json_data['refrigerator'] = int(rows['refrigerator'])
+            json_data['elevator'] = int(rows['elevator'])
+            json_data['microwave'] = int(rows['microwave'])
+            json_data['breakfast'] = int(rows['breakfast'])
+            json_data['toilet'] = int(rows['toilet'])
+            json_data['heating'] = int(rows['heating'])
+            json_data['parking'] = int(rows['parking'])
+            json_data['station'] = int(rows['station'])
+            json_data['move_in_date'] = int(rows['move_in_date'])
+            json_data['sink'] = int(rows['sink'])
             json_data['type'] = rows['type'].strip()
 
             new_row = {'home_option_no': idx, 'internet': json_data['internet'],
@@ -194,16 +204,17 @@ def init_MongoDB_Naver():
             # new_row = {'Name': 'John', 'Age': 30, 'City': 'New York'}
 
             # 호스트
-            json_data['smoke'] = random.randint(0, 1) >= 0.5
-            json_data['pet'] = random.randint(0, 1) >= 0.5
-            json_data['clean'] = random.randint(0, 1) >= 0.5
-            json_data['daytime'] = random.randint(0, 1) >= 0.5
-            json_data['nighttime'] = random.randint(0, 1) >= 0.5
-            json_data['extrovert'] = random.randint(0, 1) >= 0.5
-            json_data['introvert'] = random.randint(0, 1) >= 0.5
-            json_data['cold'] = random.randint(0, 1) >= 0.5
-            json_data['hot'] = random.randint(0, 1) >= 0.5
-            json_data['no_touch'] = random.randint(0, 1) >= 0.5
+            # json_data['smoke'] = random.randint(0, 1) >= 0.5
+            json_data['smoke'] = random.randint(0, 1)
+            json_data['pet'] = random.randint(0, 1)
+            json_data['clean'] = random.randint(0, 1)
+            json_data['daytime'] = random.randint(0, 1)
+            json_data['nighttime'] = random.randint(0, 1)
+            json_data['extrovert'] = random.randint(0, 1)
+            json_data['introvert'] = random.randint(0, 1)
+            json_data['cold'] = random.randint(0, 1)
+            json_data['hot'] = random.randint(0, 1)
+            json_data['no_touch'] = random.randint(0, 1)
 
             new_row = {
                 'host_personality_no': idx,
@@ -223,10 +234,12 @@ def init_MongoDB_Naver():
             json_data['home_no'] = idx
             json_data['host_name'] = fake.name()  # 이름
             json_data['host_age'] = random.randint(65, 100)  # 나이
-            json_data['host_phone'] = fake.phone_number()
+            # json_data['host_phone'] = fake.phone_number() # 데이터 포맷에 맞게 변경
+            json_data['host_phone'] = get_random_phone_number()
             json_data['host_gender'] = random.choice(gender)[0]  # 성별 (M/F)
             json_data['guardian_name'] = fake.name()  # 보호자 이름
-            json_data['guardian_phone'] = fake.phone_number()  # 보호자 전화번호
+            # json_data['guardian_phone'] = fake.phone_number()  # 보호자 전화번호 # 데이터 포맷에 맞게 변경
+            json_data['guardian_phone'] = get_random_phone_number()
             json_data['relation'] = '자녀'  # 보호자와 호스트와의 관계
             json_data['host_register_no'] = fake.ssn()  # 주민등록번호
             json_data['host_account_no'] = 'xx-xxxxx-xxx' #  계좌번호 -> 추후 format에 맞게 교체
@@ -244,6 +257,12 @@ def init_MongoDB_Naver():
             json_data['introduce'] = rows['introduce'].strip()  # 주소
             json_data['host_personality_no'] = idx  # 식별키
             json_data['home_option_no'] = idx  # 식별자
+
+            # merged 파일안에 결측치 문제는 이미 해결된 것으로 보임
+            json_data['si'] = rows['si'].strip()
+            json_data['sgg'] = rows['sgg'].strip()
+            json_data['emd'] = rows['emd'].strip()
+            json_data['ro'] = rows['ro'].strip()
 
             new_row = {
                 'home_no': json_data['home_no'],
@@ -264,20 +283,33 @@ def init_MongoDB_Naver():
                 'MemberRoleType': json_data['MemberRoleType'],
                 'introduce': json_data['introduce'],
                 'host_personality_no': json_data['host_personality_no'],
-                'home_option_no': json_data['home_option_no']
+                'home_option_no': json_data['home_option_no'],
+                'si': json_data['si'],
+                'sgg': json_data['sgg'],
+                'emd': json_data['emd'],
+                'ro': json_data['ro']
             }
             df_home = df_home._append(new_row, ignore_index=True)
 
+            # 집 사진은 각 매물마다 3장씩 추가할 것
             # 집 사진
             json_data['home_image_no'] = idx
-            json_data['home_image_url'] = 'home_image_url'
 
-            new_row = {
-                'home_image_no': json_data['home_image_no'],
-                'home_image_url': json_data['home_image_url'],
-                'home_no': json_data['home_no'],
-            }
-            df_home_image = df_home_image._append(new_row, ignore_index=True)
+            image_list = []
+            for i in range(1, 4):
+                new_row = {
+                'home_no': json_data['home_no'], # FK
+                # 'home_image_no': json_data['home_image_no'],
+                'home_image_no': picture_index,
+                # 'home_image_url': json_data['home_image_url'],
+                # URL 포맷에 맞게 수정
+                'home_image_url': 'http://{}/{}'.format(idx,i), # 'http://' + idx + '/' + i
+                }
+                image_list.append(new_row)
+                picture_index+=1
+                df_home_image = df_home_image._append(new_row, ignore_index=True)
+
+            json_data['home_image'] = image_list
 
             # 호스트 사진
             json_data['host_image_no'] = idx
@@ -290,7 +322,6 @@ def init_MongoDB_Naver():
             }
             df_host_image = df_host_image._append(new_row, ignore_index=True)
 
-            #############################
             json_list.append(json_data)
 
         df_home_option.to_csv('MySQL/home_option.csv')
@@ -300,6 +331,19 @@ def init_MongoDB_Naver():
         df_home_image.to_csv('MySQL/home_image.csv')
         df_host_image.to_csv('MySQL/host_image.csv')
         db.home.insert_many(json_list)
+
+def get_random_phone_number():
+    phone_num = '010'
+    nums = ['0','1','2','3','4','5','6','7','8','9']
+    for i in range(8):
+        phone_num += random.choice(nums)
+    return phone_num
+
+# 결측치 채우기 위해 구현
+def null_empty_fill_func(obj):
+    if(obj==None or obj==''):
+        return 'empty'
+    return obj
 
 if __name__ == '__main__':
     # merge_naver_home_csv()
