@@ -20,7 +20,7 @@ const initialState: HomeFilterState = {
 };
 
 // zustand 스토어 생성
-export const useMapStore = create<HomeFilterState>((set) => ({
+export const useHomeStore = create<HomeFilterState>((set) => ({
   ...initialState,
   // 상태 변경 함수 정의
   selectFilter: (newState) => set((state) => ({ ...state, ...newState })),
