@@ -1,7 +1,9 @@
 package com.tfeo.backend.domain.member.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +13,9 @@ import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import com.tfeo.backend.common.config.RedisUtils;
 import com.tfeo.backend.common.config.SmsUtils;
 import com.tfeo.backend.common.model.entity.MemberPersonality;
+import com.tfeo.backend.common.model.type.CertificateStatusType;
 import com.tfeo.backend.common.model.type.ContractProgressType;
+import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.contract.common.exception.ContractNotExistException;
 import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
@@ -28,9 +32,11 @@ import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
 import com.tfeo.backend.domain.member.common.exception.VerificationNotExistException;
 import com.tfeo.backend.domain.member.common.exception.VerificationWrongException;
 import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
+import com.tfeo.backend.domain.member.model.dto.ApprovalMemberListDto;
 import com.tfeo.backend.domain.member.model.dto.MemberHomeApplicationRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
+import com.tfeo.backend.domain.member.model.dto.MemberUpdateResponseDto;
 import com.tfeo.backend.domain.member.model.dto.SmsRequestDto;
 import com.tfeo.backend.domain.member.model.dto.SmsVerifyDto;
 import com.tfeo.backend.domain.member.model.dto.SurveyMemberPersonalityRequestDto;
@@ -55,6 +61,7 @@ public class MemberService {
 	private final HomeImageRepository homeImageRepository;
 	private final SmsUtils smsUtils;
 	private final RedisUtils redisUtils;
+	private final FileService fileService;
 
 	//회원 조회
 	public MemberResponseDto findMember(Long memberNo) {
@@ -73,7 +80,6 @@ public class MemberService {
 		memberPersonalityRepository.save(memberPersonality);
 		member.updateMemberPersonality(memberPersonality);
 		member.updateMemberSurvey(surveyRequestDto.getMember());
-		memberRepository.save(member);
 	}
 
 	//회원 탈퇴
@@ -133,10 +139,55 @@ public class MemberService {
 	}
 
 	//회원 정보 수정
-	public void modifyMember(Long memberNo, MemberRequestDto memberRequestDto) {
+	public MemberUpdateResponseDto modifyMember(Long memberNo, MemberRequestDto memberRequestDto) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
-		//Todo: 구현 해야 한다.
+		String profileUrl = member.getProfileUrl();
+		String profilePreSignedUrlToUpload = "";
+		String certificate = member.getCertificate();
+		String certificatePreSignedUrlToUpload = "";
+		if (memberRequestDto.getIsCertificateChanged()) {
+			// 파일 이름 설정
+			String filePath = fileService.createPath("certificate");
+			// 재학증명서 파일 경로
+			certificate = filePath;
+			// 재학증명서를 업로드할 url 반환
+			certificatePreSignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
+			// 재학증명서 상태를 초기화 - 승인 대기 상태로
+			member.updateMemberCertificateStatus(CertificateStatusType.CERTIFICATE_REQUIRED);
+		}
+		if (memberRequestDto.getIsProfileChanged()) {
+			// 파일 이름 설정
+			String filePath = fileService.createPath("member");
+			// 프로필사진 파일 경로
+			profileUrl = filePath;
+			// 프로필사진을 업로드할 url 반환
+			profilePreSignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
+		}
+		member.updateMemberInfo(memberRequestDto, profileUrl, certificate);
+		return new MemberUpdateResponseDto(profilePreSignedUrlToUpload, certificatePreSignedUrlToUpload);
+	}
+
+	//승인해야 하는 상태의 학생 찾기
+	public List<ApprovalMemberListDto> findMemberApprovalList() {
+		return memberRepository.findAllByCertificateStatusEqualsAndCertificateNotNullOrderByMemberNoDesc(
+				CertificateStatusType.CERTIFICATE_REQUIRED).stream()
+			.map(ApprovalMemberListDto::new)
+			.collect(Collectors.toList());
+	}
+
+	//학생 승인
+	public void approveMember(Long memberNo) {
+		Member member = memberRepository.findByMemberNo(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+		member.updateMemberCertificateStatus(CertificateStatusType.CERTIFICATED);
+	}
+
+	//학생 거절
+	public void rejectMember(Long memberNo) {
+		Member member = memberRepository.findByMemberNo(memberNo)
+			.orElseThrow(() -> new MemberNotExistException(memberNo));
+		member.updateMemberCertificateStatus(CertificateStatusType.REJECTED);
 	}
 
 	public SingleMessageSentResponse requestSms(SmsRequestDto smsRequestDto) {
