@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import '../../styles/contract/ContractCompletedContent.css';
 
 const ContractCompletedContent = () => {
   const seeContract = () => {
@@ -10,11 +11,15 @@ const ContractCompletedContent = () => {
   };
   return (
     <div className="contractContent">
-      <button onClick={seeContract}>계약서 보기</button>
-      <button>
+      <button className="selectBtn" onClick={seeContract}>
+        계약서 보기
+      </button>
+      <button className="selectBtn">
         <Link to="/activity-certification">활동 내역</Link>
       </button>
-      <button onClick={writeReview}>리뷰 쓰기</button>
+      <button className="selectBtn" onClick={writeReview}>
+        <Link to="/activity-review">리뷰 쓰기</Link>
+      </button>
     </div>
   );
 };
