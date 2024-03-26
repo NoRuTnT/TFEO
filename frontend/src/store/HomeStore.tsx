@@ -138,7 +138,7 @@ const initialFilterState: HomeFilterState = {
   types: [
     { type: '아파트', value: 'apt', choice: false },
     { type: '빌라', value: 'vl', choice: false },
-    { type: '오피스', value: 'opst', choice: false },
+    { type: '오피스텔', value: 'opst', choice: false },
     { type: '원룸', value: 'oneroom', choice: false },
   ],
   selectFilter: (newState: Partial<HomeFilterState>) => {},
