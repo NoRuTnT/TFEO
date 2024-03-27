@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Null;
 
 import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.GenderType;
@@ -68,8 +69,10 @@ public class Home {
 
 	private int rent;
 
+	@Null
 	private Double lat;
 
+	@Null
 	private Double lng;
 
 	@Enumerated(value = EnumType.STRING)
