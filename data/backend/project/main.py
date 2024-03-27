@@ -12,6 +12,7 @@ from recommend_house import Recommendation
 
 from bson import json_util
 
+import numpy as np
 import uvicorn
 import json
 import traceback
@@ -343,6 +344,25 @@ def filter_by_search_condition(search_condition: Search_Condition):
                         'move_in_date': {'$in':move_in_date_list},
                         'type': {'$in':building_option_list},
                          })
+    ########################################
+    # def get_recommended_list():
+    #     data = db.host_vector.find({}, {'_id': False})
+    #     data_list = []
+    #     for doc in data:
+    #         data_list.append(doc)
+    #     host_vector_list = []
+    #     for data in data_list:
+    #         host_vector = []
+    #         for value in data.values():
+    #             host_vector.append(value)
+    #         host_vector_list.append(host_vector)
+    #     print(host_vector_list)
+    #     vector_matrix = np.array(host_vector_list)
+    #     return vector_matrix
+    ########################################
+
+
+
     print(data)
     data_list = []
     for doc in data:
@@ -355,8 +375,7 @@ def filter_by_search_condition(search_condition: Search_Condition):
     ## data_list에서 추천 알고리즘 적용용
     index_list = []
 
-
-
+    data_list = {"data": data_list}
    # data_list = data_list[:3]  # 3개만 추출
     data_json = json.dumps(data_list, default=str, ensure_ascii=False)
     data_json = data_json.replace("\"", "")
@@ -423,8 +442,6 @@ def delete_house(host_no):
 #     return "complete"
 #     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
 
-
-
 # for test
 @app.get("/select/one/{home_no}")
 def get_one_home(home_no: int, q: Union[Home, None] = None):
@@ -433,9 +450,7 @@ def get_one_home(home_no: int, q: Union[Home, None] = None):
     # print(data)
     # print(list(data)[0])
 
-
     # find().limit(7) # 7개로 출력할 횟수 제한
-
 
     return data.dict()
 
@@ -444,59 +459,7 @@ def get_one_home(home_no: int, q: Union[Home, None] = None):
 @app.get("/select/get-url-list/{home_no}")
 def get_one_home(home_no: int):
     data = db.home.find({'home_no': home_no},{
-        # "id": 0,
-        # "internet": 0,
-        # "gas": 0,
-        # "washing_machine": 0,
-        # "air_conditioner": 0,
-        # "refrigerator": 0,
-        # "elevator": 0,
-        # "microwave": 0,
-        # "breakfast": 0,
-        # "toilet": 0,
-        # "heating": 0,
-        # "parking": 0,
-        # "station": 0,
-        # "move_in_date": 0,
-        # "sink": 0,
-        # "type": 0,
-        # "smoke": 0,
-        # "pet": 0,
-        # "clean": 0,
-        # "daytime": 0,
-        # "nighttime": 0,
-        # "extrovert": 0,
-        # "introvert": 0,
-        # "cold": 0,
-        # "hot": 0,
-        # "no_touch": 0,
-        # "home_no": 0,
-        # "host_name": 0,
-        # "host_age": 0,
-        # "host_phone": 0,
-        # "host_gender": 0,
-        # "guardian_name": 0,
-        # "guardian_phone": 0,
-        # "relation": 0,
-        # "host_register_no": 0,
-        # "host_account_no": 0,
-        # "host_bank": 0,
-        # "address": 0,
-        # "rent": 0,
-        # "lat": 0,
-        # "lng": 0,
-        # "role": 0,
-        # "introduce": 0,
-        # "host_personality_no": 0,
-        # "home_option_no": 0,
-        # "si": 0,
-        # "sgg": 0,
-        # "emd": 0,
-        # "ro": 0,
-        # "home_image_no": 0,
         "home_image": 1,
-        # "host_image_no": 0,
-        # "host_image_url": 0
     })
     data_list = []
     for doc in data:
@@ -506,7 +469,7 @@ def get_one_home(home_no: int):
     print(len(data_list))
     print(data_list)
 
-    ## data_list에서 추천 알고리즘 적용용
+    ## data_list에서 추천 알고리즘 적용
     index_list = []
 
     # data_list = data_list[:3]  # 3개만 추출
@@ -577,10 +540,6 @@ def convert_bool_to_int(bool):
     if(bool==True):
         return 1
     return 0
-
-def get_recommended_list():
-    print('리스트')
-
 
 def init():
     print("DB초기설정")
