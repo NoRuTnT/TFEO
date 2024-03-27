@@ -382,7 +382,6 @@ def filter_by_search_condition(search_condition: Search_Condition):
     # return 'OK'
     return data_json
 
-
 ##############################
 # 사용자 맞춤형 추천이 반영된 결과를 반환
 # @app.get("/recommend")
@@ -392,7 +391,6 @@ def filter_by_search_condition(search_condition: Search_Condition):
 #     print(weight)
 #     return None
 ##############################
-
 
 # 추천이 적용되지 않은 전체 집 정보를 반환
 @app.get("/select/all")
