@@ -39,7 +39,7 @@ services:
     restart: "no"
 
   tfeo-mongodb:
-    image: mongo
+    image: mongo:5.0.25
     container_name: mongo
     ports:
       - 27017:27017
