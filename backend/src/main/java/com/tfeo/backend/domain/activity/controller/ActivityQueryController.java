@@ -1,6 +1,6 @@
 package com.tfeo.backend.domain.activity.controller;
 
-import static com.tfeo.backend.common.model.type.MemberRoleType.*;
+import static com.tfeo.backend.common.model.type.Role.*;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityResponseDto;
 import com.tfeo.backend.domain.activity.service.ActivityQueryService;
@@ -38,7 +38,7 @@ public class ActivityQueryController {
 		@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
 		Long memberNo = 1L;
-		MemberRoleType role = MEMBER;
+		Role role = USER;
 		Page<ReadActivityResponseDto> result = activityQueryService.readActivityList(memberNo, role, request, pageable);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 목록 조회 성공", result));
 	}
@@ -47,7 +47,7 @@ public class ActivityQueryController {
 	@GetMapping(value = "/{studentNo}")
 	public ResponseEntity<?> roadmapRead(@PathVariable("studentNo") Long studentNo) {
 		Long memberNo = 1L;
-		MemberRoleType role = MEMBER;
+		Role role = USER;
 		List<ReadActivityResponseDto> result = activityQueryService.readRoadmap(memberNo, role, studentNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "로드맵 조회 성공", result));
 	}
@@ -56,7 +56,7 @@ public class ActivityQueryController {
 	@GetMapping(value = "/{activityNo}/detail")
 	public ResponseEntity<?> activityRead(@PathVariable("activityNo") Long activityNo) {
 		Long memberNo = 1L;
-		MemberRoleType role = MEMBER;
+		Role role = USER;
 
 		ReadActivityResponseDto result = activityQueryService.readActivity(memberNo, role, activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 상세 조회 성공", result));
