@@ -277,12 +277,8 @@ def get_recommended_list(home_option: Home_Option, member_personality: Member_Pe
     return resp
 
 
-
 @app.post("/testing/test")
 def filter_by_search_condition(search_condition: Search_Condition):
-    # min = 60
-    # max = 100
-
     ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
     # s_c 가 false 이면 그냥 전부 채택
     # s_c 가 true 이면 s_c가 있는 것만 선택됨
@@ -330,9 +326,6 @@ def filter_by_search_condition(search_condition: Search_Condition):
     station_list = get_permit_list(search_condition.station)
     move_in_date_list = get_permit_list(search_condition.move_in_date)
 
-    # DDDGG
-
-
     # type: BuildingType  # 건축물 종류(ENUM)
     data = db.home.find({'rent': {'$gte': search_condition.rent_min, '$lte': search_condition.rent_max}, # 월세 범위 내 검색
                         'internet': {'$in':internet_list},
@@ -358,7 +351,13 @@ def filter_by_search_condition(search_condition: Search_Condition):
 
     print(len(data_list))
     print(data_list)
-    # data_list = data_list[:3]  # 3개만 추출
+
+    ## data_list에서 추천 알고리즘 적용용
+    index_list = []
+
+
+
+   # data_list = data_list[:3]  # 3개만 추출
     data_json = json.dumps(data_list, default=str, ensure_ascii=False)
     data_json = data_json.replace("\"", "")
     # return 'OK'
@@ -391,8 +390,7 @@ def get_all_list():
 # 등록된 아이템 추가
 @app.post("/insert-item/")
 def insert_item(item: Item):
-    db.home.insert_one(item
-                       .dict())
+    db.home.insert_one(item.dict())
     return "complete"
 
 # 등록된 집 추가
@@ -402,19 +400,30 @@ def insert_item(item: Home):
     vector = get_host_vector(item)
     db.home.insert_one(item.dict())
     # 벡터화 해서 insert
-    db.host_vector.insert_one()
+
     return "complete"
 
 # 계약이 성사된 집 삭제
-@app.delete("/delete/{item_name}")
-def delete_house(item_name):
-    db.items.delete_one({"name": item_name})
+@app.delete("/delete/{host_no}")
+def delete_house(host_no):
+    db.home.delete_one({"home_no": host_no})
     dicted_item = None
-
     # 벡터값 collection에서도 삭제한다.
-
+    db.host_vector.delete_one({'host_vector_no': host_no})
     return "complete"
     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
+
+# # 계약이 성사된 집 삭제
+# @app.delete("/delete/{item_name}")
+# def delete_house(item_name):
+#     db.items.delete_one({"name": item_name})
+#     dicted_item = None
+#     # 벡터값 collection에서도 삭제한다.
+#     db.host_vector.delete_one({})
+#     return "complete"
+#     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
+
+
 
 # for test
 @app.get("/select/one/{home_no}")
@@ -429,6 +438,84 @@ def get_one_home(home_no: int, q: Union[Home, None] = None):
 
 
     return data.dict()
+
+
+"""이미지 URL 테스트 용"""
+@app.get("/select/get-url-list/{home_no}")
+def get_one_home(home_no: int):
+    data = db.home.find({'home_no': home_no},{
+        # "id": 0,
+        # "internet": 0,
+        # "gas": 0,
+        # "washing_machine": 0,
+        # "air_conditioner": 0,
+        # "refrigerator": 0,
+        # "elevator": 0,
+        # "microwave": 0,
+        # "breakfast": 0,
+        # "toilet": 0,
+        # "heating": 0,
+        # "parking": 0,
+        # "station": 0,
+        # "move_in_date": 0,
+        # "sink": 0,
+        # "type": 0,
+        # "smoke": 0,
+        # "pet": 0,
+        # "clean": 0,
+        # "daytime": 0,
+        # "nighttime": 0,
+        # "extrovert": 0,
+        # "introvert": 0,
+        # "cold": 0,
+        # "hot": 0,
+        # "no_touch": 0,
+        # "home_no": 0,
+        # "host_name": 0,
+        # "host_age": 0,
+        # "host_phone": 0,
+        # "host_gender": 0,
+        # "guardian_name": 0,
+        # "guardian_phone": 0,
+        # "relation": 0,
+        # "host_register_no": 0,
+        # "host_account_no": 0,
+        # "host_bank": 0,
+        # "address": 0,
+        # "rent": 0,
+        # "lat": 0,
+        # "lng": 0,
+        # "role": 0,
+        # "introduce": 0,
+        # "host_personality_no": 0,
+        # "home_option_no": 0,
+        # "si": 0,
+        # "sgg": 0,
+        # "emd": 0,
+        # "ro": 0,
+        # "home_image_no": 0,
+        "home_image": 1,
+        # "host_image_no": 0,
+        # "host_image_url": 0
+    })
+    data_list = []
+    for doc in data:
+        data_list.append(doc)
+    # data_list = [doc for doc in data]
+
+    print(len(data_list))
+    print(data_list)
+
+    ## data_list에서 추천 알고리즘 적용용
+    index_list = []
+
+    # data_list = data_list[:3]  # 3개만 추출
+
+    data_list = {"data": data_list}
+    data_json = json.dumps(data_list, default=str, ensure_ascii=False)
+    data_json = data_json.replace("\"", "")
+    # return 'OK'
+    return data_json
 
 # @app.get("/items/{item_id}")
 # def read_item(item_id: int, q: Union[str, None] = None):
@@ -490,6 +577,9 @@ def convert_bool_to_int(bool):
     if(bool==True):
         return 1
     return 0
+
+def get_recommended_list():
+    print('리스트')
 
 
 def init():
