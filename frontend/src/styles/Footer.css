@@ -1,5 +1,5 @@
 .footer {
-    height: 8%;
+    height: 10%;
     position: fixed;
     bottom: 0; /* 하단에 붙임 */
     left: 0; /* 왼쪽 끝에서 시작 */
@@ -22,8 +22,8 @@
 }
 
 .footer .icon-description {
-    font-size: 10px;
+    font-size: 14px;
     color: #666;
-    margin-top: -5px; /* 텍스트를 하단으로 밀어내기 */
+    margin-top: auto; /* 텍스트를 하단으로 밀어내기 */
 }
 
