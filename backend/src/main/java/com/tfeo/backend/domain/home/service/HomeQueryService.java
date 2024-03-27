@@ -7,17 +7,17 @@ import com.tfeo.backend.domain.home.model.dto.HomeDetailsResponseDto;
 import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 
 public interface HomeQueryService {
-	public void findHomeList();
+	void findHomeList();
 
-	public HomeDetailsResponseDto findHomeDetails(Long homeNo);
+	HomeDetailsResponseDto findHomeDetails(Long homeNo);
 
-	public void findHomeNoneMemberList();
+	void findHomeNoneMemberList();
 
-	public List<HomeByContractStatusResponseDto> findHomeInProgressList();
+	List<HomeByContractStatusResponseDto> findHomeInProgressList();
 
-	public List<HomeByContractStatusResponseDto> findHomeCompletionList();
+	List<HomeByContractStatusResponseDto> findHomeCompletionList();
 
-	public List<HomeByContractStatusResponseDto> findHomeAppliedList();
+	List<HomeByContractStatusResponseDto> findHomeAppliedList();
 
-	public List<MemberResponseDto> findHomeAppliedMemberList(Long homeNo);
+	List<MemberResponseDto> findHomeAppliedMemberList(Long homeNo);
 }
