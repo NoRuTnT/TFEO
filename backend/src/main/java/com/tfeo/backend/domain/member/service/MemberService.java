@@ -135,10 +135,12 @@ public class MemberService {
 		Home home = contract.getHome();
 		ContractResponseDto contractResponseDto = new ContractResponseDto(contract);
 		HomeDetailsResponseDto homeDetailsResponseDto = new HomeDetailsResponseDto(home);
-		return new AppliedHomeResponseDto(homeDetailsResponseDto, contractResponseDto);
+		MemberResponseDto memberResponseDto = new MemberResponseDto(member);
+		return new AppliedHomeResponseDto(homeDetailsResponseDto, contractResponseDto, memberResponseDto);
 	}
 
 	//회원 정보 수정
+	@Transactional
 	public MemberUpdateResponseDto modifyMember(Long memberNo, MemberRequestDto memberRequestDto) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
@@ -177,6 +179,7 @@ public class MemberService {
 	}
 
 	//학생 승인
+	@Transactional
 	public void approveMember(Long memberNo) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
@@ -184,6 +187,7 @@ public class MemberService {
 	}
 
 	//학생 거절
+	@Transactional
 	public void rejectMember(Long memberNo) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
