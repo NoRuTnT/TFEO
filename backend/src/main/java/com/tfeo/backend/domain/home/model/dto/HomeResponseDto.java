@@ -6,8 +6,8 @@ import lombok.Getter;
 
 @Getter
 public class HomeResponseDto {
-	private List<String> homeImagePreSignedUrlList;
-	private List<String> hostImagePreSignedUrlList;
+	private final List<String> homeImagePreSignedUrlList;
+	private final List<String> hostImagePreSignedUrlList;
 
 	public HomeResponseDto(List<String> homeImagePreSignedUrlList, List<String> hostImagePreSignedUrlList) {
 		this.homeImagePreSignedUrlList = homeImagePreSignedUrlList;

@@ -9,13 +9,13 @@ import lombok.Getter;
 
 @Getter
 public class AppliedHomeHomeResponseDto {
-	private Long homeNo;
-	private Address address;
-	private Integer rent;
-	private String hostName;
-	private List<String> hostImageUrlList;
-	private List<String> homeImageUrlList;
-	private String introduce;
+	private final Long homeNo;
+	private final Address address;
+	private final Integer rent;
+	private final String hostName;
+	private final List<String> hostImageUrlList;
+	private final List<String> homeImageUrlList;
+	private final String introduce;
 
 	public AppliedHomeHomeResponseDto(Home home, List<String> hostImageUrlList, List<String> homeImageUrlList) {
 		this.homeNo = home.getHomeNo();
