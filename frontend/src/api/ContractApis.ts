@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { ISuccessResponse } from '../interfaces/SuccessResponseInterface';
+import { customAxios } from './customAxios';
 
 // pdf 생성
 export const createForm = async (homeNo: number) => {
   try {
-    const response = await axios.get<ISuccessResponse>(`http://localhost:8081/api/contracts/creation-form/${homeNo}`);
+    const response = await customAxios.get<ISuccessResponse>(`/contracts/creation-form/${homeNo}`);
     return response.data.result;
   } catch (e) {
     console.log(e);
@@ -19,7 +20,7 @@ export const applyApproval = async (homeNo: number, memberNo: number) => {
     memberNo: memberNo,
   };
   try {
-    const response = await axios.put<ISuccessResponse>(`http://localhost:8081/api/home/apply-approval`, request);
+    const response = await customAxios.put<ISuccessResponse>(`/home/apply-approval`, request);
     console.log(response.data.result);
     return response.data.result;
   } catch (e) {
