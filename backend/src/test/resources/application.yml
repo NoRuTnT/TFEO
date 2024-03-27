@@ -77,19 +77,3 @@ jwt:
 
 tfeo:
   domain: ${TFEO_DOMAIN}
-
-logging:
-  level:
-    org:
-      springframework:
-        security: trace
-        web: trace
-        oauth2:
-          client: trace
-        data:
-          redis: trace
-#images:
-#  path:
-#    profile:
-#      save: ${PROFILE_IMAGE_SAVE_PATH}
-#      db: ${PROFILE_IMAGE_DB_PATH}

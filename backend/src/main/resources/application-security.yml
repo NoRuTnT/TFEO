@@ -56,8 +56,3 @@ logging:
           client: trace
         data:
           redis: trace
-#images:
-#  path:
-#    profile:
-#      save: ${PROFILE_IMAGE_SAVE_PATH}
-#      db: ${PROFILE_IMAGE_DB_PATH}
