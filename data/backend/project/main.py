@@ -381,7 +381,29 @@ def filter_by_search_condition(search_condition: Search_Condition):
     data_json = data_json.replace("\"", "")
 
     # 벡터 추출 -> 위키독스 참고
-    # [1, 2, 3, 4]
+
+    # 임시 json 객체
+    member_personality_json_info = {
+        'member_personality_no': 1,
+        'daytime': True,
+        'nighttime': True,
+        'fast': True,
+        'late': True,
+        'dinner': True,
+        'smoke': True,
+        'drink': True,
+        'outside': True,
+        'inside': True,
+        'quite': True,
+        'live_long': True,
+        'live_short': True,
+        'pet': True,
+        'cold': True,
+        'hot': True,
+        'host_house_prefer': True,
+    }
+
+
 
 
     # return 'OK'
