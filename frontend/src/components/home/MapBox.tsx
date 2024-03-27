@@ -156,6 +156,6 @@ export default function MapBox() {
   };
 
   return (
-    <div className="mapbox-container" id="map" style={{ width: '100%', height: '630px', marginTop: '67px' }}></div>
+    <div className="mapbox-container" id="map" style={{ width: '100%', height: '590px', marginTop: '120px' }}></div>
   );
 }
