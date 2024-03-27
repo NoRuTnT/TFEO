@@ -16,6 +16,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query(value = "SELECT m from Member m LEFT JOIN FETCH m.memberPersonality mp WHERE m.memberNo = :memberNo")
 	Optional<Member> findByMemberNo(Long memberNo);
 
+	Optional<Member> findByEmail(String Email);
+
 	List<Member> findAllByCertificateStatusEqualsAndCertificateNotNullOrderByMemberNoDesc(
 		CertificateStatusType certificateStatusType);
 }
