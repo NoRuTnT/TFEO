@@ -379,6 +379,11 @@ def filter_by_search_condition(search_condition: Search_Condition):
    # data_list = data_list[:3]  # 3개만 추출
     data_json = json.dumps(data_list, default=str, ensure_ascii=False)
     data_json = data_json.replace("\"", "")
+
+    # 벡터 추출 -> 위키독스 참고
+    # [1, 2, 3, 4]
+
+
     # return 'OK'
     return data_json
 
