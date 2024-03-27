@@ -16,14 +16,11 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.CertificateStatusType;
-import com.tfeo.backend.common.model.type.ContractProgressType;
 import com.tfeo.backend.common.model.type.GenderType;
 import com.tfeo.backend.common.model.type.MemberRoleType;
 import com.tfeo.backend.common.model.type.SocialType;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
-import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
-import com.tfeo.backend.domain.home.model.entity.Home;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
@@ -93,38 +90,38 @@ public class ActivityControllerTest {
 			.build();
 		memberRepository.save(saveMember);
 
-		Home saveHome = Home.builder()
-			.hostName("hostname")
-			.hostAge(70)
-			.hostPhone("phonenum")
-			.hostGender(GenderType.F)
-			.guardianName("문준형")
-			.guardianPhone("01046402249")
-			.relation("자")
-			.hostRegisterNo("hostreginum")
-			.hostAccountNo("hostaccountnum")
-			.hostBank("신한은행")
-			.address(address)
-			.rent(500000)
-			.lat(37.5012647456244)
-			.lng(127.03958123605)
-			.introduce("introduce")
-			.wishes(new ArrayList<>())
-			.contracts(new ArrayList<>())
-			.reviews(new ArrayList<>())
-			.homeImages(new ArrayList<>())
-			.hostImages(new ArrayList<>())
-			.build();
-		homeRepository.save(saveHome);
+		// Home saveHome = Home.builder()
+		// 	.hostName("hostname")
+		// 	.hostAge(70)
+		// 	.hostPhone("phonenum")
+		// 	.hostGender(GenderType.F)
+		// 	.guardianName("문준형")
+		// 	.guardianPhone("01046402249")
+		// 	.relation("자")
+		// 	.hostRegisterNo("hostreginum")
+		// 	.hostAccountNo("hostaccountnum")
+		// 	.hostBank("신한은행")
+		// 	.address(address)
+		// 	.rent(500000)
+		// 	.lat(37.5012647456244)
+		// 	.lng(127.03958123605)
+		// 	.introduce("introduce")
+		// 	.wishes(new ArrayList<>())
+		// 	.contracts(new ArrayList<>())
+		// 	.reviews(new ArrayList<>())
+		// 	.homeImages(new ArrayList<>())
+		// 	.hostImages(new ArrayList<>())
+		// 	.build();
+		// homeRepository.save(saveHome);
 
-		Contract saveContract = Contract.builder()
-			.contractUrl("contractUrl")
-			.progress(ContractProgressType.DONE)
-			.member(saveMember)
-			.home(saveHome)
-			.activities(new ArrayList<>())
-			.build();
-		contractRepository.save(saveContract);
+		// Contract saveContract = Contract.builder()
+		// 	.contractUrl("contractUrl")
+		// 	.progress(ContractProgressType.DONE)
+		// 	.member(saveMember)
+		// 	.home(saveHome)
+		// 	.activities(new ArrayList<>())
+		// 	.build();
+		// contractRepository.save(saveContract);
 
 		// //when
 		// AddActivityRequestDto addActivityRequestDto = new AddActivityRequestDto(1, "imageUrl", "text", 1L);
