@@ -61,7 +61,6 @@ public class ActivityControllerTest {
 	// 	mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()) // 스프링 시큐리티와 함께 MockMvc 설정
 	// 		.build();
 	// }
-
 	@Test
 	@DisplayName("활동내역 등록 - 성공")
 	void activityAdd_success() throws Exception {
