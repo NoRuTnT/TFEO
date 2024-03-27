@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
@@ -44,12 +44,11 @@ public class ContractServiceImpl implements ContractService {
 	private final ActivityRepository activityRepository;
 	private final FileService fileService;
 
-
 	//계약 완료 승인 -> 완성된 계약서 저장
 	@Override
 	public void completionContract(Long contractNo) {
 		Contract contract = contractRepository.findById(contractNo)
-			.orElseThrow(()->new ContractNotExistException("contractNo", contractNo));
+			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
 
 		// 계약 완료로 변경
 		contract.setProgress(DONE);
@@ -59,19 +58,19 @@ public class ContractServiceImpl implements ContractService {
 		LocalDate startAt = contract.getStartAt();
 		LocalDate expiredAt = contract.getExpiredAt();
 
-		if(startAt==null || expiredAt==null){
+		if (startAt == null || expiredAt == null) {
 			throw new ContractDayNotExistException(contract.getContractNo());
 		}
 
 		//활동인증글 생성
-		for(int i = 0; !startAt.plusWeeks(i).isAfter(expiredAt);i++){
+		for (int i = 0; !startAt.plusWeeks(i).isAfter(expiredAt); i++) {
 			LocalDate tmpDate = startAt.plusWeeks(i);
 			Activity activity = Activity.builder()
 				.week(getCurrentWeekOfMonth(startAt.plusWeeks(i)))
 				.approve(NONE)
 				.contract(contract)
-				.startAt(tmpDate.minusDays(tmpDate.getDayOfWeek().getValue()-1))
-				.expiredAt(tmpDate.plusDays(tmpDate.getDayOfWeek().getValue()-1))
+				.startAt(tmpDate.minusDays(tmpDate.getDayOfWeek().getValue() - 1))
+				.expiredAt(tmpDate.plusDays(tmpDate.getDayOfWeek().getValue() - 1))
 				.build();
 			activityRepository.save(activity);
 		}
@@ -123,10 +122,12 @@ public class ContractServiceImpl implements ContractService {
 		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Contract contract = contractRepository.findById(contractNo)
-			.orElseThrow(() -> new ContractNotExistException("contractNo",contractNo));
+			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
 
-		if (member.getRole() == MemberRoleType.MEMBER) contract.setStudentSign(true);
-		if (member.getRole() == MemberRoleType.MANAGER) contract.setHostSign(true);
+		if (member.getRole() == Role.USER)
+			contract.setStudentSign(true);
+		if (member.getRole() == Role.MANAGER)
+			contract.setHostSign(true);
 
 		contract.setProgress(IN_PROGRESS);
 		contractRepository.save(contract);
@@ -134,12 +135,11 @@ public class ContractServiceImpl implements ContractService {
 		return fileService.createPresignedUrlToUpload(contract.getContractUrl());
 	}
 
-
 	// 계약서 삭제
 	@Override
 	public void deleteContract(Long contractNo) {
 		Contract contract = contractRepository.findById(contractNo)
-				.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
+			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
 		contractRepository.delete(contract);
 	}
 
@@ -159,11 +159,12 @@ public class ContractServiceImpl implements ContractService {
 		// 이번 달의 마지막 날 기준
 		LocalDate lastDayOfMonth = localDate.with(TemporalAdjusters.lastDayOfMonth());
 		// 마지막 주차의 경우 마지막 날이 월~수 사이이면 다음달 1주차로 계산
-		if (weekOfMonth == lastDayOfMonth.get(weekFields.weekOfMonth()) && lastDayOfMonth.getDayOfWeek().compareTo(DayOfWeek.THURSDAY) < 0) {
+		if (weekOfMonth == lastDayOfMonth.get(weekFields.weekOfMonth())
+			&& lastDayOfMonth.getDayOfWeek().compareTo(DayOfWeek.THURSDAY) < 0) {
 			LocalDate firstDayOfNextMonth = lastDayOfMonth.plusDays(1); // 마지막 날 + 1일 => 다음달 1일
 			return getCurrentWeekOfMonth(firstDayOfNextMonth);
 		}
 
-		return localDate.getYear() +"년 " + localDate.getMonthValue() + "월 " + weekOfMonth + "주차";
+		return localDate.getYear() + "년 " + localDate.getMonthValue() + "월 " + weekOfMonth + "주차";
 	}
 }

@@ -9,11 +9,11 @@ import lombok.Getter;
 
 @Getter
 public class HomeDetailsResponseDto {
-	private HomeDto home;
-	private HostPersonalityDto hostPersonality;
-	private HomeOptionDto homeOption;
-	private List<HomeImageDto> homeImageList;
-	private List<HostImageDto> hostImageList;
+	private final HomeDto home;
+	private final HostPersonalityDto hostPersonality;
+	private final HomeOptionDto homeOption;
+	private final List<HomeImageDto> homeImageList;
+	private final List<HostImageDto> hostImageList;
 
 	public HomeDetailsResponseDto(Home home) {
 		this.home = new HomeDto(home);

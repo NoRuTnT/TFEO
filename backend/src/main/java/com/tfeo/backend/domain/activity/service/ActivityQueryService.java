@@ -5,16 +5,16 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityResponseDto;
 
 public interface ActivityQueryService {
-	Page<ReadActivityResponseDto> readActivityList(Long memberNo, MemberRoleType role,
+	Page<ReadActivityResponseDto> readActivityList(Long memberNo, Role role,
 		ReadActivityRequestDto request, Pageable pageable);
 
-	List<ReadActivityResponseDto> readRoadmap(Long memberNo, MemberRoleType role, Long studentNo);
+	List<ReadActivityResponseDto> readRoadmap(Long memberNo, Role role, Long studentNo);
 
-	ReadActivityResponseDto readActivity(Long memberNo, MemberRoleType role, Long activityNo);
+	ReadActivityResponseDto readActivity(Long memberNo, Role role, Long activityNo);
 
 }

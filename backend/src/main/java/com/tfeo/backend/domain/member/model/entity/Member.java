@@ -25,7 +25,7 @@ import com.tfeo.backend.common.model.entity.MemberPersonality;
 import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.CertificateStatusType;
 import com.tfeo.backend.common.model.type.GenderType;
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.common.model.type.SocialType;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.member.model.dto.MemberRequestDto;
@@ -76,7 +76,7 @@ public class Member {
 	private GenderType gender;
 
 	@Enumerated(value = EnumType.STRING)
-	private MemberRoleType role;
+	private Role role;
 
 	private String certificate;
 
