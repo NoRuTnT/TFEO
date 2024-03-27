@@ -23,7 +23,7 @@ const Survey: React.FC = () => {
 
   const QuestionContainer = styled(Paper)({
     boxShadow: 'none',
-    padding: '40px',
+    padding: ' 0px',
     marginTop: '40px',
     textAlign: 'center',
     whiteSpace: 'pre-wrap',
@@ -148,14 +148,14 @@ const Survey: React.FC = () => {
               </Typography>
               {idx == 0 && (
                 <div>
-                  <Box sx={{ textAlign: 'left' }}>성별</Box>
+                  <Box sx={{ textAlign: 'left', marginLeft: '30px', marginTop: '30px' }}>성별</Box>
                   <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={6} md={6}>
+                    <Grid item xs={5} md={6}>
                       <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[0]`)}>
                         {item.answer[0]}
                       </AnswerButton>
                     </Grid>
-                    <Grid item xs={6} md={6}>
+                    <Grid item xs={5} md={6}>
                       <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[1]`)}>
                         {item.answer[1]}
                       </AnswerButton>

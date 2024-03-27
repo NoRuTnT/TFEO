@@ -30,7 +30,7 @@ const Header: React.FC = () => {
   };
 
   const getIconStyle = (isActive: boolean): React.CSSProperties => ({
-    fontSize: '75px',
+    fontSize: '30px',
     color: isActive ? '#000000' : theme.palette.primary.contrastText,
   });
 

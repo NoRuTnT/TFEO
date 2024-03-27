@@ -4,6 +4,10 @@
     --secondary-main: #F9EAE1;
 }
 
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
 /*primary: {*/
 /*    main: '#E07068',*/
 /*    // light: main값을 통해 계산됨*/

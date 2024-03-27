@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../styles/MainPage.css';
 import Footer from '../components/footer/Footer';
 import '../styles/Footer.css';
 import '../styles/ActivityContent.css'; // 이 페이지 전용 스타일을 위한 새 CSS 파일 경로
 
 const ActivityContent: React.FC = () => {
   return (
-    <div className="main-page">
+    <div className="content-container">
       {/* 뒤로 가기 버튼 */}
       <div className="back-button-container">
         <Link to="/activity-certification">
