@@ -1,11 +1,6 @@
 package com.tfeo.backend.domain.member.model.dto;
 
-import java.time.LocalDate;
-
-import com.tfeo.backend.common.model.entity.MemberPersonality;
-import com.tfeo.backend.common.model.type.CertificateStatusType;
-import com.tfeo.backend.common.model.type.GenderType;
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Address;
 
 import lombok.Getter;
 
@@ -15,14 +10,7 @@ public class MemberRequestDto {
 	private String phone;
 	private String email;
 	private String registerNo;
-	private String college;
-	private String address;
-	private String profileUrl;
-	private GenderType gender;
-	private MemberRoleType role;
-	private String certificate;
-	private CertificateStatusType certificateStatus;
-	private LocalDate certificateRegisterDate;
-	private LocalDate certificateExpirationDate;
-	private MemberPersonality memberPersonality;
+	private Address address;
+	private Boolean isProfileChanged;
+	private Boolean isCertificateChanged;
 }

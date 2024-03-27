@@ -1,0 +1,47 @@
+.signStatusContainer{
+    display: flex;
+    height: 120px;
+    /*height: 50px;*/
+    padding: 10px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.signStatus {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.statusBtn {
+    width: 50%;
+    height: 45%;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid gray;
+}
+
+.contractDiv {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+    width: 90%;
+    height: 45px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.background {
+    background-color: #E07068;
+    color: white;
+    border: 1px solid #E07068;
+}

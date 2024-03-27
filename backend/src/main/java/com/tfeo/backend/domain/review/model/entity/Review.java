@@ -51,4 +51,8 @@ public class Review extends BaseTimeEntity {
 	@JoinColumn(name="review_keyword_no")
 	private ReviewKeyword reviewKeyword;
 
+	public void updateReview(String homeContent) {
+		this.homeContent = homeContent;
+	}
+
 }

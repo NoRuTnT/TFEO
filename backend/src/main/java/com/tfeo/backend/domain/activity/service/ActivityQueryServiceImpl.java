@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.activity.common.ActivityException;
 import com.tfeo.backend.domain.activity.common.ActivitySpecification;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityRequestDto;
@@ -38,40 +38,40 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 	private final ContractRepository contractRepository;
 
 	@Override
-	public Page<ReadActivityResponseDto> readActivityList(Long memberNo, MemberRoleType role,
+	public Page<ReadActivityResponseDto> readActivityList(Long memberNo, Role role,
 		@ModelAttribute("request") ReadActivityRequestDto request, Pageable pageable) {
 		Specification<Activity> spce = null;
-		if(request.getSgg()!=null){
+		if (request.getSgg() != null) {
 			spce = ActivitySpecification.bySgg(request.getSgg());
 		}
-		if(request.getApprove() != null){
+		if (request.getApprove() != null) {
 			spce = spce.and(ActivitySpecification.equalApprove(request.getApprove()));
 		}
-		if(request.getWeek() != null){
+		if (request.getWeek() != null) {
 			spce = spce.and(ActivitySpecification.equalWeek(request.getWeek()));
 		}
 		Page<Activity> activities = activityRepository.findAll(spce, pageable);
 
-			return activities.map(activity -> {
-				ReadActivityResponseDto.ReadActivityResponseDtoBuilder builder = ReadActivityResponseDto.builder()
-					.activityNo(activity.getActivityNo())
-					.week(activity.getWeek())
-					.memberName(activity.getContract().getMember().getName())
-					.activityApproveType(activity.getApprove())
-					.createdAt(activity.getCreatedAt())
-					.si(activity.getContract().getHome().getAddress().getSi())
-					.sgg(activity.getContract().getHome().getAddress().getSgg())
-					.emd(activity.getContract().getHome().getAddress().getEmd())
-					.ro(activity.getContract().getHome().getAddress().getRo())
-					.detail(activity.getContract().getHome().getAddress().getDetail());
+		return activities.map(activity -> {
+			ReadActivityResponseDto.ReadActivityResponseDtoBuilder builder = ReadActivityResponseDto.builder()
+				.activityNo(activity.getActivityNo())
+				.week(activity.getWeek())
+				.memberName(activity.getContract().getMember().getName())
+				.activityApproveType(activity.getApprove())
+				.createdAt(activity.getCreatedAt())
+				.si(activity.getContract().getHome().getAddress().getSi())
+				.sgg(activity.getContract().getHome().getAddress().getSgg())
+				.emd(activity.getContract().getHome().getAddress().getEmd())
+				.ro(activity.getContract().getHome().getAddress().getRo())
+				.detail(activity.getContract().getHome().getAddress().getDetail());
 
-				return builder.build();
-			});
+			return builder.build();
+		});
 
 	}
 
 	@Override
-	public List<ReadActivityResponseDto> readRoadmap(Long memberNo, MemberRoleType role, Long studentNo) {
+	public List<ReadActivityResponseDto> readRoadmap(Long memberNo, Role role, Long studentNo) {
 		try {
 			Member student = memberRepository.findByMemberNo(studentNo)
 				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + studentNo));
@@ -100,7 +100,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 	}
 
 	@Override
-	public ReadActivityResponseDto readActivity(Long memberNo, MemberRoleType role, Long activityNo) {
+	public ReadActivityResponseDto readActivity(Long memberNo, Role role, Long activityNo) {
 		try {
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));

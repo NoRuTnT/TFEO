@@ -64,6 +64,16 @@ interface HomeListState {
   selectHome: (homeNo: number) => void;
 }
 
+interface VisibleHomesState {
+  visibleHomes: Home[];
+  setVisibleHomes: (homes: Home[]) => void;
+}
+
+const initialVisibleHomesState: VisibleHomesState = {
+  visibleHomes: [], // 초기 상태는 빈 배열
+  setVisibleHomes: (homes: Home[]) => {},
+};
+
 const dummyHomes: Home[] = [
   {
     lat: 37.566022,
@@ -152,20 +162,19 @@ const initialListState: HomeListState = {
   selectHome: (homeNo: number) => {},
 };
 
-export const useHomeStore = create<HomeFilterState & HomeListState>((set) => ({
+export const useHomeStore = create<HomeFilterState & HomeListState & VisibleHomesState>((set) => ({
   ...initialFilterState,
   ...initialListState,
+  ...initialVisibleHomesState,
   selectFilter: (newState: Partial<HomeFilterState>) => set((state) => ({ ...state, ...newState })),
   selectHome: (homeNo: number) => set({ selectedHomeNo: homeNo }),
+  setVisibleHomes: (homes: Home[]) => set({ visibleHomes: homes }), // 현재 보이는 집들을 설정하는 함수
   toggleOption: (value: string) =>
     set((state) => ({
       options: state.options.map((option) => (option.value === value ? { ...option, choice: !option.choice } : option)),
     })),
-  toggleType: (value: string) => {
-    set((state) => {
-      return {
-        types: state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type)),
-      };
-    });
-  },
+  toggleType: (value: string) =>
+    set((state) => ({
+      types: state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type)),
+    })),
 }));
