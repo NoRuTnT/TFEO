@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tfeo.backend.common.model.type.ContractProgressType;
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
@@ -74,7 +74,7 @@ public class HomeCommandServiceImpl implements HomeCommandService {
 		HomeOption createdHomeOption = homeOptionRepository.findById(homeOptionNo)
 			.orElseThrow(() -> new HomeOptionNotExistException(homeOptionNo));
 		//home
-		Home home = buildHome(homeDto, homeOption, hostPersonality, MemberRoleType.MANAGER);
+		Home home = buildHome(homeDto, homeOption, hostPersonality, Role.MANAGER);
 		homeRepository.save(home);
 		//host image
 		List<String> hostImagePresignedUrlList = new ArrayList<>();
@@ -108,7 +108,7 @@ public class HomeCommandServiceImpl implements HomeCommandService {
 		Long homeOptionNo = homeOptionRepository.save(homeOption).getHomeOptionNo();
 		HomeOption createdHomeOption = homeOptionRepository.findById(homeOptionNo)
 			.orElseThrow(() -> new HomeOptionNotExistException(homeOptionNo));
-		Home home = buildHome(homeDto, createdHomeOption, createdHostPersonality, MemberRoleType.UNAUTHORIZED_MEMBER);
+		Home home = buildHome(homeDto, createdHomeOption, createdHostPersonality, Role.UNAUTHORIZED_MEMBER);
 		homeRepository.save(home);
 	}
 
@@ -148,16 +148,16 @@ public class HomeCommandServiceImpl implements HomeCommandService {
 	@Override
 	public void approveHomeNoneMemberRegistration(Long homeNo) {
 		Home home = homeRepository.findById(homeNo).orElseThrow(() -> new HomeNotExistException(homeNo));
-		if (!home.getRegisterMemberRole().equals(MemberRoleType.UNAUTHORIZED_MEMBER))
+		if (!home.getRegisterMemberRole().equals(Role.UNAUTHORIZED_MEMBER))
 			throw new HomeNotRegisteredByNoneMember(homeNo);
-		home.setRegisterMemberRole(MemberRoleType.MANAGER);
+		home.setRegisterMemberRole(Role.MANAGER);
 		homeRepository.save(home);
 	}
 
 	@Override
 	public void refuseHomeNoneMemberRegistration(Long homeNo) {
 		Home home = homeRepository.findById(homeNo).orElseThrow(() -> new HomeNotExistException(homeNo));
-		if (!home.getRegisterMemberRole().equals(MemberRoleType.UNAUTHORIZED_MEMBER))
+		if (!home.getRegisterMemberRole().equals(Role.UNAUTHORIZED_MEMBER))
 			throw new HomeNotRegisteredByNoneMember(homeNo);
 		homeRepository.delete(home);
 	}
@@ -281,7 +281,7 @@ public class HomeCommandServiceImpl implements HomeCommandService {
 	}
 
 	private Home buildHome(HomeDto homeDto, HomeOption homeOption, HostPersonality hostPersonality,
-		MemberRoleType memberRoleType) {
+		Role role) {
 		//Todo: hostImage, homeImage 처리
 		return Home.builder()
 			.address(homeDto.getAddress())
@@ -299,7 +299,7 @@ public class HomeCommandServiceImpl implements HomeCommandService {
 			.lat(homeDto.getLat())
 			.introduce(homeDto.getIntroduce())
 			.rent(homeDto.getRent())
-			.registerMemberRole(memberRoleType)
+			.registerMemberRole(role)
 			.homeOption(homeOption)
 			.hostPersonality(hostPersonality)
 			.build();

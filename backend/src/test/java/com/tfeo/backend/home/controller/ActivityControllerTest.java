@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.CertificateStatusType;
 import com.tfeo.backend.common.model.type.GenderType;
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.common.model.type.SocialType;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
@@ -81,7 +81,7 @@ public class ActivityControllerTest {
 			.address(address)
 			.profileUrl("url")
 			.gender(GenderType.F)
-			.role(MemberRoleType.MEMBER)
+			.role(Role.USER)
 			.certificate("url")
 			.certificateStatus(CertificateStatusType.CERTIFICATED)
 			.wishes(new ArrayList<>())
