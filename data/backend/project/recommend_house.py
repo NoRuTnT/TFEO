@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.metrics.pairwise import cosine_distances
+from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 features = ['keywords', 'cast', 'genres', 'director']
@@ -29,9 +30,12 @@ def get_most_fit_one():
     # 추천해주려는사용자_vector = [5, 5.2, 3]
     # 추천상품리스트_vector = [[1, 2, 3],[1, 2, 4],[2, 2, 2], [2, 3, 2]]
 
+    ######################################################
 
-
-
+    # 사용자 벡터와 상품 벡터
+    user_vector = np.array([2, 3, 7])
+    print(user_vector)
+    item_vectors = np.array([[1, 3, 4], [2, 3, 4], [7, 7, 9]])
 
 if __name__ == '__main__':
     get_most_fit_one()

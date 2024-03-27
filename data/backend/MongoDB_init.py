@@ -350,7 +350,7 @@ def init_MongoDB_Naver():
 
             # host_vector 관련 정보를 json_data에 추가
             # host_vector_no는 home_no로 대체
-            host_vector_json = get_host_vector(host_personality_json_info)
+            host_vector_json = get_host_vector_json(host_personality_json_info)
             json_data['host_vector'] = host_vector_json
             json_list.append(json_data)
 
@@ -364,7 +364,7 @@ def init_MongoDB_Naver():
         db.home.insert_many(json_list)
 
 # json 입력
-def get_host_vector(host_personality):
+def get_host_vector_json(host_personality):
     # print('빅데이터의 벡터화')
     """
     <노인>
