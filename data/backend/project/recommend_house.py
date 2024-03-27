@@ -20,8 +20,14 @@ class Recommendation:
 def get_most_fit_one():
     X = [[0, 0, 0], [1, 1, 1]]
     Y = [[1, 0, 0], [1, 1, 0]]
-    print(cosine_distances(X, Y))
+    XX = np.array([1, 3, 5, 7, 9]).reshape(1, -1)
+    YY = np.array([9, 7, 5, 3, 1]).reshape(1, -1)
+    # YY = np.array([[9, 7, 5, 3, 1], [9, 7, 5, 3, 1]])
+    # print(cosine_distances(X, Y))
+    print(cosine_distances(XX, YY))
 
+    # 추천해주려는사용자_vector = [5, 5.2, 3]
+    # 추천상품리스트_vector = [[1, 2, 3],[1, 2, 4],[2, 2, 2], [2, 3, 2]]
 
 
 
