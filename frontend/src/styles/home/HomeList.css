@@ -5,19 +5,13 @@
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding-top: 15px;
-    width: 104%;
+    width: 100%;
     z-index: 2;
     background-color: white;
 }
 
-.btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 .text {
-    font-size: 25px;
+    font-size: 15px;
     margin-right: 10px;
 }
 
@@ -34,19 +28,23 @@
 hr.custom-hr {
     width: 15%;
     border-radius: 10px;
-    height: 10px;
-    border-width: 5px;
+    height: 3px;
+    border-width: 3px;
     margin: 0 auto; /* 수평 가운데 정렬 */
 }
 
-.btn {
+.mapBtn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: fixed;
     bottom: 12%;
     left: 50%;
     transform: translateX(-50%);
     background-color: #E07068;
     color: white;
-    height: 5%;
+    width: 25%;
+    height: 6%;
     border-radius: 40px;
     font-size: 33px;
     font-weight: bold;
@@ -54,8 +52,8 @@ hr.custom-hr {
 }
 
 .home-count {
-    margin-top: 25px;
-    font-size: 25px;
+    margin-top: 15px;
+    font-size: 15px;
 }
 
 .list-container {
@@ -99,15 +97,16 @@ hr.custom-hr {
 .slick-slide {
     outline: none;
     position: relative;
-    height: 100%; /* 슬라이드 높이를 컨테이너에 맞춤 */
+    height: 100%; /* 슬라이드 높이를 컨테이너에 맞춤   */
 }
 
 .slick-slide img {
     display: block;
     width: 100%;
-    max-height: 100%; /* 컨테이너 높이에 맞추되 도트를 위한 공간 확보 */
-    object-fit: cover; /* 이미지가 비율을 유지하며 컨테이너를 채움 */
+    height: 100%; /* 컨테이너 높이에 정확히 맞도록 변경 */
+    object-fit: fill; /* 이미지가 컨테이너를 가득 채우도록 설정 */
 }
+
 
 /* 도트 스타일 */
 .slick-dots {
