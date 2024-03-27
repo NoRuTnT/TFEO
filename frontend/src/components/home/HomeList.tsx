@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import '../../styles/home/HomeList.css';
@@ -9,7 +9,19 @@ import Home from './Home';
 const HomeList: React.FC = () => {
   const [isButtonVisible, setIsButtonVisible] = useState(true);
   const [containerMarginTop, setContainerMarginTop] = useState('0%');
-  const { visibleHomes } = useHomeStore(); // 현재 화면에 보이는 집들의 목록을 가져옴
+  const { visibleHomes, isMapLoaded } = useHomeStore(); // 현재 화면에 보이는 집들의 목록을 가져옴
+
+  // 지도가 로드되었고, visibleHomes가 업데이트 되었는지 확인하기 위한 상태
+  const [shouldDisplay, setShouldDisplay] = useState(false);
+  const [initialDisplay, setInitialDisplay] = useState(true);
+  useEffect(() => {
+    // 지도가 로드되었고 visibleHomes에 데이터가 있을 경우 내용을 보여주도록 설정
+    if (visibleHomes.length == 0) {
+      setShouldDisplay(false);
+    } else {
+      setShouldDisplay(true);
+    }
+  }, [visibleHomes]);
 
   const settings = {
     dots: true,
@@ -39,12 +51,16 @@ const HomeList: React.FC = () => {
         </button>
       )}
       <hr className="custom-hr" onClick={resetStyles} />
-      <div className="home-count" onClick={resetStyles}>
-        어르신 {visibleHomes.length} 명
-      </div>
-      {visibleHomes.map((home, index) => (
-        <Home key={index} settings={settings} home={home} />
-      ))}
+      {shouldDisplay && (
+        <>
+          <div className="home-count" onClick={resetStyles}>
+            어르신 {visibleHomes.length} 명
+          </div>
+          {visibleHomes.map((home, index) => (
+            <Home key={index} settings={settings} home={home} />
+          ))}
+        </>
+      )}
     </div>
   );
 };
