@@ -63,7 +63,7 @@ const HomeList: React.FC = () => {
   });
 
   return (
-    <div className="page-container" style={{ marginTop: containerMarginTop }}>
+    <div className="page-container" style={{ marginTop: containerMarginTop }} {...handlers}>
       {isButtonVisible && (
         <button className="mapBtn" onClick={handleButtonClick}>
           <span className="text">지도</span>
@@ -81,16 +81,6 @@ const HomeList: React.FC = () => {
           ))}
         </>
       )}
-      {/* swipeable 핸들러를 적용할 요소에 {...handlers}를 추가 */}
-      <div {...handlers}>
-        <hr className="custom-hr" onClick={resetStyles} />
-        <div className="home-count" onClick={resetStyles}>
-          나와 함께하고 싶은 어르신 {visibleHomes.length} 명
-        </div>
-      </div>
-      {visibleHomes.map((home, index) => (
-        <Home key={index} settings={settings} home={home} />
-      ))}
     </div>
   );
 };
