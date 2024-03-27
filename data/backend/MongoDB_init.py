@@ -12,6 +12,7 @@ import uvicorn
 import json
 import traceback
 import pandas as pd
+import numpy as np
 import csv
 import random
 
@@ -99,6 +100,19 @@ class Home(BaseModel):
     sink: bool  # 싱크대 여부
     type: BuildingType  # 건축물 종류(ENUM)
 
+class Host_Personality(BaseModel):
+    host_personality_no: int  # 식별키
+    smoke: bool # 흡연 여부
+    pet: bool # 반려동물 여부
+    clean: bool # 청결한걸 좋아함
+    daytime: bool # 아침형
+    nighttime: bool # 저녁형
+    extrovert: bool # 외향적
+    introvert: bool # 내향적
+    cold: bool # 추위잘타는
+    hot: bool # 더위잘타는
+    no_touch: bool # 간섭안하는
+
 host = 'localhost'
 port = 27017
 client = MongoClient(host, port)
@@ -117,7 +131,7 @@ home_columns = ['home_no', 'host_name', 'host_age', 'host_phone',
                 'host_gender', 'guardian_name', 'guardian_phone',
                 'relation', 'host_register_no', 'host_account_no',
                 'host_bank', 'address', 'rent', 'lat', 'lng',
-                'MemberRoleType', 'introduce', 'host_personality_no',
+                'role', 'introduce', 'host_personality_no',
                 'home_option_no', 'si', 'sgg', 'emd', 'ro'] # 시,군,구,도로명->추가 ('si', 'sgg', 'emd', 'ro')
 host_personality_columns = ['host_personality_no', 'smoke', 'pet',
                             'clean', 'daytime', 'nighttime', 'extrovert',
@@ -134,6 +148,7 @@ def init_MongoDB_Naver():
     df = pd.read_csv('CSV_Data/naver_home_merged.csv', encoding='UTF-8')
     # 인코딩 열때는 반드시 UTF-8로 열어야 에러 발생 없음
     json_list = []
+    host_vector_json_list = []
     fake = Faker('ko_KR')
     Faker.seed()
     # MySQL에 들어갈 csv파일 작성
@@ -165,8 +180,6 @@ def init_MongoDB_Naver():
             # 집별 옵션
             # json_data['internet'] = True if rows['internet']==1 else False
 
-
-            # json_data['internet'] = boolean[int(rows['internet'])]
             json_data['internet'] = int(rows['internet'])
             json_data['gas'] = int(rows['gas'])
             json_data['washing_machine'] = int(rows['washing_machine'])
@@ -229,6 +242,9 @@ def init_MongoDB_Naver():
                 'hot': json_data['hot'],
                 'no_touch': json_data['no_touch'],
             }
+
+            host_vector_json_data = get_host_vector_json(new_row)
+
             df_host_personality = df_host_personality._append(new_row, ignore_index=True)
             # 집
             json_data['home_no'] = idx
@@ -253,7 +269,7 @@ def init_MongoDB_Naver():
             json_data['lng']  = float(rows['lng'])  # 경도
             # json_data['noneRegisterMember'] = random.randint(0, 1) >= 0.5  # 비회원등록여부
             # json_data['noneRegisterMember'] = random.choice(list(MemberRoleType))  # 비회원등록여부
-            json_data['MemberRoleType'] = random.choice(list(member_role))  # 비회원등록여부
+            json_data['role'] = random.choice(list(member_role))  # 비회원등록여부
             json_data['introduce'] = rows['introduce'].strip()  # 주소
             json_data['host_personality_no'] = idx  # 식별키
             json_data['home_option_no'] = idx  # 식별자
@@ -280,7 +296,7 @@ def init_MongoDB_Naver():
                 'rent': json_data['rent'],
                 'lat': json_data['lat'],
                 'lng': json_data['lng'],
-                'MemberRoleType': json_data['MemberRoleType'],
+                'role': json_data['role'],
                 'introduce': json_data['introduce'],
                 'host_personality_no': json_data['host_personality_no'],
                 'home_option_no': json_data['home_option_no'],
@@ -323,6 +339,7 @@ def init_MongoDB_Naver():
             df_host_image = df_host_image._append(new_row, ignore_index=True)
 
             json_list.append(json_data)
+            host_vector_json_list.append(host_vector_json_data)
 
         df_home_option.to_csv('MySQL/home_option.csv')
         df_home.to_csv('MySQL/home.csv')
@@ -331,6 +348,29 @@ def init_MongoDB_Naver():
         df_home_image.to_csv('MySQL/home_image.csv')
         df_host_image.to_csv('MySQL/host_image.csv')
         db.home.insert_many(json_list)
+        db.host_vector.insert_many(host_vector_json_list) # host_vector를 따로 MongoDB에 저장
+
+
+def get_host_vector_json(host_personality):
+    json_data = {}
+    """
+    <노인>
+    주간지수, 야간지수, 흡연지수, 외향, 내향, 매너있는 호스트, 동물애호가, 추위잘탐, 더위잘탐
+    """
+    json_data['host_vector_no'] = host_personality['host_personality_no']
+    json_data['day'] = convert_bool_to_int(host_personality['daytime'])
+    json_data['night'] = convert_bool_to_int(host_personality['nighttime'])
+    json_data['smoke'] = convert_bool_to_int(host_personality['smoke'])
+    json_data['extro'] = convert_bool_to_int(host_personality['extrovert'])
+    json_data['intro'] = convert_bool_to_int(host_personality['introvert'])
+    json_data['mannered'] = convert_bool_to_int(host_personality['clean'])+convert_bool_to_int(host_personality['no_touch'])
+    json_data['pet_lover'] = convert_bool_to_int(host_personality['pet'])
+    json_data['cold'] = convert_bool_to_int(host_personality['cold'])
+    json_data['hot'] = convert_bool_to_int(host_personality['hot'])
+    return json_data
+
+
+
 
 def get_random_phone_number():
     phone_num = '010'
@@ -338,6 +378,11 @@ def get_random_phone_number():
     for i in range(8):
         phone_num += random.choice(nums)
     return phone_num
+
+def convert_bool_to_int(bool):
+    if(bool==True):
+        return 1
+    return 0
 
 # 결측치 채우기 위해 구현
 def null_empty_fill_func(obj):
