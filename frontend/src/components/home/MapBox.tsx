@@ -36,7 +36,57 @@ export default function MapBox() {
         minClusterSize: 1,
         calculator: [3, 5, 10],
         styles: [
-          // 클러스터 스타일링, 생략...
+          {
+            // 1 - 3 마커
+            width: '35px',
+            height: '35px',
+            background: theme.palette.primary.main, // 테마의 기본 색상을 사용합니다.
+            borderRadius: '50%',
+            color: '#fff', // 텍스트 색상은 흰색입니다.
+            textAlign: 'center',
+            fontSize: '15px',
+            fontWeight: 'bold',
+            lineHeight: '35px',
+            opacity: '85%',
+          },
+          {
+            // 4 - 5 마커
+            width: '50px',
+            height: '50px',
+            background: theme.palette.primary.main,
+            borderRadius: '50%',
+            color: '#fff',
+            textAlign: 'center',
+            fontSize: '25px',
+            fontWeight: 'bold',
+            lineHeight: '50px',
+            opacity: '85%',
+          },
+          {
+            // 6 - 10 마커
+            width: '70px',
+            height: '70px',
+            background: theme.palette.primary.main,
+            borderRadius: '50%',
+            color: '#fff',
+            textAlign: 'center',
+            fontSize: '30px',
+            fontWeight: 'bold',
+            lineHeight: '70px',
+            opacity: '85%',
+          },
+          {
+            // 11개 이상 마커
+            width: '80px',
+            height: '80px',
+            background: theme.palette.primary.main,
+            borderRadius: '50%',
+            color: '#fff',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            lineHeight: '60px',
+            opacity: '85%',
+          },
         ],
       });
 
@@ -58,5 +108,7 @@ export default function MapBox() {
     });
   }, [homes, setVisibleHomes]);
 
-  return <div className="mapbox-container" id="map" style={{ width: '100%', height: '400px' }}></div>;
+  return (
+    <div className="mapbox-container" id="map" style={{ width: '100%', height: '590px', marginTop: '120px' }}></div>
+  );
 }

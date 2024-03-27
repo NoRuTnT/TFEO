@@ -14,26 +14,29 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
   const { homes } = useHomeStore();
   return (
     <div className="list-container">
-      {/*집주인의 사진을 보여줄 캐러셀*/}
-      <div className="carousel-container">
-        <Slider {...settings}>
-          {home.hostImg.map((img: string, index: number) => (
-            <div key={index} className="slide-left">
-              <img src={img} alt={`Owner ${index + 1}`} />
-            </div>
-          ))}
-        </Slider>
+      <div className="img-container">
+        {/*집주인의 사진을 보여줄 캐러셀*/}
+        <div className="carousel-container-left">
+          <Slider {...settings}>
+            {home.hostImg.map((img: string, index: number) => (
+              <div key={index} className="slide-left">
+                <img src={img} alt={`Owner ${index + 1}`} />
+              </div>
+            ))}
+          </Slider>
+        </div>
+        {/* 집의 사진을 보여줄 캐러셀 */}
+        <div className="carousel-container">
+          <Slider {...settings}>
+            {home.homeImg.map((img: string, index: number) => (
+              <div key={index} className="slide-right">
+                <img src={img} alt={`Home ${index + 1}`} />
+              </div>
+            ))}
+          </Slider>
+        </div>
       </div>
-      {/* 집의 사진을 보여줄 캐러셀 */}
-      <div className="carousel-container">
-        <Slider {...settings}>
-          {home.homeImg.map((img: string, index: number) => (
-            <div key={index} className="slide-right">
-              <img src={img} alt={`Home ${index + 1}`} />
-            </div>
-          ))}
-        </Slider>
-      </div>
+      <div>서울특별시 동작구 흑석동</div>
     </div>
   );
 };
