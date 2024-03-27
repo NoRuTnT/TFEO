@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.tfeo.backend.common.model.type.MemberRoleType;
-import com.tfeo.backend.domain.activity.model.dto.ReadActivityRequestDto;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
 import com.tfeo.backend.domain.home.model.entity.Home;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
@@ -30,19 +27,19 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Slf4j
 public class ReviewQueryServiceImpl implements ReviewQueryService {
-	private final MemberRepository  memberRepository;
+	private final MemberRepository memberRepository;
 	private final ReviewRepository reviewRepository;
 	private final HomeRepository homeRepository;
 
 	@Override
-	public List<ReadReviewResponseDto> readReviewList(Long memberNo, MemberRoleType role,
+	public List<ReadReviewResponseDto> readReviewList(Long memberNo, Role role,
 		Long homeNo) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
-		Home home = homeRepository.findById(homeNo).orElseThrow(()-> new HomeNotExistException(homeNo));
+		Home home = homeRepository.findById(homeNo).orElseThrow(() -> new HomeNotExistException(homeNo));
 		List<Review> reviews = reviewRepository.findAllByHome(home);
 		List<ReadReviewResponseDto> result = new ArrayList<>();
-		for(Review review : reviews){
+		for (Review review : reviews) {
 			ReadReviewResponseDto responseDto = ReadReviewResponseDto.builder()
 				.reviewNo(review.getReviewNo())
 				.memberName(review.getMember().getName())
@@ -56,11 +53,11 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
 	}
 
 	@Override
-	public ReadReviewResponseDto readReview(Long memberNo, MemberRoleType role, Long reviewNo) {
+	public ReadReviewResponseDto readReview(Long memberNo, Role role, Long reviewNo) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Review review = reviewRepository.findById(reviewNo)
-			.orElseThrow(()->new ReviewNotExistException(reviewNo));
+			.orElseThrow(() -> new ReviewNotExistException(reviewNo));
 
 		ReadReviewResponseDto result = ReadReviewResponseDto.builder()
 			.reviewNo(review.getReviewNo())

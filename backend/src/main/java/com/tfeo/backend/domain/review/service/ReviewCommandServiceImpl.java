@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tfeo.backend.common.model.type.ContractProgressType;
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.activity.common.exception.AccessDeniedException;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
@@ -42,13 +42,13 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
 	private final ReviewKeywordRepository reviewKeywordRepository;
 
 	@Override
-	public AddReviewResponseDto addReview(Long memberNo, MemberRoleType role, AddReviewRequestDto request) {
+	public AddReviewResponseDto addReview(Long memberNo, Role role, AddReviewRequestDto request) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Home home = homeRepository.findById(request.getHomeNo())
-			.orElseThrow(()->new HomeNotExistException(request.getHomeNo()));
+			.orElseThrow(() -> new HomeNotExistException(request.getHomeNo()));
 		Contract contract = contractRepository.findByHomeAndMemberAndProgress(home, member, ContractProgressType.DONE)
-			.orElseThrow(()->new AccessDeniedException(memberNo));
+			.orElseThrow(() -> new AccessDeniedException(memberNo));
 
 		ReviewKeyword keyword = ReviewKeyword.builder()
 			.kindElderly(request.getKeywordValues().get("kindElderly"))
@@ -89,13 +89,14 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
 	}
 
 	@Override
-	public Long modifyReview(Long memberNo, MemberRoleType role, Long reviewNo, ModifyReviewRequestDto request) {
+	public Long modifyReview(Long memberNo, Role role, Long reviewNo, ModifyReviewRequestDto request) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Review review = reviewRepository.findById(reviewNo)
-			.orElseThrow(()->new ReviewNotExistException(reviewNo));
-		Contract contract = contractRepository.findByHomeAndMemberAndProgress(review.getHome(), member, ContractProgressType.DONE)
-			.orElseThrow(()->new AccessDeniedException(memberNo));
+			.orElseThrow(() -> new ReviewNotExistException(reviewNo));
+		Contract contract = contractRepository.findByHomeAndMemberAndProgress(review.getHome(), member,
+				ContractProgressType.DONE)
+			.orElseThrow(() -> new AccessDeniedException(memberNo));
 
 		review.updateReview(request.getHomeContent());
 
@@ -120,13 +121,14 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
 	}
 
 	@Override
-	public void removeReview(Long memberNo, MemberRoleType role, Long reviewNo) {
+	public void removeReview(Long memberNo, Role role, Long reviewNo) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Review review = reviewRepository.findById(reviewNo)
-			.orElseThrow(()->new ReviewNotExistException(reviewNo));
-		Contract contract = contractRepository.findByHomeAndMemberAndProgress(review.getHome(), member, ContractProgressType.DONE)
-			.orElseThrow(()->new AccessDeniedException(memberNo));
+			.orElseThrow(() -> new ReviewNotExistException(reviewNo));
+		Contract contract = contractRepository.findByHomeAndMemberAndProgress(review.getHome(), member,
+				ContractProgressType.DONE)
+			.orElseThrow(() -> new AccessDeniedException(memberNo));
 
 		reviewRepository.delete(review);
 	}
