@@ -5,6 +5,7 @@ import MyInfo from './pages/MyInfo';
 import ApplyList from './pages/ApplyList';
 import ActivityCertification from './pages/ActivityCertification';
 import ActivityContent from './pages/ActivityContent';
+import ActivityReview from './pages/ActivityReview';
 import MakeActivity from './pages/MakeActivity';
 import FindHouse from './pages/FindHouse';
 import Contract from './pages/Contract';
@@ -25,6 +26,7 @@ function App() {
           <Route path="/apply-list" element={<ApplyList />} />
           <Route path="/activity-certification" element={<ActivityCertification />} />
           <Route path="/activity-content" element={<ActivityContent />} />
+          <Route path="/activity-review" element={<ActivityReview />} />
           <Route path="/make-activity" element={<MakeActivity />} />
           <Route path="/find-house" element={<FindHouse />} />
           <Route path="/home-detail" element={<HomeDetail />} />

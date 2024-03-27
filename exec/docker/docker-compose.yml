@@ -16,7 +16,7 @@ services:
     environment:
       TZ: Asia/Seoul
     volumes:
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-mysql:/var/lib/mysql
+#      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-mysql:/var/lib/mysql
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial:/docker-entrypoint-initdb.d
     command:
       - "mysqld"
@@ -37,6 +37,17 @@ services:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-redis/data:/data
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-redis/conf:/etc/redis/redis.conf
     restart: "no"
+
+  tfeo-mongodb:
+    image: mongo:5.0.25
+    container_name: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-mongodb/data:/data
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=tfeo123
 
 #  tfeo-back:
 #    container_name: "back"

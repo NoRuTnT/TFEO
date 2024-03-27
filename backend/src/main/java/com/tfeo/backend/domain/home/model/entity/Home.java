@@ -17,10 +17,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Null;
 
 import com.tfeo.backend.common.model.type.Address;
 import com.tfeo.backend.common.model.type.GenderType;
-import com.tfeo.backend.common.model.type.MemberRoleType;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.home.model.dto.HomeDto;
 import com.tfeo.backend.domain.member.model.entity.Wish;
@@ -68,12 +69,14 @@ public class Home {
 
 	private int rent;
 
+	@Null
 	private Double lat;
 
+	@Null
 	private Double lng;
 
 	@Enumerated(value = EnumType.STRING)
-	private MemberRoleType registerMemberRole;
+	private Role registerMemberRole;
 
 	private String introduce;
 
@@ -100,7 +103,7 @@ public class Home {
 	@OneToMany(mappedBy = "home", cascade = ALL)
 	private List<HostImage> hostImages;
 
-	public void setRegisterMemberRole(MemberRoleType registerMemberRole) {
+	public void setRegisterMemberRole(Role registerMemberRole) {
 		this.registerMemberRole = registerMemberRole;
 	}
 

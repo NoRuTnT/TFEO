@@ -7,8 +7,8 @@ import lombok.Getter;
 
 @Getter
 public class AppliedHomeContractResponseDto {
-	private Long contractNo;
-	private ContractProgressType progress;
+	private final Long contractNo;
+	private final ContractProgressType progress;
 
 	public AppliedHomeContractResponseDto(Contract contract) {
 		this.contractNo = contract.getContractNo();
