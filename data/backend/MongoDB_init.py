@@ -130,7 +130,7 @@ home_columns = ['home_no', 'host_name', 'host_age', 'host_phone',
                 'host_gender', 'guardian_name', 'guardian_phone',
                 'relation', 'host_register_no', 'host_account_no',
                 'host_bank', 'address', 'rent', 'lat', 'lng',
-                'MemberRoleType', 'introduce', 'host_personality_no',
+                'role', 'introduce', 'host_personality_no',
                 'home_option_no', 'si', 'sgg', 'emd', 'ro'] # 시,군,구,도로명->추가 ('si', 'sgg', 'emd', 'ro')
 host_personality_columns = ['host_personality_no', 'smoke', 'pet',
                             'clean', 'daytime', 'nighttime', 'extrovert',
