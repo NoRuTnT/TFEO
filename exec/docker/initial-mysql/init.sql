@@ -277,31 +277,31 @@ alter table wish
             references member (member_no);
 
 
-LOAD DATA INFILE '/var/lib/mysql/csv/home.csv'
+LOAD DATA INFILE '/etc/csv/home.csv'
 INTO TABLE home
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE '/var/lib/mysql/csv/home_image.csv'
+LOAD DATA INFILE '/etc/csv/home_image.csv'
 INTO TABLE home_image
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE '/var/lib/mysql/csv/home_option.csv'
+LOAD DATA INFILE '/etc/csv/home_option.csv'
 INTO TABLE home_option
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE '/var/lib/mysql/csv/host_image.csv'
+LOAD DATA INFILE '/etc/csv/host_image.csv'
 INTO TABLE host_image
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE '/var/lib/mysql/csv/host_personality.csv'
+LOAD DATA INFILE '/etc/csv/host_personality.csv'
 INTO TABLE home_personality
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
