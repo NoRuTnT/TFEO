@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import DirectionsSubwayIcon from '@mui/icons-material/DirectionsSubway';
@@ -12,7 +12,28 @@ import { useHomeStore } from '../../store/HomeStore';
 
 const Header: React.FC = () => {
   const theme = useTheme();
-  const { school, subway, apartment, pets, selectFilter, options, types, toggleType, toggleOption } = useHomeStore();
+  const {
+    school,
+    subway,
+    apartment,
+    pets,
+    selectFilter,
+    options,
+    types,
+    toggleType,
+    toggleOption,
+    visibleHomes,
+    setVisibleHomes,
+    isMapLoaded,
+    headerFilterChanged,
+    setHeaderFilterChanged,
+  } = useHomeStore();
+
+  useEffect(() => {
+    if (isMapLoaded) {
+      setHeaderFilterChanged(true);
+    }
+  }, [isMapLoaded, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
 
   const marks = [
     {
@@ -80,28 +101,57 @@ const Header: React.FC = () => {
     toggleType(value);
   };
 
+  const headerFilterClick = (filterKey: string) => {
+    if (filterKey == 'school') {
+      selectFilter({ school: !school });
+      // 학교 근처 필터링
+      const homeBySchool = visibleHomes.filter((home) => home.distance < 3);
+      setVisibleHomes(homeBySchool);
+      console.log('학교 근처 필터링', homeBySchool);
+    } else if (filterKey == 'subway') {
+      selectFilter({ subway: !subway });
+      // 역세권 필터링
+      const homesByStation = visibleHomes.filter((home) => home.station === 1);
+      setVisibleHomes(homesByStation);
+      console.log('역세권 필터링', homesByStation);
+      console.log('homes', visibleHomes);
+    } else if (filterKey == 'apartment') {
+      selectFilter({ apartment: !apartment });
+      const homesByType = visibleHomes.filter((home) => home.type === 'APT');
+      setVisibleHomes(homesByType);
+      console.log('아파트 필터링', homesByType);
+      console.log('homes', visibleHomes);
+    } else if (filterKey == 'pets') {
+      selectFilter({ pets: !pets });
+      const homesByPet = visibleHomes.filter((home) => home.pet === 1);
+      setVisibleHomes(homesByPet);
+      console.log('반려동물 필터링', homesByPet);
+      console.log('homes', visibleHomes);
+    }
+  };
+
   return (
     <header>
       <div className="criteria-container">
-        <div className="element-container" onClick={() => selectFilter({ school: !school })}>
+        <div className="element-container" onClick={() => headerFilterClick('school')}>
           <AccountBalanceIcon style={getIconStyle(school)} />
           <span className="criteria-description" style={getDescriptionStyle(school)}>
             학교 근처
           </span>
         </div>
-        <div className="element-container" onClick={() => selectFilter({ subway: !subway })}>
+        <div className="element-container" onClick={() => headerFilterClick('subway')}>
           <DirectionsSubwayIcon style={getIconStyle(subway)} />
           <span className="criteria-description" style={getDescriptionStyle(subway)}>
             역세권
           </span>
         </div>
-        <div className="element-container" onClick={() => selectFilter({ apartment: !apartment })}>
+        <div className="element-container" onClick={() => headerFilterClick('apartment')}>
           <ApartmentIcon style={getIconStyle(apartment)} />
           <span className="criteria-description" style={getDescriptionStyle(apartment)}>
             아파트
           </span>
         </div>
-        <div className="element-container" onClick={() => selectFilter({ pets: !pets })}>
+        <div className="element-container" onClick={() => headerFilterClick('pets')}>
           <PetsIcon style={getIconStyle(pets)} />
           <span className="criteria-description" style={getDescriptionStyle(pets)}>
             반려동물
