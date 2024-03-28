@@ -17,12 +17,12 @@ services:
       TZ: Asia/Seoul
     volumes:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mysql:/docker-entrypoint-initdb.d
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MySQL:/app/data
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MySQL:/var/lib/mysql
     command:
       - "mysqld"
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
-      - "--secure-file-priv=''"
+      - "--secure-file-priv=\"\""
     restart: "no"
 
   tfeo-redis:
