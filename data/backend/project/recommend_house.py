@@ -1,10 +1,6 @@
-import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
 from sklearn.metrics.pairwise import cosine_distances
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
 
 features = ['keywords', 'cast', 'genres', 'director']
 client_vector = [] # 학생 정보를 추출해서 만든 벡터
