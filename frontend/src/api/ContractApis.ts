@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { ISuccessResponse } from '../interfaces/SuccessResponseInterface';
 import { customAxios } from './customAxios';
 import { IContractForm, IContractInfo } from '../interfaces/ContractInterface';
