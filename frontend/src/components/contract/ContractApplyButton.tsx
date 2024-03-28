@@ -4,22 +4,26 @@ import { IContractForm } from '../../interfaces/ContractFormInterface';
 import { pdf } from '@react-pdf/renderer';
 import { createContractPdf } from '../../utils/createContractPdfUtils';
 import { S3UploadProps } from '../../interfaces/S3Interface';
-import { uploadPdfToS3 } from '../../api/S3Apis';
-const ContractTest = () => {
+import { uploadFileToS3 } from '../../api/S3Apis';
+import { IContractInfo } from '../../interfaces/ContractInterface';
+const ContractApplyButton = () => {
   const [contractFormData, setContractFormData] = useState<IContractForm>();
-  const approveApiTest = async () => {
-    setContractFormData(await applyApproval(1, 1));
+  const applyApprove = async () => {
+    const fetchData = await applyApproval(1, 1);
+    setContractFormData(fetchData);
   };
   const generateBlobFromPdf = async () => {
     if (!contractFormData) return;
+    console.log(contractFormData);
     const blobPdf = await pdf(createContractPdf(contractFormData)).toBlob();
     const preSignedUrlToUpload = await createForm(1);
+    console.log(preSignedUrlToUpload);
     if (typeof preSignedUrlToUpload !== 'string') return;
     const S3UploadProps: S3UploadProps = {
       uploadFile: blobPdf,
       preSignedUrlToUpload: preSignedUrlToUpload,
     };
-    const response = await uploadPdfToS3(S3UploadProps);
+    const response = await uploadFileToS3(S3UploadProps);
   };
   useEffect(() => {
     const blobPdf = generateBlobFromPdf();
@@ -27,8 +31,9 @@ const ContractTest = () => {
   }, [contractFormData]);
   return (
     <>
-      <button onClick={approveApiTest}>승인 요청하기</button>
+      <div>학생 정보 대충 나열</div>
+      <button onClick={applyApprove}>승인하기</button>
     </>
   );
 };
-export default ContractTest;
+export default ContractApplyButton;
