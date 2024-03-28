@@ -16,12 +16,11 @@ export interface IHome {
   rent: number;
   lat: number; // 위도
   lng: number; // 경도
-  noneRegisterMember: boolean;
   introduce: string;
-  maintenanceFee: number;
 }
 
 export interface IHostPersonality {
+  hostPersonalityNo: number;
   smoke: boolean;
   pet: boolean;
   clean: boolean;
@@ -35,6 +34,7 @@ export interface IHostPersonality {
 }
 
 export interface IHomeOption {
+  homeOptionNo: number;
   internet: boolean;
   gas: boolean;
   washingMachine: boolean;
