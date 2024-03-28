@@ -9,3 +9,5 @@ uvicorn==0.21.1
 pymongo==4.3.3
 Faker
 matplotlib==3.7.1
+
+scipy==1.10.1
