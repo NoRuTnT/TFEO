@@ -38,6 +38,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           {/* ... 여기에 더 많은 라우트를 추가할 수 있습니다 ... */}
           <Route path="/contract-test" element={<ContractTest />} />
+          <Route path="/wish-list" element={<WishList />} />
         </Routes>
       </Router>
     </div>
