@@ -13,14 +13,14 @@ declare global {
 export default function MapBox() {
   const {
     homes,
+    visibleHomes,
     setVisibleHomes,
     setHomes,
     isMapLoaded,
     setIsMapLoaded,
     search_condition,
     member_personality,
-    setSearchCondition,
-    setMemberPersonality,
+    headerFilterChanged,
   } = useHomeStore();
 
   useEffect(() => {
@@ -72,6 +72,13 @@ export default function MapBox() {
       loadMap(); // 지도 로드 조건을 mapLoaded로 설정
     }
   }, [isMapLoaded, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
+
+  useEffect(() => {
+    if (isMapLoaded && headerFilterChanged) {
+      setHomes(visibleHomes);
+      loadMap();
+    }
+  }, [headerFilterChanged, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
 
   const makeClusterer = (map: any) => {
     return new window.kakao.maps.MarkerClusterer({

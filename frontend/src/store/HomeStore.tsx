@@ -127,15 +127,18 @@ type Home = {
   home_image: HomeImage[];
   host_image_no: number;
   host_image: string;
+  distance: number;
 };
 
 // 집 리스트 상태 타입 정의
 interface HomeListState {
   homes: Home[];
   isMapLoaded: boolean; // 지도 로드 상태 추가
+  headerFilterChanged: boolean; // 헤더 필터 상태 추가
   selectedHomeNo: number | null; // 선택된 집의 ID (선택되지 않았을 경우 null)
   selectHome: (homeNo: number) => void;
   setIsMapLoaded: (isLoaded: boolean) => void;
+  setHeaderFilterChanged: (isChanged: boolean) => void;
   setHomes: (newHomes: any[]) => void;
 }
 
@@ -184,8 +187,10 @@ const initialListState: HomeListState = {
   homes: [],
   isMapLoaded: false, // 지도 로드 상태 추가
   selectedHomeNo: null,
+  headerFilterChanged: false, // 헤더 필터 상태 추가
   selectHome: (homeNo: number) => {},
   setIsMapLoaded: (isLoaded: boolean) => {},
+  setHeaderFilterChanged: (isChanged: boolean) => {},
   setHomes: (newHomes: any[]) => {},
 };
 
@@ -257,6 +262,7 @@ export const useHomeStore = create<HomeFilterState & HomeRequestDataState & Home
         types: state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type)),
       })),
     setIsMapLoaded: (isLoaded: boolean) => set({ isMapLoaded: isLoaded }), // 지도 로드 상태 업데이트 함수 추가
+    setHeaderFilterChanged: (isChanged: boolean) => set({ headerFilterChanged: isChanged }),
     setHomes: (newHomes: any[]) => set((state) => ({ ...state, homes: newHomes })),
     setSearchCondition: (newData: SearchCondition) => set((state) => ({ ...state, search_condition: newData })),
     setMemberPersonality: (newData: MemberPersonality) => set((state) => ({ ...state, member_personality: newData })),
