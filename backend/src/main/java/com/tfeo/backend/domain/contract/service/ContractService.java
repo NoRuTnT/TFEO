@@ -16,4 +16,6 @@ public interface ContractService {
 	String signContract(Long memberNo, Long contractNo);
 
 	void deleteContract(Long contractNo);
+
+	String getPreSignedUrl(Long contractNo);
 }

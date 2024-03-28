@@ -7,6 +7,7 @@ import { IContractForm } from '../interfaces/ContractFormInterface';
 import { getYear, getMonth, getDay } from './timeUtils';
 import { getRoadNameAddress } from './addressUtils';
 import { getRent } from './moneyUtils';
+import { IContractInfo } from '../interfaces/ContractInterface';
 
 Font.register({
   family: 'NotoSansKRRegular',
@@ -118,14 +119,13 @@ const getContractJSX = ({ person, name, registerNo, phone, address }: ContractPd
     </View>
   );
 };
-export const createContractPdf = (contractForm: IContractForm) => {
+export const createContractPdf = ({ home, contract, member }: IContractForm) => {
   return (
     <Document>
       <Page size="A4" style={styles.page}>
         <Text style={styles.title}>스물다섯 여든하나 룸쉐어링 계약서</Text>
         <Text style={styles.introduce}>
-          임대인 ( {contractForm.home.hostName} )과 임차인 ( {contractForm.member.name} )은 아래와 같이 임대차 계약을
-          체결한다.
+          임대인 ( {home.hostName} )과 임차인 ( {member.name} )은 아래와 같이 임대차 계약을 체결한다.
         </Text>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>1. 임대주택의 표시</Text>
@@ -134,7 +134,7 @@ export const createContractPdf = (contractForm: IContractForm) => {
               <Text style={styles.cell}>주소</Text>
             </View>
             <View style={styles.homeInfoSecondCell}>
-              <Text style={styles.cell}>{getRoadNameAddress(contractForm.home.address)}</Text>
+              <Text style={styles.cell}>{getRoadNameAddress(home.address)}</Text>
             </View>
           </View>
         </View>
@@ -143,18 +143,17 @@ export const createContractPdf = (contractForm: IContractForm) => {
           <View style={styles.contractContentWrapper}>
             <Text style={styles.contractContentTitle}>제 1 조 (목적)</Text>
             <Text>
-              위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금 {getRent(contractForm.home.rent)}
+              위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금 {getRent(home.rent)}
               만원정을 선불로 매월 1일에 지불한다.
             </Text>
           </View>
           <View style={styles.contractContentWrapper}>
             <Text style={styles.contractContentTitle}>제 2 조 (존속 기간)</Text>
             <Text>
-              임대인은 위 임대주택을 임대차 목적으로 사용, 수익할 수 있는 상태로{' '}
-              {getYear(contractForm.contract.startAt)}년 {getMonth(contractForm.contract.startAt)}월{' '}
-              {getDay(contractForm.contract.startAt)}일 까지 임차인에게 인도하며, 임대차 기간은 인도일로부터{' '}
-              {getYear(contractForm.contract.expiredAt)}년 {getMonth(contractForm.contract.expiredAt)}월{' '}
-              {getDay(contractForm.contract.expiredAt)}일 까지로 한다.
+              임대인은 위 임대주택을 임대차 목적으로 사용, 수익할 수 있는 상태로 {getYear(contract.startAt)}년{' '}
+              {getMonth(contract.startAt)}월 {getDay(contract.startAt)}일 까지 임차인에게 인도하며, 임대차 기간은
+              인도일로부터 {getYear(contract.expiredAt)}년 {getMonth(contract.expiredAt)}월 {getDay(contract.expiredAt)}
+              일 까지로 한다.
             </Text>
           </View>
           <View style={styles.contractContentWrapper}>
@@ -202,17 +201,17 @@ export const createContractPdf = (contractForm: IContractForm) => {
           </View>
           {getContractJSX({
             person: '임대인',
-            name: contractForm.home.hostName,
-            registerNo: contractForm.home.hostRegisterNo,
-            phone: contractForm.home.hostPhone,
-            address: contractForm.home.address,
+            name: home.hostName,
+            registerNo: home.hostRegisterNo,
+            phone: home.hostPhone,
+            address: home.address,
           })}
           {getContractJSX({
             person: '임차인',
-            name: contractForm.member.name,
-            registerNo: contractForm.member.registerNo,
-            phone: contractForm.member.phone,
-            address: contractForm.member.address,
+            name: member.name,
+            registerNo: member.registerNo,
+            phone: member.phone,
+            address: member.address,
           })}
         </View>
       </Page>

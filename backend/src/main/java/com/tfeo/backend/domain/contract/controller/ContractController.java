@@ -4,7 +4,12 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
 import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
@@ -22,7 +27,7 @@ public class ContractController {
 	// 계약서 폼 생성
 	@GetMapping("/creation-form/{homeNo}")
 	public ResponseEntity<SuccessResponse> contractFormCreation(
-		@PathVariable Long homeNo){
+		@PathVariable Long homeNo) {
 		Long memberNo = 1L;
 		String contractUrl = contractService.creationContractForm(memberNo, homeNo);
 		SuccessResponse response = SuccessResponse.builder()
@@ -37,7 +42,7 @@ public class ContractController {
 	// 계약 완료
 	@PutMapping(value = "/completion/{contractNo}")
 	public ResponseEntity<SuccessResponse> contractCompletion(
-		@PathVariable Long contractNo){
+		@PathVariable Long contractNo) {
 		contractService.completionContract(contractNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "성공적으로 계약서가 생성되었습니다.", null));
 	}
@@ -45,19 +50,30 @@ public class ContractController {
 	// 계약서 상세 조회
 	@GetMapping("/detail/{contractNo}")
 	public ResponseEntity<SuccessResponse> getContract(
-		@PathVariable Long contractNo){
+		@PathVariable Long contractNo) {
 		ContractResponseDto contract = contractService.getContract(contractNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서가 조회되었습니다.")
 			.result(contract)
 			.build();
-			return ResponseEntity.ok(response);
+		return ResponseEntity.ok(response);
+	}
+	// 계약서 pre signed url 받아오기
+
+	@GetMapping("/contract-url/{contractNo}")
+	public ResponseEntity<SuccessResponse> getContractPreSignedUrl(@PathVariable Long contractNo) {
+		SuccessResponse response = SuccessResponse.builder()
+			.status(HttpStatus.OK)
+			.message("계약서 조회용 presignedurl이 발급되었습니다.")
+			.result(contractService.getPreSignedUrl(contractNo))
+			.build();
+		return ResponseEntity.ok(response);
 	}
 
 	// 계약서 목록 조회 (학생)
 	@GetMapping
-	public ResponseEntity<SuccessResponse> getContracts(){
+	public ResponseEntity<SuccessResponse> getContracts() {
 		Long memberNo = 1L;
 		List<ContractResponseDto> contracts = contractService.getContracts(memberNo);
 		SuccessResponse response = SuccessResponse.builder()
@@ -71,7 +87,7 @@ public class ContractController {
 	// 계약서 싸인
 	@PutMapping("/sign/{contractNo}")
 	public ResponseEntity<SuccessResponse> signContract(
-		@PathVariable Long contractNo){
+		@PathVariable Long contractNo) {
 		Long memberNo = 1L;
 		String contractPresignedUrl = contractService.signContract(memberNo, contractNo);
 		SuccessResponse response = SuccessResponse.builder()
@@ -85,7 +101,7 @@ public class ContractController {
 	// 계약서 삭제
 	@DeleteMapping("/delete/{contractNo}")
 	public ResponseEntity<SuccessResponse> deleteContract(
-		@PathVariable Long contractNo){
+		@PathVariable Long contractNo) {
 		contractService.deleteContract(contractNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)

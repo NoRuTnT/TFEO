@@ -7,112 +7,70 @@ import ContractAppliedContent from '../components/contract/ContractAppliedConten
 import ContractInProgressContent from '../components/contract/ContractInProgressContent';
 import { IHome, IHomeDetail, IHomeOption, IHostPersonality } from '../interfaces/HomeInterface';
 import '../styles/contract/Contract.css';
-import { IContract } from '../interfaces/ContractInterface';
+import { IContract, IContractInfo } from '../interfaces/ContractInterface';
 import { IAddress } from '../interfaces/AddressInterface';
+import { customAxios } from '../api/customAxios';
+import { getMemberContract } from '../api/ContractApis';
 
 const Contract = () => {
+  const [contractInfo, setContractInfo] = useState<IContractInfo>();
   const [status, setStatus] = useState<string>('applied');
-  const [homeDetail, setHomeDetail] = useState<IHomeDetail>({
-    home: {
-      homeNo: 1,
-      address: {
-        si: '서울특별시',
-        emd: '흑석동',
-        sgg: '동작구',
-        ro: '흑석3로',
-        detail: 'oo아파트 302동',
-      },
-      guardianName: '',
-      guardianPhone: '',
-      hostAccountNo: '',
-      hostAge: 64,
-      hostBank: '',
-      hostGender: 'M',
-      hostPhone: '',
-      hostName: '김복순',
-      hostRegisterNo: '',
-      lat: 36,
-      lng: 44,
-      introduce: '안녕로봇',
-      rent: 200000,
-      maintenanceFee: 40000,
-      noneRegisterMember: false,
-      relation: '자녀',
-    },
-    homeOption: {
-      airConditioner: false,
-      breakfast: false,
-      gas: false,
-      elevator: false,
-      heating: false,
-      internet: false,
-      microwave: false,
-      moveInDate: false,
-      parking: false,
-      sink: false,
-      refrigerator: false,
-      station: false,
-      toilet: false,
-      type: '',
-      washingMachine: false,
-    },
-    hostPersonality: {
-      clean: false,
-      cold: false,
-      daytime: false,
-      hot: false,
-      extrovert: false,
-      introvert: false,
-      pet: false,
-      nighttime: false,
-      noTouch: false,
-      smoke: false,
-    },
-    homeImageList: [],
-    hostImageList: [],
-  });
-  const [contract, setContract] = useState<IContract>({
-    contractNo: 1,
-    contractUrl: 'asdf.url',
-    expiredAt: '2024-09-21',
-    hostSign: false,
-    studentSign: false,
-    progress: 'applied',
-    startAt: '2024-03-22',
-  });
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getMemberContract();
+      if (!result) return;
+      setContractInfo(result);
+    };
+    fetchData();
+  }, []);
   const setApplied = () => {
-    setStatus('applied');
+    setStatus('APPLIED');
   };
   const setInProgress = () => {
-    setStatus('in-progress');
+    setStatus('IN_PROGRESS');
   };
   const setCompleted = () => {
-    setStatus('completed');
+    setStatus('DONE');
   };
   const renderByStatus = (status: string) => {
+    if (!contractInfo) return;
     switch (status) {
-      case 'applied':
+      case 'APPLIED':
         console.log('applied');
         return <ContractAppliedContent />;
-      case 'in-progress':
+      case 'IN_PROGRESS':
         console.log('in-progress');
-        return <ContractInProgressContent />;
-      case 'completed':
+        return (
+          <ContractInProgressContent
+            homeDetail={contractInfo.home}
+            contract={contractInfo.contract}
+            member={contractInfo.member}
+          />
+        );
+      case 'DONE':
         console.log('completed');
         return <ContractCompletedContent />;
     }
   };
-  return (
-    <div className="contract">
-      <ContractProgressBar status={status} />
-      <ContractHomeCard status={status} homeDetail={homeDetail} contract={contract} />
-      {renderByStatus(status)}
-      <button onClick={setApplied}>applied</button>
-      <button onClick={setInProgress}>inProgress</button>
-      <button onClick={setCompleted}>completed</button>
-      <hr />
-      <Footer />
-    </div>
-  );
+  if (!contractInfo) {
+    return <div>신청한 집이 없습니다.</div>;
+  } else {
+    return (
+      <div className="contract">
+        <ContractProgressBar status={contractInfo.contract.progress} />
+        <ContractHomeCard
+          status={contractInfo.contract.progress}
+          homeDetail={contractInfo.home}
+          contract={contractInfo.contract}
+        />
+        {renderByStatus(contractInfo.contract.progress)}
+        <button onClick={setApplied}>APPLIED</button>
+        <button onClick={setInProgress}>IN_PROGRESS</button>
+        <button onClick={setCompleted}>DONE</button>
+        <hr />
+        <Footer />
+      </div>
+    );
+  }
 };
 export default Contract;

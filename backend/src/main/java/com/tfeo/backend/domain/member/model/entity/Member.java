@@ -63,9 +63,9 @@ public class Member {
 
 	private String college;
 
-	private double lat; // 대학 위도
+	private Double lat; // 대학 위도
 
-	private double lng; // 대학 경도
+	private Double lng; // 대학 경도
 
 	@Embedded
 	private Address address;
@@ -116,6 +116,7 @@ public class Member {
 		this.wakeAt = surveyMemberRequestDto.getWakeAt();
 		this.sleepAt = surveyMemberRequestDto.getSleepAt();
 		this.returnAt = surveyMemberRequestDto.getReturnAt();
+		this.gender = surveyMemberRequestDto.getGender();
 	}
 
 	public void updateMemberInfo(MemberRequestDto memberRequestDto, String profileUrl, String certificate) {
@@ -130,6 +131,7 @@ public class Member {
 		this.phone = memberRequestDto.getPhone();
 		this.profileUrl = profileUrl;
 		this.certificate = certificate;
+		this.registerNo = memberRequestDto.getRegisterNo();
 	}
 
 	public void updateMemberCertificateStatus(CertificateStatusType certificateStatusType) {

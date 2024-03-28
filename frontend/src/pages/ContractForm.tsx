@@ -13,13 +13,32 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import { ArrowDropDownIcon } from '@mui/x-date-pickers';
 import { StyledEngineProvider } from '@mui/styled-engine-sc';
 import { Box, Button } from '@mui/material';
-import Modal from '@mui/material/Modal';
-import html2canvas from 'html2canvas';
 import ContractSignatureModal from '../components/contract/ContractSignatureModal';
 import { IContractForm } from '../interfaces/ContractFormInterface';
+import { IHome } from '../interfaces/HomeInterface';
+import { IMember } from '../interfaces/MemberInterface';
+import { IContract, IContractInfo } from '../interfaces/ContractInterface';
+import { useLocation } from 'react-router-dom';
+import { getMemberContract } from '../api/ContractApis';
 
+interface ContractFormProps {
+  home: IHome;
+  member: IMember;
+  contract: IContract;
+}
 const ContractForm = () => {
+  const location = useLocation();
+  const { home, member, contract } = location.state as { home: IHome; member: IMember; contract: IContract };
   const [open, setOpen] = React.useState(false);
+  const [contractInfo, setContractInfo] = useState<IContractInfo>();
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getMemberContract();
+      if (!result) return;
+      setContractInfo(result);
+    };
+    fetchData();
+  }, []);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const boxStyle = {
@@ -34,9 +53,6 @@ const ContractForm = () => {
     boxShadow: 24,
     p: 4,
   };
-
-  const [contractForm, setContractForm] = useState<IContractForm>({} as IContractForm);
-
   interface ContractPdfProps {
     person: string;
     name: string;
@@ -87,14 +103,34 @@ const ContractForm = () => {
       </View>
     );
   };
+  const signModal = () => {
+    if (!contractInfo) return <></>;
+    return (
+      <>
+        <Button onClick={handleOpen}>서명하기</Button>
+        <ContractSignatureModal
+          open={open}
+          handleClose={handleClose}
+          contract={contractInfo.contract}
+          role={contractInfo.member.role}
+        />
+      </>
+    );
+  };
+  if (!contractInfo)
+    return (
+      <>
+        <div>조회된 계약이 없습니다.</div>
+      </>
+    );
   return (
     <>
       <Page>
         <StyledEngineProvider injectFirst>
           <Title>스물다섯 여든하나 룸쉐어링 계약서</Title>
           <Introduce>
-            임대인 ( {contractForm.home.hostName} )과 임차인 ( {contractForm.member.name} )은 아래와 같이 임대차 계약을
-            체결한다.
+            임대인 ( {contractInfo.home.home.hostName} )과 임차인 ( {contractInfo.member.name} )은 아래와 같이 임대차
+            계약을 체결한다.
           </Introduce>
           <Accordion>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />}>1. 임대주택의 표시</AccordionSummary>
@@ -103,7 +139,7 @@ const ContractForm = () => {
                 <Cell>주소</Cell>
               </HomeInfoFirstCell>
               <HomeInfoSecondCell>
-                <Cell>{getRoadNameAddress(contractForm.home.address)}</Cell>
+                <Cell>{getRoadNameAddress(contractInfo.home.home.address)}</Cell>
               </HomeInfoSecondCell>
             </AccordionDetails>
           </Accordion>
@@ -113,19 +149,17 @@ const ContractForm = () => {
               <View>
                 <Text>제 1 조 (목적)</Text>
                 <Text>
-                  위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금{' '}
-                  {getRent(contractForm.home.rent)}
+                  위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금 {getRent(home.rent)}
                   만원정을 선불로 매월 1일에 지불한다.
                 </Text>
               </View>
               <View>
                 <Text>제 2 조 (존속 기간)</Text>
                 <Text>
-                  임대인은 위 임대주택을 임대차 목적으로 사용, 수익할 수 있는 상태로{' '}
-                  {getYear(contractForm.contract.startAt)}년 {getMonth(contractForm.contract.startAt)}월{' '}
-                  {getDay(contractForm.contract.startAt)}일 까지 임차인에게 인도하며, 임대차 기간은 인도일로부터{' '}
-                  {getYear(contractForm.contract.expiredAt)}년 {getMonth(contractForm.contract.expiredAt)}월{' '}
-                  {getDay(contractForm.contract.expiredAt)}일 까지로 한다.
+                  임대인은 위 임대주택을 임대차 목적으로 사용, 수익할 수 있는 상태로 {getYear(contract.startAt)}년{' '}
+                  {getMonth(contract.startAt)}월 {getDay(contract.startAt)}일 까지 임차인에게 인도하며, 임대차 기간은
+                  인도일로부터 {getYear(contract.expiredAt)}년 {getMonth(contract.expiredAt)}월{' '}
+                  {getDay(contract.expiredAt)}일 까지로 한다.
                 </Text>
               </View>
               <View>
@@ -173,17 +207,17 @@ const ContractForm = () => {
             <AccordionDetails>
               {getContractJSX({
                 person: '임대인',
-                name: contractForm.home.hostName,
-                registerNo: contractForm.home.hostRegisterNo,
-                phone: contractForm.home.hostPhone,
-                address: contractForm.home.address,
+                name: contractInfo.home.home.hostName,
+                registerNo: contractInfo.home.home.hostRegisterNo,
+                phone: contractInfo.home.home.hostPhone,
+                address: contractInfo.home.home.address,
               })}
               {getContractJSX({
                 person: '임차인',
-                name: contractForm.member.name,
-                registerNo: contractForm.member.registerNo,
-                phone: contractForm.member.phone,
-                address: contractForm.member.address,
+                name: contractInfo.member.name,
+                registerNo: contractInfo.member.registerNo,
+                phone: contractInfo.member.phone,
+                address: contractInfo.member.address,
               })}
             </AccordionDetails>
           </Accordion>
@@ -192,19 +226,18 @@ const ContractForm = () => {
             <ContractSignBody>
               <ContractSignStatus>
                 <ContractSignPerson>학생</ContractSignPerson>
-                <IsContractSigned>
-                  <Button onClick={handleOpen}>서명하기</Button>
-                  <ContractSignatureModal open={open} handleClose={handleClose} />
-                </IsContractSigned>
+                <Button>{contractInfo.contract.studentSign ? '서명 완료' : '서명 미완'}</Button>
               </ContractSignStatus>
               <ContractSignStatus>
                 <ContractSignPerson>노인</ContractSignPerson>
-                <IsContractSigned>
-                  <Button onClick={handleOpen}>서명하기</Button>
-                  <ContractSignatureModal open={open} handleClose={handleClose} />
-                </IsContractSigned>
+                <Button>{contractInfo.contract.hostSign ? '서명 완료' : '서명 미완'}</Button>
               </ContractSignStatus>
             </ContractSignBody>
+            <IsContractSigned>
+              {' '}
+              {!contractInfo.contract.studentSign && signModal()}{' '}
+              {contractInfo.contract.studentSign && <Box>서명이 완료되었습니다.</Box>}
+            </IsContractSigned>
           </ContractSignWrapper>
           {/*<PDFDownloadLink document={<ContractPDFCreate contractForm={contractForm} />}>*/}
           {/*  {({ blob, url, loading, error }) => (loading ? '' : '계약서 PDF로 보기')}*/}
