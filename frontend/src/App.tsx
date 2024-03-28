@@ -13,7 +13,6 @@ import ContractForm from './pages/ContractForm';
 import './styles/App.css';
 import Survey from './pages/Survey';
 import ContractApplyButton from './components/contract/ContractApplyButton';
-import { IHomeDetail } from './interfaces/HomeInterface';
 import HomeDetail from './pages/HomeDetail';
 import LoginPage from './pages/Login';
 import WishList from './pages/WishList';
