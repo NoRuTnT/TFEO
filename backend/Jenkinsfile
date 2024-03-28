@@ -124,7 +124,7 @@ pipeline {
 
         stage('[Backend]Image Build & DockerHub Push') {
             when {
-                expression { ${env.gitlabMergeRequestState} != 'opened' }
+                expression { env.gitlabMergeRequestState != 'opened' }
             }
             steps {
                 dir('backend') {
@@ -145,7 +145,7 @@ pipeline {
 
         stage('[FastAPI]Image Build & DockerHub Push') {
             when {
-                expression { ${env.gitlabMergeRequestState} != 'opened' }
+                expression { env.gitlabMergeRequestState != 'opened' }
             }
             steps {
                 dir('data') {
@@ -166,7 +166,7 @@ pipeline {
 
         stage('[Frontend]Image Build & DockerHub Push') {
             when {
-                expression { ${env.gitlabMergeRequestState} != 'opened' }
+                expression { env.gitlabMergeRequestState != 'opened' }
             }
             steps {
                 dir('frontend') {
@@ -187,7 +187,7 @@ pipeline {
 
         stage('Before Service Stop') {
             when {
-                expression { ${env.gitlabMergeRequestState} != 'opened' }
+                expression { env.gitlabMergeRequestState != 'opened' }
             }
             steps {
                 sshagent(credentials: ['ubuntu']) {
@@ -207,7 +207,7 @@ pipeline {
 
         stage('DockerHub Pull') {
             when {
-                expression { ${env.gitlabMergeRequestState} != 'opened' }
+                expression { env.gitlabMergeRequestState != 'opened' }
             }
             steps {
                 sshagent(credentials: ['ubuntu']) {
@@ -220,7 +220,7 @@ pipeline {
 
         stage('Service Start') {
             when {
-                expression { ${env.gitlabMergeRequestState} != 'opened' }
+                expression { env.gitlabMergeRequestState != 'opened' }
             }
             steps {
                 sshagent(credentials: ['ubuntu']) {
