@@ -7,12 +7,14 @@ pipeline {
         // 환경 변수를 선언하고 초기화
         imageName = "norutnt/develop"
         frontimageName = "norutnt/front"
+        dataimageName = "norutnt/data"
         registryCredential = "tfeo-docker"
         dockerImage = ''
 
         releaseServerAccount = 'ubuntu'
         releaseServerUri = 'j10a707.p.ssafy.io'
         frontreleasePort = '3000'
+        datareleasePort = '8000'
         releasePort = '8081'
 
     }
@@ -64,6 +66,8 @@ pipeline {
                         sh 'mkdir -p backend/env'
                         sh "chown -R jenkins:jenkins backend/env"
                         sh "chmod -R 755 backend/env"
+                        sh "chown -R jenkins:jenkins frontend"
+                        sh "chmod -R 755 frontend"
                 }
 
 
@@ -79,9 +83,16 @@ pipeline {
                         sh 'cp $testdbFile backend/env/test-db.env'
                     }
                 }
+
                 withCredentials([file(credentialsId: 'security', variable: 'securityFile')]) {
                     script {
                         sh 'cp $securityFile backend/env/security.env'
+                    }
+                }
+
+                withCredentials([file(credentialsId: 'front', variable: 'frontFile')]) {
+                    script {
+                        sh 'cp $frontFile frontend/.env'
                     }
                 }
 
@@ -111,9 +122,9 @@ pipeline {
             }
         }
 
-        stage('Image Build & DockerHub Push') {
+        stage('[Backend]Image Build & DockerHub Push') {
             when {
-                expression { env.CI_MERGE_REQUEST_ID == null }
+                expression { ${env.gitlabMergeRequestState} != 'opened' }
             }
             steps {
                 dir('backend') {
@@ -129,6 +140,35 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+
+        stage('[FastAPI]Image Build & DockerHub Push') {
+            when {
+                expression { ${env.gitlabMergeRequestState} != 'opened' }
+            }
+            steps {
+                dir('data') {
+                    script {
+                        docker.withRegistry('', registryCredential) {
+                            // 이미지 빌드
+                            sh "docker build -t $dataimageName:$BUILD_NUMBER ."
+                            sh "docker build -t $dataimageName:latest ."
+
+                            // Docker Hub에 푸시
+                            sh "docker push $dataimageName:$BUILD_NUMBER"
+                            sh "docker push $dataimageName:latest"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('[Frontend]Image Build & DockerHub Push') {
+            when {
+                expression { ${env.gitlabMergeRequestState} != 'opened' }
+            }
+            steps {
                 dir('frontend') {
                     script {
                         docker.withRegistry('', registryCredential) {
@@ -147,7 +187,7 @@ pipeline {
 
         stage('Before Service Stop') {
             when {
-                expression { env.CI_MERGE_REQUEST_ID == null }
+                expression { ${env.gitlabMergeRequestState} != 'opened' }
             }
             steps {
                 sshagent(credentials: ['ubuntu']) {
@@ -155,8 +195,10 @@ pipeline {
                     ssh -o StrictHostKeyChecking=no ubuntu@j10a707.p.ssafy.io "
                     docker stop back || true
                     docker stop front || true
+                    docker stop data || true
                     docker rm -f back || true
                     docker rm -f front || true
+                    docker rm -f data || true
                     "
                     '''
                 }
@@ -165,25 +207,27 @@ pipeline {
 
         stage('DockerHub Pull') {
             when {
-                expression { env.CI_MERGE_REQUEST_ID == null }
+                expression { ${env.gitlabMergeRequestState} != 'opened' }
             }
             steps {
                 sshagent(credentials: ['ubuntu']) {
                     sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $imageName:latest'"
                     sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $frontimageName:latest'"
+                    sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $dataimageName:latest'"
                 }
             }
         }
 
         stage('Service Start') {
             when {
-                expression { env.CI_MERGE_REQUEST_ID == null }
+                expression { ${env.gitlabMergeRequestState} != 'opened' }
             }
             steps {
                 sshagent(credentials: ['ubuntu']) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e \\"SPRING_PROFILES_ACTIVE=set1\\" --env-file=/home/ubuntu/env/db.env --env-file=/home/ubuntu/env/test-db.env --env-file=/home/ubuntu/env/security.env --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul --name front --network tfeo-network -p $frontreleasePort:$frontreleasePort -d $frontimageName:latest"
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul --env-file=/home/ubuntu/env/.env --name front --network tfeo-network -p $frontreleasePort:$frontreleasePort -d $frontimageName:latest"
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul --name data --network tfeo-network -p $datareleasePort:$datareleasePort -d $dataimageName:latest"
                     """
                 }
             }
