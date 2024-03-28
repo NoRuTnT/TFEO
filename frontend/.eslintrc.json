@@ -23,7 +23,6 @@
     "react/prop-types": "off",
     "react/display-name": "off",
     "react-hooks/rules-of-hooks": "error",
-    "camelcase": "error",
     "no-console": "warn",
     "prefer-const": "error",
     "prettier/prettier": ["error", { "endOfLine": "auto" }]
