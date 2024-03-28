@@ -1,17 +1,17 @@
 FROM node:20.11.1-alpine3.18
 
-# Set the timezone in docker
+
 RUN apk --no-cache add tzdata && \
         cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime && \
         echo "Asia/Seoul" > /etc/timezone
 
 WORKDIR /app
 
-# COPY package*.json ./
+
 COPY . .
 
-RUN npm install --force
-# RUN npm install -g yarn
+RUN npm install -g yarn
+
 RUN yarn install
 
 
