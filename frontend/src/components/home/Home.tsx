@@ -34,7 +34,7 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
       <div className="content-container">
         <div>{home.address}</div>
         <div>
-          {home.host_name} {home.gender == 1 ? '할머니' : '할아버지'}
+          {home.host_name} {home.gender == 0 ? '할머니' : '할아버지'}
         </div>
         <div>월 {home.rent} 만원</div>
       </div>
