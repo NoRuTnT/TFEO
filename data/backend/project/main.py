@@ -4,6 +4,8 @@ from fastapi import FastAPI
 from pymongo import MongoClient
 from pydantic import BaseModel
 from typing import Union # 예제 구현용
+
+from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
 from enum import Enum
 from bson.json_util import dumps
@@ -18,11 +20,25 @@ import json
 import traceback
 
 
-
 app = FastAPI()
 host = 'localhost'
 port = 27017
 # db = None
+
+# origins에는 protocal, domain, port만 등록한다.
+origins = [
+    # "http://192.168.0.13:3000", # url을 등록해도 되고
+    "*" # private 영역에서 사용한다면 *로 모든 접근을 허용할 수 있다.
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True, # cookie 포함 여부를 설정한다. 기본은 False
+    allow_methods=["*"],    # 허용할 method를 설정할 수 있으며, 기본값은 'GET'이다.
+    allow_headers=["*"],	# 허용할 http header 목록을 설정할 수 있으며 Content-Type, Accept, Accept-Language, Content-Language은 항상 허용된다.
+)
+
 
 ###########
 client = MongoClient(host, port)
@@ -366,8 +382,17 @@ def filter_by_search_condition(search_condition: Search_Condition):
     print(data)
     data_list = []
     for doc in data:
-        data_list.append(doc)
+        doc = dumps(doc)
+        doc_json = json.loads(doc)
+        print('0000000')
+        print(doc)
+        data_list.append(doc_json)
     # data_list = [doc for doc in data]
+
+    # String이 아닌 Json배열로 확실하게 return 하는 방법
+    return data_list
+    pass
+
 
     print(len(data_list))
     print(data_list)
@@ -375,10 +400,56 @@ def filter_by_search_condition(search_condition: Search_Condition):
     ## data_list에서 추천 알고리즘 적용용
     index_list = []
 
-    data_list = {"data": data_list}
+    print('type:', type(data_list))
+
+    # data_list = {"data": data_list}
+    print('type:', type(data_list))
    # data_list = data_list[:3]  # 3개만 추출
     data_json = json.dumps(data_list, default=str, ensure_ascii=False)
     data_json = data_json.replace("\"", "")
+
+    # 벡터 추출 -> 위키독스 참고
+
+    # 임시 json 객체
+    member_personality_json_info = {
+        'member_personality_no': 1,
+        'daytime': True,
+        'nighttime': True,
+        'fast': True,
+        'late': True,
+        'dinner': True,
+        'smoke': True,
+        'drink': True,
+        'outside': True,
+        'inside': True,
+        'quite': True,
+        'live_long': True,
+        'live_short': True,
+        'pet': True,
+        'cold': True,
+        'hot': True,
+        'host_house_prefer': True,
+    }
+    member_vector = get_member_vector(member_personality_json_info)
+    print('vector-format')
+    print(member_vector)
+
+    cosine_values = []
+    # 이제 data를 for문으로 돌면서 하나씩 vector로 변환하고 코사인 유사도를 계산함
+    # for item in data_list:
+    #     vector_json = item['host_vector']
+
+    if data_json.startswith('\"'):
+        data_json = data_json[1:]
+    if data_json.endswith('\"'):
+        data_json = data_json[:-1]
+    if data_json.endswith(','):
+        data_json = data_json[:-1]
+    # data_json = data_json[1:-1]
+    # print(data_json)
+    # ex = json.loads(data_json)
+    # return ex
+
     # return 'OK'
     return data_json
 
@@ -416,7 +487,6 @@ def insert_item(item: Home):
     # db.items.insert_one(item.dict())
     vector = get_host_vector(item)
     db.home.insert_one(item.dict())
-    # 벡터화 해서 insert
 
     return "complete"
 
@@ -472,41 +542,38 @@ def get_one_home(home_no: int):
 
     # data_list = data_list[:3]  # 3개만 추출
 
-    data_list = {"data": data_list}
+    # data_list = {"data": data_list}
     data_json = json.dumps(data_list, default=str, ensure_ascii=False)
     data_json = data_json.replace("\"", "")
     # return 'OK'
     return data_json
 
-# @app.get("/items/{item_id}")
-# def read_item(item_id: int, q: Union[str, None] = None):
-#     return {"item_id": item_id, "q": q}
-
-
 # 호스트+집 정보를 벡터화 시키는 과정이 필요하고
 # insert가 들어올 때마다 이를 갱신하는 과정이 필요함
 
 
-def get_member_vector(member_personality: Member_Personality):
+# def get_member_vector(member_personality: Member_Personality):
+# class -> json
+def get_member_vector(member_personality):
     print('빅데이터의 벡터화')
     """
     <대학생>
     주간지수, 야간지수, 흡연지수, 외향, 내향, 호스트 습관의 중요함, 동물애호가, 추위잘탐, 더위잘탐
     """
     index = 12
-    day = convert_bool_to_int(member_personality.daytime)+convert_bool_to_int(member_personality.fast)
-    night = convert_bool_to_int(member_personality.nighttime)+convert_bool_to_int(member_personality.late)
-    smoke = convert_bool_to_int(member_personality.smoke)
-    extro = convert_bool_to_int(member_personality.outside)
-    intro = convert_bool_to_int(member_personality.inside)+convert_bool_to_int(member_personality.quite)
-    host_related = convert_bool_to_int(member_personality.live_long)
-    pet_lover = convert_bool_to_int(member_personality.pet)
-    cold = convert_bool_to_int(member_personality.cold)
-    hot = convert_bool_to_int(member_personality.hot)
+    day = convert_bool_to_int(member_personality['daytime'])+convert_bool_to_int(member_personality['fast'])
+    night = convert_bool_to_int(member_personality['nighttime'])+convert_bool_to_int(member_personality['late'])
+    smoke = convert_bool_to_int(member_personality['smoke'])
+    extro = convert_bool_to_int(member_personality['outside'])
+    intro = convert_bool_to_int(member_personality['inside'])+convert_bool_to_int(member_personality['quite'])
+    host_related = convert_bool_to_int(member_personality['live_long'])
+    pet_lover = convert_bool_to_int(member_personality['pet'])
+    cold = convert_bool_to_int(member_personality['cold'])
+    hot = convert_bool_to_int(member_personality['hot'])
     member_vector = [index, day, night, smoke, extro, intro,
                      host_related, pet_lover, cold, hot]
 
-    return member_vector
+    return np.array(member_vector)
 
 
 def get_permit_list(b):
@@ -515,7 +582,6 @@ def get_permit_list(b):
     return [1]
 
 def get_host_vector(host_personality: Host_Personality):
-    print('빅데이터의 벡터화')
     """
     <노인>
     주간지수, 야간지수, 흡연지수, 외향, 내향, 매너있는 호스트, 동물애호가, 추위잘탐, 더위잘탐
@@ -533,6 +599,7 @@ def get_host_vector(host_personality: Host_Personality):
     member_vector = [index, day, night, smoke, extro, intro,
                      mannered, pet_lover, cold, hot]
     return member_vector
+    # return np.array(member_vector)
 
 def convert_bool_to_int(bool):
     if(bool==True):

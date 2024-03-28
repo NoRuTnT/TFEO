@@ -113,6 +113,7 @@ class Host_Personality(BaseModel):
     hot: bool # 더위잘타는
     no_touch: bool # 간섭안하는
 
+
 host = 'localhost'
 port = 27017
 client = MongoClient(host, port)
@@ -242,9 +243,18 @@ def init_MongoDB_Naver():
                 'hot': json_data['hot'],
                 'no_touch': json_data['no_touch'],
             }
-
-            host_vector_json_data = get_host_vector_json(new_row)
-
+            host_personality_json_info = {
+                'smoke': json_data['smoke'],
+                'pet': json_data['pet'],
+                'clean': json_data['clean'],
+                'daytime': json_data['daytime'],
+                'nighttime': json_data['nighttime'],
+                'extrovert': json_data['extrovert'],
+                'introvert': json_data['introvert'],
+                'cold': json_data['cold'],
+                'hot': json_data['hot'],
+                'no_touch': json_data['no_touch'],
+            }
             df_host_personality = df_host_personality._append(new_row, ignore_index=True)
             # 집
             json_data['home_no'] = idx
@@ -338,8 +348,11 @@ def init_MongoDB_Naver():
             }
             df_host_image = df_host_image._append(new_row, ignore_index=True)
 
+            # host_vector 관련 정보를 json_data에 추가
+            # host_vector_no는 home_no로 대체
+            host_vector_json = get_host_vector_json(host_personality_json_info)
+            json_data['host_vector'] = host_vector_json
             json_list.append(json_data)
-            host_vector_json_list.append(host_vector_json_data)
 
         df_home_option.to_csv('MySQL/home_option.csv')
         df_home.to_csv('MySQL/home.csv')
@@ -347,27 +360,45 @@ def init_MongoDB_Naver():
 
         df_home_image.to_csv('MySQL/home_image.csv')
         df_host_image.to_csv('MySQL/host_image.csv')
+
         db.home.insert_many(json_list)
-        db.host_vector.insert_many(host_vector_json_list) # host_vector를 따로 MongoDB에 저장
 
-
+# json 입력
 def get_host_vector_json(host_personality):
-    json_data = {}
+    # print('빅데이터의 벡터화')
     """
     <노인>
     주간지수, 야간지수, 흡연지수, 외향, 내향, 매너있는 호스트, 동물애호가, 추위잘탐, 더위잘탐
     """
-    json_data['host_vector_no'] = host_personality['host_personality_no']
-    json_data['day'] = convert_bool_to_int(host_personality['daytime'])
-    json_data['night'] = convert_bool_to_int(host_personality['nighttime'])
-    json_data['smoke'] = convert_bool_to_int(host_personality['smoke'])
-    json_data['extro'] = convert_bool_to_int(host_personality['extrovert'])
-    json_data['intro'] = convert_bool_to_int(host_personality['introvert'])
-    json_data['mannered'] = convert_bool_to_int(host_personality['clean'])+convert_bool_to_int(host_personality['no_touch'])
-    json_data['pet_lover'] = convert_bool_to_int(host_personality['pet'])
-    json_data['cold'] = convert_bool_to_int(host_personality['cold'])
-    json_data['hot'] = convert_bool_to_int(host_personality['hot'])
-    return json_data
+    # index = 12
+    day_element = convert_bool_to_int(host_personality['daytime'])
+    night_element = convert_bool_to_int(host_personality['nighttime'])
+    smoke_element = convert_bool_to_int(host_personality['smoke'])
+    extro_element = convert_bool_to_int(host_personality['extrovert'])
+    intro_element = convert_bool_to_int(host_personality['introvert'])
+    mannered_element = convert_bool_to_int(host_personality['clean'])+convert_bool_to_int(host_personality['no_touch'])
+    pet_lover_element = convert_bool_to_int(host_personality['pet'])
+    cold_element = convert_bool_to_int(host_personality['cold'])
+    hot_element = convert_bool_to_int(host_personality['hot'])
+
+    member_vector_json = {
+        'day_element': day_element,
+        'night_element': night_element,
+        'smoke_element': smoke_element,
+        'extro_element': extro_element,
+        'intro_element': intro_element,
+        'mannered_element': mannered_element,
+        'pet_lover_element': pet_lover_element,
+        'cold_element': cold_element,
+        'hot_element': hot_element
+    }
+    return member_vector_json
+
+
+
+
+
+
 
 
 
