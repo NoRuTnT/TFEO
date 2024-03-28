@@ -9,6 +9,7 @@ from enum import Enum
 from bson.json_util import dumps
 from faker import Faker
 from recommend_house import Recommendation
+from sklearn.metrics.pairwise import cosine_similarity
 
 from bson import json_util
 
@@ -368,27 +369,15 @@ def filter_by_search_condition(search_condition: Search_Condition):
     for doc in data:
         doc = dumps(doc)
         doc_json = json.loads(doc)
-        print('0000000')
-        print(doc)
         data_list.append(doc_json)
     # data_list = [doc for doc in data]
 
     # String이 아닌 Json배열로 확실하게 return 하는 방법
-    return data_list
-    pass
 
 
     print(len(data_list))
     print(data_list)
 
-    ## data_list에서 추천 알고리즘 적용용
-    index_list = []
-
-    print('type:', type(data_list))
-
-    # data_list = {"data": data_list}
-    print('type:', type(data_list))
-   # data_list = data_list[:3]  # 3개만 추출
     data_json = json.dumps(data_list, default=str, ensure_ascii=False)
     data_json = data_json.replace("\"", "")
 
@@ -419,23 +408,54 @@ def filter_by_search_condition(search_condition: Search_Condition):
     print(member_vector)
 
     cosine_values = []
+
+    priorities = []
     # 이제 data를 for문으로 돌면서 하나씩 vector로 변환하고 코사인 유사도를 계산함
-    # for item in data_list:
-    #     vector_json = item['host_vector']
+    for item in data_list:
+        vector_json = item['host_vector'] # 벡터 관련 성분 json만 가져옴
+        host_vector = []
+        for value in vector_json.values():
+            host_vector.append(value)
+        host_vector=np.array(host_vector)
 
-    if data_json.startswith('\"'):
-        data_json = data_json[1:]
-    if data_json.endswith('\"'):
-        data_json = data_json[:-1]
-    if data_json.endswith(','):
-        data_json = data_json[:-1]
-    # data_json = data_json[1:-1]
-    # print(data_json)
-    # ex = json.loads(data_json)
-    # return ex
+        print(host_vector)
+        print(member_vector)
+        print('++++++++++++++++++++')
+        print(host_vector.reshape(1,-1))
+        print(member_vector.reshape(1,-1))
+        similarity = cosine_similarity(host_vector.reshape(1,-1), member_vector.reshape(1,-1))
+        # 끝에다 붙여준다.
+        priorities.append([similarity[0][0], item['home_no']])
 
-    # return 'OK'
-    return data_json
+    print('구한 결과 벡터 list임')
+    print(priorities)
+
+    priorities.sort(key=lambda x:x[0], reverse=True)
+
+    print('정렬 결과 벡터 list임')
+    print(priorities)
+    print(data_json)
+
+
+    # indices = indices[:3]  # 3개만 추출
+
+
+
+    output_list = [] # 최종적으로 추천된 부동산 내용들의 list, 필요시 원하는 성분들만 추출해서 사용
+    for index in priorities:
+        item = db.home.find({'home_no': index[1]})
+        item = dumps(item)
+        item_json = json.loads(item)
+        output_list.append(item_json)
+
+    # for doc in data:
+    #     doc = dumps(doc)
+    #     doc_json = json.loads(doc)
+    #     data_list.append(doc_json)
+
+    # print(output_list)
+    return output_list
+    # return data_list
 
 ##############################
 # 사용자 맞춤형 추천이 반영된 결과를 반환
@@ -538,13 +558,14 @@ def get_one_home(home_no: int):
 
 # def get_member_vector(member_personality: Member_Personality):
 # class -> json
+"""np.array형태로 반환함"""
 def get_member_vector(member_personality):
     print('빅데이터의 벡터화')
     """
     <대학생>
     주간지수, 야간지수, 흡연지수, 외향, 내향, 호스트 습관의 중요함, 동물애호가, 추위잘탐, 더위잘탐
     """
-    index = 12
+    # index = 12
     day = convert_bool_to_int(member_personality['daytime'])+convert_bool_to_int(member_personality['fast'])
     night = convert_bool_to_int(member_personality['nighttime'])+convert_bool_to_int(member_personality['late'])
     smoke = convert_bool_to_int(member_personality['smoke'])
@@ -554,7 +575,7 @@ def get_member_vector(member_personality):
     pet_lover = convert_bool_to_int(member_personality['pet'])
     cold = convert_bool_to_int(member_personality['cold'])
     hot = convert_bool_to_int(member_personality['hot'])
-    member_vector = [index, day, night, smoke, extro, intro,
+    member_vector = [day, night, smoke, extro, intro,
                      host_related, pet_lover, cold, hot]
 
     return np.array(member_vector)
