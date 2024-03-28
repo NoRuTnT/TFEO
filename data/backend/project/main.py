@@ -466,18 +466,6 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
 #     return None
 ##############################
 
-# 추천이 적용되지 않은 전체 집 정보를 반환
-@app.get("/select/all")
-def get_all_list():
-    # data = db.items.find({},{'_id': False})
-    data = db.home.find({},{'_id': False})
-
-    data_list = [doc for doc in data]
-    data_list = data_list[:1] # 1개만 추출
-    data_json = json.dumps(data_list, default=str, ensure_ascii=False)
-    data_json = data_json.replace("\"","")
-    return data_json
-
 # 등록된 아이템 추가
 @app.post("/insert-item/")
 def insert_item(item: Item):
@@ -488,6 +476,10 @@ def insert_item(item: Item):
 @app.post("/insert/")
 def insert_item(item: Home):
     # db.items.insert_one(item.dict())
+
+    # vector json을 생성해서 덧붙인 뒤
+    # MongoDB에 추가하는 게 필요함
+
     vector = get_host_vector(item)
     db.home.insert_one(item.dict())
 
@@ -554,9 +546,6 @@ def get_one_home(home_no: int):
 # 호스트+집 정보를 벡터화 시키는 과정이 필요하고
 # insert가 들어올 때마다 이를 갱신하는 과정이 필요함
 
-
-# def get_member_vector(member_personality: Member_Personality):
-# class -> json
 """np.array형태로 반환함"""
 def get_member_vector(member_personality):
     print('빅데이터의 벡터화')
