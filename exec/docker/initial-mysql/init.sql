@@ -278,31 +278,31 @@ alter table wish
             references member (member_no);
 
 
-LOAD DATA INFILE '/home.csv'
+LOAD DATA INFILE '/tmp/home.csv'
 INTO TABLE home
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE '/home_image.csv'
+LOAD DATA INFILE '/tmp/home_image.csv'
 INTO TABLE home_image
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE '/home_option.csv'
+LOAD DATA INFILE '/tmp/home_option.csv'
 INTO TABLE home_option
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE '/host_image.csv'
+LOAD DATA INFILE '/tmp/host_image.csv'
 INTO TABLE host_image
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE '/host_personality.csv'
+LOAD DATA INFILE '/tmp/host_personality.csv'
 INTO TABLE home_personality
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'

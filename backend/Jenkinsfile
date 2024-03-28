@@ -54,6 +54,8 @@ pipeline {
         stage('Run Container') {
             steps {
                 dir('exec/docker') {
+                    sh "chmod -R 777 /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MySQL"
+                    sh "chmod -R 777 /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MongoDB"
                     sh 'docker-compose -f docker-compose.yml up -d > docker-compose-logs.txt 2>&1'
                 }
             }

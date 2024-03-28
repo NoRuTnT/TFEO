@@ -17,7 +17,7 @@ services:
       TZ: Asia/Seoul
     volumes:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mysql:/docker-entrypoint-initdb.d
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MySQL:/
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MySQL:/tmp
     command:
       - "mysqld"
       - "--character-set-server=utf8mb4"
@@ -45,7 +45,7 @@ services:
       - 27017:27017
     volumes:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mongo:/docker-entrypoint-initdb.d
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MongoDB:/
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MongoDB:/tmp
     environment:
       - docker-db.env
 
