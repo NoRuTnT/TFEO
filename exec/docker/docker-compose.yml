@@ -16,8 +16,7 @@ services:
     environment:
       TZ: Asia/Seoul
     volumes:
-#      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-mysql:/var/lib/mysql
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial:/docker-entrypoint-initdb.d
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mysql:/docker-entrypoint-initdb.d
     command:
       - "mysqld"
       - "--character-set-server=utf8mb4"
@@ -44,10 +43,9 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-mongodb/data:/data
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mongo:/docker-entrypoint-initdb.d
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=tfeo123
+      - docker-db.env
 
 #  tfeo-back:
 #    container_name: "back"
