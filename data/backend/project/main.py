@@ -278,20 +278,8 @@ def get_recommended_list(home_option: Home_Option, member_personality: Member_Pe
 
     weight = member_personality.host_house_prefer # 0-10사이의 값을 적당하게 mapping
     print(weight)
+    # 1. 입력으로 주어진 좌표 범위 내 주택만 filtering
 
-
-    resp = {}
-    return resp
-
-
-@app.post("/recommend")
-def filter_by_search_condition(search_condition: Search_Condition, member_personality: Optional[Member_Personality]=None):
-    ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
-    # s_c 가 false 이면 그냥 전부 채택
-    # s_c 가 true 이면 s_c가 있는 것만 선택됨
-    # -> (~s_c)AND(매물 대상)
-
-    # 1. 입력으로 주어진 좌표 범위 내 주택만 filtering # 불필요해짐
     # Ex)
     # filtered = db.home.find({
     #     "lat": {$gte:30, $lt:70},
