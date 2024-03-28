@@ -12,7 +12,7 @@ import Contract from './pages/Contract';
 import ContractForm from './pages/ContractForm';
 import './styles/App.css';
 import Survey from './pages/Survey';
-import ContractTest from './components/contract/ContractTest';
+import ContractApplyButton from './components/contract/ContractApplyButton';
 import { IHomeDetail } from './interfaces/HomeInterface';
 import HomeDetail from './pages/HomeDetail';
 import LoginPage from './pages/Login';
@@ -37,7 +37,7 @@ function App() {
           <Route path="/survey" element={<Survey />} />
           <Route path="/login" element={<LoginPage />} />
           {/* ... 여기에 더 많은 라우트를 추가할 수 있습니다 ... */}
-          <Route path="/contract-test" element={<ContractTest />} />
+          <Route path="/contract-test" element={<ContractApplyButton />} />
           <Route path="/wish-list" element={<WishList />} />
         </Routes>
       </Router>
