@@ -9,6 +9,7 @@ import '../../styles/home/Header.css';
 import styled from '@emotion/styled';
 import { Slider, Box, Typography, Button, Grid } from '@mui/material';
 import { useHomeStore } from '../../store/HomeStore';
+import { RecommendAxios } from '../../api/RecommendAxios';
 
 const Header: React.FC = () => {
   const theme = useTheme();
@@ -27,6 +28,10 @@ const Header: React.FC = () => {
     isMapLoaded,
     headerFilterChanged,
     setHeaderFilterChanged,
+    search_condition,
+    member_personality,
+    setIsMapLoaded,
+    setHomes,
   } = useHomeStore();
 
   useEffect(() => {
@@ -101,6 +106,28 @@ const Header: React.FC = () => {
     toggleType(value);
   };
 
+  const handleSearchClick = () => {
+    setModalOpen(false);
+    const fetchData = async () => {
+      try {
+        // 성향 반영 추천 api
+        const requestData = {
+          search_condition: search_condition,
+          member_personality: member_personality,
+        };
+        // http://j10a707.p.ssafy.io:8000/recommend
+        member_personality;
+        const response = await RecommendAxios.post('/recommend', requestData);
+        console.log(response.data);
+        setHomes(response.data); // 상태 업데이트
+        setIsMapLoaded(true); // 지도 로드 플래그 설정
+      } catch (error) {
+        console.error('집 리스트를 가져오는 데 실패했습니다 : ', error);
+      }
+    };
+    fetchData();
+  };
+
   const headerFilterClick = (filterKey: string) => {
     if (filterKey == 'school') {
       selectFilter({ school: !school });
@@ -129,6 +156,7 @@ const Header: React.FC = () => {
       console.log('homes', visibleHomes);
     }
   };
+
   return (
     <header>
       <div className="criteria-container">
@@ -213,7 +241,7 @@ const Header: React.FC = () => {
                   ))}
                 </Grid>
                 <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button onClick={() => setModalOpen(false)} color="primary">
+                  <Button onClick={handleSearchClick} color="primary">
                     확인
                   </Button>
                 </Box>
