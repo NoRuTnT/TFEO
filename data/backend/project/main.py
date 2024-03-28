@@ -461,6 +461,10 @@ def insert_item(item: Home):
     # vector json을 생성해서 덧붙인 뒤
     # MongoDB에 추가하는 게 필요함
 
+    """
+    MAX(home_id)+1
+    """
+
     vector = get_host_vector(item)
     db.home.insert_one(item.dict())
 
@@ -470,9 +474,9 @@ def insert_item(item: Home):
 # @app.delete("/delete/{home_no}")
 @app.delete("/delete")
 def delete_house(home_no):
-
     print(home_no)
-
+    home_no = int(home_no)
+    db.home.delete_one({'home_no': home_no})
     return "complete"
     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
 # find().limit(7) # 7개로 출력할 횟수 제한
