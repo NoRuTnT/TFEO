@@ -87,7 +87,7 @@ services:
     image: nginx:1.18.0
     volumes:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-nginx/conf:/etc/nginx/conf.d
-      - /home/ubuntu/homeImage:/usr/share/nginx/html
+      - /home/ubuntu/image:/usr/share/nginx/html
       - /etc/letsencrypt:/etc/letsencrypt
       - /var/lib/letsencrypt:/var/lib/letsencrypt
     networks:
@@ -98,6 +98,7 @@ services:
     depends_on:
       - tfeo-mysql
       - tfeo-redis
+      - tfeo-mongodb
 
     restart: always
 
