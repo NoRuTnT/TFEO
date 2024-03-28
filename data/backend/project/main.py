@@ -28,6 +28,7 @@ port = 27017
 # origins에는 protocal, domain, port만 등록한다.
 origins = [
     # "http://192.168.0.13:3000", # url을 등록해도 되고
+    # "http://70.12.246.99:3000",
     "*" # private 영역에서 사용한다면 *로 모든 접근을 허용할 수 있다.
 ]
 

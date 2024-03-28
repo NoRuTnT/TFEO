@@ -15,19 +15,19 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
       <div className="img-container">
         {/*집주인의 사진을 보여줄 캐러셀*/}
         <div className="carousel-container-left">
-          {/*<div className="slide-left">*/}
-          {/*  <img src={home.host_image} alt={`Owner `} />*/}
-          {/*</div>*/}
+          <div className="slide-left">
+            <img src={home.host_image} alt={`Owner `} />
+          </div>
           host
         </div>
         {/* 집의 사진을 보여줄 캐러셀 */}
         <div className="carousel-container">
           <Slider {...settings}>
-            {/*{home.home_image.map((img: any, index: number) => (*/}
-            {/*  <div key={index} className="slide-right">*/}
-            {/*    <img src={img.home_image_url} alt={`Home ${index + 1}`} />*/}
-            {/*  </div>*/}
-            {/*))}*/}
+            {home.home_image.map((img: any, index: number) => (
+              <div key={index} className="slide-right">
+                <img src={img.home_image_url} alt={`Home ${index + 1}`} />
+              </div>
+            ))}
           </Slider>
         </div>
       </div>
