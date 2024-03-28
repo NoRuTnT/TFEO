@@ -1,9 +1,10 @@
 # swaggerURL : 127.0.0.1:8000/docs
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pymongo import MongoClient
 from pydantic import BaseModel
 from typing import Union # 예제 구현용
+from typing import Optional
 
 from starlette.middleware.cors import CORSMiddleware
 from starlette.responses import JSONResponse
@@ -288,15 +289,12 @@ def get_recommended_list(home_option: Home_Option, member_personality: Member_Pe
     # 4. 우선순위가 높은 순서대로 json list 반환
 
 
-    resp = {
-        "name": "김태현",
-        "grade": 4,
-    }
+    resp = {}
     return resp
 
 
 @app.post("/testing/test")
-def filter_by_search_condition(search_condition: Search_Condition):
+def filter_by_search_condition(search_condition: Search_Condition, member_personality: Optional[Member_Personality]=None):
     ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
     # s_c 가 false 이면 그냥 전부 채택
     # s_c 가 true 이면 s_c가 있는 것만 선택됨
@@ -361,24 +359,6 @@ def filter_by_search_condition(search_condition: Search_Condition):
                         'move_in_date': {'$in':move_in_date_list},
                         'type': {'$in':building_option_list},
                          })
-    ########################################
-    # def get_recommended_list():
-    #     data = db.host_vector.find({}, {'_id': False})
-    #     data_list = []
-    #     for doc in data:
-    #         data_list.append(doc)
-    #     host_vector_list = []
-    #     for data in data_list:
-    #         host_vector = []
-    #         for value in data.values():
-    #             host_vector.append(value)
-    #         host_vector_list.append(host_vector)
-    #     print(host_vector_list)
-    #     vector_matrix = np.array(host_vector_list)
-    #     return vector_matrix
-    ########################################
-
-
 
     print(data)
     data_list = []
@@ -386,10 +366,12 @@ def filter_by_search_condition(search_condition: Search_Condition):
         doc = dumps(doc)
         doc_json = json.loads(doc)
         data_list.append(doc_json)
-    # data_list = [doc for doc in data]
-
-    # String이 아닌 Json배열로 확실하게 return 하는 방법
-
+    """
+    학생성향이 들어오지 않은 경우
+    추천 알고리즘 적용 안하고 필터링 결과만 반환
+    """
+    if(member_personality is None):
+        return data_list
 
     print(len(data_list))
     print(data_list)
