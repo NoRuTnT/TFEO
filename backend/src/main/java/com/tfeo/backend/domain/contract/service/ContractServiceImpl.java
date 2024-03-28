@@ -135,12 +135,20 @@ public class ContractServiceImpl implements ContractService {
 		return fileService.createPresignedUrlToUpload(contract.getContractUrl());
 	}
 
+
 	// 계약서 삭제
 	@Override
 	public void deleteContract(Long contractNo) {
 		Contract contract = contractRepository.findById(contractNo)
 			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
 		contractRepository.delete(contract);
+	}
+
+	@Override
+	public String getPreSignedUrl(Long contractNo) {
+		Contract contract = contractRepository.findById(contractNo)
+			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
+		return fileService.createPresignedUrlToDownload(contract.getContractUrl());
 	}
 
 	public static String getCurrentWeekOfMonth(LocalDate localDate) {
