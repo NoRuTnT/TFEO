@@ -197,7 +197,7 @@ def init_MongoDB_Naver():
             json_data['sink'] = int(rows['sink'])
             json_data['type'] = rows['type'].strip()
 
-            new_row = {'home_option_no': idx, 'internet': json_data['internet'],
+            new_row = {'home_option_no': idx+1, 'internet': json_data['internet'],
                        'gas': json_data['gas'], 'washing_machine': json_data['washing_machine'],
                        'air_conditioner': json_data['air_conditioner'],
                        'refrigerator': json_data['refrigerator'],
@@ -231,7 +231,7 @@ def init_MongoDB_Naver():
             json_data['no_touch'] = random.randint(0, 1)
 
             new_row = {
-                'host_personality_no': idx,
+                'host_personality_no': idx+1,
                 'smoke': json_data['smoke'],
                 'pet': json_data['pet'],
                 'clean': json_data['clean'],
@@ -257,7 +257,7 @@ def init_MongoDB_Naver():
             }
             df_host_personality = df_host_personality._append(new_row, ignore_index=True)
             # 집
-            json_data['home_no'] = idx
+            json_data['home_no'] = idx+1
             json_data['host_name'] = fake.name()  # 이름
             json_data['host_age'] = random.randint(65, 100)  # 나이
             # json_data['host_phone'] = fake.phone_number() # 데이터 포맷에 맞게 변경
@@ -281,8 +281,8 @@ def init_MongoDB_Naver():
             # json_data['noneRegisterMember'] = random.choice(list(MemberRoleType))  # 비회원등록여부
             json_data['role'] = random.choice(list(member_role))  # 비회원등록여부
             json_data['introduce'] = rows['introduce'].strip()  # 주소
-            json_data['host_personality_no'] = idx  # 식별키
-            json_data['home_option_no'] = idx  # 식별자
+            json_data['host_personality_no'] = idx+1  # 식별키
+            json_data['home_option_no'] = idx+1  # 식별자
 
             # merged 파일안에 결측치 문제는 이미 해결된 것으로 보임
             json_data['si'] = rows['si'].strip()
@@ -319,7 +319,7 @@ def init_MongoDB_Naver():
 
             # 집 사진은 각 매물마다 3장씩 추가할 것
             # 집 사진
-            json_data['home_image_no'] = idx
+            json_data['home_image_no'] = idx+1
 
             image_list = []
             for i in range(1, 4):
@@ -328,8 +328,7 @@ def init_MongoDB_Naver():
                 # 'home_image_no': json_data['home_image_no'],
                 'home_image_no': picture_index,
                 # 'home_image_url': json_data['home_image_url'],
-                # URL 포맷에 맞게 수정
-                'home_image_url': 'http://{}/{}'.format(idx,i), # 'http://' + idx + '/' + i
+                'home_image_url': '/homeImage/{}/{}.jpg'.format(idx%360+1,f"{i:02}"), # 'http://' + idx + '/' + i
                 }
                 image_list.append(new_row)
                 picture_index+=1
@@ -338,8 +337,8 @@ def init_MongoDB_Naver():
             json_data['home_image'] = image_list
 
             # 호스트 사진
-            json_data['host_image_no'] = idx
-            json_data['host_image_url'] = 'host_image_url'
+            json_data['host_image_no'] = idx+1
+            json_data['host_image_url'] = '/hostImage/{}.jpg'.format(idx%120+1) # 'host_image_url'
 
             new_row = {
                 'host_image_no': json_data['host_image_no'],
