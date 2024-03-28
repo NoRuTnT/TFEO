@@ -23,7 +23,7 @@ import traceback
 import math
 
 app = FastAPI()
-host = 'https://j10a707.p.ssafy.io/'
+host = 'mongodb://j10a707.p.ssafy.io'
 port = 27017
 # db = None
 
