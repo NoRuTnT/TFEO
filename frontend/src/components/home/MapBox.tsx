@@ -11,7 +11,17 @@ declare global {
 }
 
 export default function MapBox() {
-  const { homes, setVisibleHomes, setHomes, isMapLoaded, setIsMapLoaded } = useHomeStore();
+  const {
+    homes,
+    setVisibleHomes,
+    setHomes,
+    isMapLoaded,
+    setIsMapLoaded,
+    search_condition,
+    member_personality,
+    setSearchCondition,
+    setMemberPersonality,
+  } = useHomeStore();
 
   useEffect(() => {
     // Axios 요청으로 homes 상태 업데이트
@@ -38,9 +48,14 @@ export default function MapBox() {
           JT: true,
           DDDGG: true,
           OR: true,
-          rent_max: 30,
+          rent_max: 50,
           rent_min: 0,
         };
+        // 성향 반영 추천 api 반영 시 주석 해제
+        // const requestData = {
+        //   search_condition: search_condition,
+        //   member_personality: member_personality,
+        // };
         const response = await axios.post('http://localhost:8000/testing/test', requestData);
         setHomes(response.data); // 상태 업데이트
         setIsMapLoaded(true); // 지도 로드 플래그 설정
