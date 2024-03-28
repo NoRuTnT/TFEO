@@ -1,9 +1,13 @@
 import React from 'react';
 import '../../styles/contract/ContractAppliedContent.css';
-
-const ContractAppliedContent = () => {
-  const removeApplication = () => {
-    console.log('신청 취소 요청 보내기');
+import { cancelApply } from '../../api/ContractApis';
+interface Props {
+  homeNo: number;
+}
+const ContractAppliedContent = ({ homeNo }: Props) => {
+  const removeApplication = async () => {
+    const response = await cancelApply(homeNo);
+    if (response) window.location.reload();
   };
   return (
     <div className="contractContent">

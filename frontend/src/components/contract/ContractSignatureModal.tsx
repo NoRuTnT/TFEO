@@ -100,7 +100,7 @@ const ContractSignatureModal = ({ open, handleClose, contract, role }: Props) =>
 
   const handleCombine = async () => {
     console.log(role);
-    if (role !== 'MEMBER' && role !== 'MANAGER') return;
+    if (role !== 'USER' && role !== 'MANAGER') return;
     try {
       if (!signature) {
         window.alert('서명 이후 완료 버튼을 눌러주세요');
@@ -152,7 +152,7 @@ const ContractSignatureModal = ({ open, handleClose, contract, role }: Props) =>
           font: font,
           color: rgb(0, 0, 0),
         });
-      } else if (role === 'MEMBER') {
+      } else if (role === 'USER') {
         page.drawImage(image, {
           x: memberSignaturePosition.imageX, // 이미지의 x 좌표
           y: memberSignaturePosition.imageY, // 이미지의 y 좌표
@@ -169,11 +169,9 @@ const ContractSignatureModal = ({ open, handleClose, contract, role }: Props) =>
           color: rgb(0, 0, 0),
         });
       }
-
       // 나머지 코드는 그대로 유지됩니다.
       // PDF 파일로 저장
       const modifiedPdfBytes = await pdfDoc.save();
-
       //pdf s3에 업로드
       const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
       const link = document.createElement('a');
@@ -184,6 +182,7 @@ const ContractSignatureModal = ({ open, handleClose, contract, role }: Props) =>
       if (preSignedUrl) await uploadFileToS3({ preSignedUrlToUpload: preSignedUrl, uploadFile: blob });
       window.alert('서명이 완료되었습니다.');
       handleClose();
+      window.location.reload();
     } catch (error) {
       console.error('Error loading PDF or image:', error);
     }
