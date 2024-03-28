@@ -438,9 +438,10 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
     output_list = [] # 최종적으로 추천된 부동산 내용들의 list, 필요시 원하는 성분들만 추출해서 사용
     for index in priorities:
         item = db.home.find({'home_no': index[1]})
-        item = dumps(item)
-        item_json = json.loads(item)
-        output_list.append(item_json)
+        for doc in item:
+            doc = dumps(doc)
+            item_json = json.loads(doc)
+            output_list.append(item_json)
 
     # for doc in data:
     #     doc = dumps(doc)
