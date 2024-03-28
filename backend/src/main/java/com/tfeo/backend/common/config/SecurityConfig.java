@@ -81,8 +81,8 @@ public class SecurityConfig {
 			// 페이지접근 제한
 			// .antMatchers("/my-page", "/my-page/info", "/my-page/collection", "/my-page/avatar")
 			// .hasRole("USER")
-			.anyRequest()
-			.authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
+			// .anyRequest()
+			// .authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
 
 			//예외핸들러
 			.and()
