@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import ContractProgressBar from '../components/contract/ContractProgressBar';
-import Footer from '../components/footer/Footer';
-import ContractHomeCard from '../components/contract/ContractHomeCard';
-import ContractCompletedContent from '../components/contract/ContractCompletedContent';
-import ContractAppliedContent from '../components/contract/ContractAppliedContent';
-import ContractInProgressContent from '../components/contract/ContractInProgressContent';
-import { IHome, IHomeDetail, IHomeOption, IHostPersonality } from '../interfaces/HomeInterface';
-import '../styles/contract/Contract.css';
-import { IContract, IContractInfo } from '../interfaces/ContractInterface';
-import { IAddress } from '../interfaces/AddressInterface';
-import { customAxios } from '../api/customAxios';
-import { getMemberContract } from '../api/ContractApis';
+import ContractProgressBar from '../../components/contract/ContractProgressBar';
+import Footer from '../../components/footer/Footer';
+import ContractHomeCard from '../../components/contract/ContractHomeCard';
+import ContractCompletedContent from '../../components/contract/ContractCompletedContent';
+import ContractAppliedContent from '../../components/contract/ContractAppliedContent';
+import ContractInProgressContent from '../../components/contract/ContractInProgressContent';
+import { IHome, IHomeDetail, IHomeOption, IHostPersonality } from '../../interfaces/HomeInterface';
+import '../../styles/contract/Contract.css';
+import { IContract, IContractInfo } from '../../interfaces/ContractInterface';
+import { IAddress } from '../../interfaces/AddressInterface';
+import { customAxios } from '../../api/customAxios';
+import { getMemberContract } from '../../api/ContractApis';
 
 const Contract = () => {
   const [contractInfo, setContractInfo] = useState<IContractInfo>();

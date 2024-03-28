@@ -9,7 +9,6 @@ export const createForm = async (homeNo: number) => {
     return response.data.result;
   } catch (e) {
     console.log(e);
-    throw e;
   }
 };
 
@@ -25,7 +24,6 @@ export const applyApproval = async (homeNo: number, memberNo: number) => {
     return response.data.result as IContractForm;
   } catch (e) {
     console.log(e);
-    throw e;
   }
 };
 
@@ -57,6 +55,5 @@ export const getMemberContract = async () => {
   } catch (e) {
     // 학생이 신청한 계약이 없는 경우가 고려되어야 한다. 신청한 계약 없을 경우 계약 없음 페이지 띄워야함
     console.log(e);
-    throw e;
   }
 };
