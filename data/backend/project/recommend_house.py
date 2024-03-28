@@ -37,5 +37,10 @@ def get_most_fit_one():
     print(user_vector)
     item_vectors = np.array([[1, 3, 4], [2, 3, 4], [7, 7, 9]])
 
+    s1 = np.array([1,1,1,0,1])
+    s2 = np.array([1,1,0,1,1])
+    s3 = np.array([1,2,2,0,1])
+
+
 if __name__ == '__main__':
     get_most_fit_one()

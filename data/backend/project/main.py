@@ -416,11 +416,6 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
             host_vector.append(value)
         host_vector=np.array(host_vector)
 
-        print(host_vector)
-        print(member_vector)
-        print('++++++++++++++++++++')
-        print(host_vector.reshape(1,-1))
-        print(member_vector.reshape(1,-1))
         similarity = cosine_similarity(host_vector.reshape(1,-1), member_vector.reshape(1,-1))
         # 끝에다 붙여준다.
         priorities.append([similarity[0][0], item['home_no']])
