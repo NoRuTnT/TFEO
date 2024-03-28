@@ -20,7 +20,7 @@ import numpy as np
 import uvicorn
 import json
 import traceback
-
+import math
 
 app = FastAPI()
 host = 'localhost'
@@ -184,6 +184,9 @@ class Search_Condition(BaseModel): # 검색 조건, 피그마 기반으로 작�
     rent_max: int # 최고 가격
     rent_min: int # 최저 가격
 
+    lat: float # member가 다니는 학교의 위도정보
+    lng: float # member가 다니는 학교의 경도정보
+
 class Home_Option(BaseModel): # 집별 옵션
     home_option_no: int # 식별자
     internet: bool # 인터넷 여부
@@ -275,43 +278,29 @@ def get_recommended_list(home_option: Home_Option, member_personality: Member_Pe
 
     weight = member_personality.host_house_prefer # 0-10사이의 값을 적당하게 mapping
     print(weight)
-    # 1. 입력으로 주어진 좌표 범위 내 주택만 filtering
-
-    # Ex)
-    # filtered = db.home.find({
-    #     "lat": {$gte:30, $lt:70},
-    #     "lng": {$gte:30, $lt:70},
-    # })
-
-    # 2. 필터 column 기준으로 필터링
-    # (이 과정에서 vector cosine 유사도 연산)
-
-    # 3. 추천 알고리즘 기반으로 sorting
-    # 4. 우선순위가 높은 순서대로 json list 반환
 
 
     resp = {}
     return resp
 
 
-@app.post("/testing/test")
+@app.post("/recommend")
 def filter_by_search_condition(search_condition: Search_Condition, member_personality: Optional[Member_Personality]=None):
     ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
     # s_c 가 false 이면 그냥 전부 채택
     # s_c 가 true 이면 s_c가 있는 것만 선택됨
     # -> (~s_c)AND(매물 대상)
 
-    # { $ and: [
-    #     { $ or: [{조건1}, {조건2}]},
-    # { $ or: [{조건3}, {조건4}]}
-    # ]}
-
-    # APT: bool
-    # OPST: bool
-    # VL: bool
-    # JT: bool
-    # DDDGG: bool
-    # OR: bool
+    # 1. 입력으로 주어진 좌표 범위 내 주택만 filtering # 불필요해짐
+    # Ex)
+    # filtered = db.home.find({
+    #     "lat": {$gte:30, $lt:70},
+    #     "lng": {$gte:30, $lt:70},
+    # })
+    # 2. 필터 column 기준으로 필터링
+    # (이 과정에서 vector cosine 유사도 연산)
+    # 3. 추천 알고리즘 기반으로 sorting
+    # 4. 우선순위가 높은 순서대로 json list 반환
 
     building_option_list = []
     if search_condition.APT:
@@ -360,12 +349,20 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
                         'move_in_date': {'$in':move_in_date_list},
                         'type': {'$in':building_option_list},
                          })
+    # 서울대임
+    univ_lat = search_condition.lat
+    univ_lng = search_condition.lng
+    # univ_distance = math.sqrt(univ_lat**2+univ_lng**2)
+
+
 
     print(data)
     data_list = []
     for doc in data:
         doc = dumps(doc)
         doc_json = json.loads(doc)
+        distance = get_min_length(univ_lat, univ_lng, doc_json['lat'], doc_json['lng'])
+        doc_json['distance'] = distance
         data_list.append(doc_json)
     """
     학생성향이 들어오지 않은 경우
@@ -441,26 +438,14 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
         for doc in item:
             doc = dumps(doc)
             item_json = json.loads(doc)
+            distance = get_min_length(univ_lat, univ_lng, item_json['lat'], item_json['lng'])
+            item_json['distance'] = distance
             output_list.append(item_json)
-
-    # for doc in data:
-    #     doc = dumps(doc)
-    #     doc_json = json.loads(doc)
-    #     data_list.append(doc_json)
-
+    # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
     # print(output_list)
     return output_list
     # return data_list
 
-##############################
-# 사용자 맞춤형 추천이 반영된 결과를 반환
-# @app.get("/recommend")
-# def get_recommended_list(search_condition: Search_Condition, member_personality: Member_Personality):
-#
-#     weight = member_personality.host_house_prefer # 0-10사이의 값을 적당하게 mapping
-#     print(weight)
-#     return None
-##############################
 
 # 등록된 아이템 추가
 @app.post("/insert-item/")
@@ -482,37 +467,15 @@ def insert_item(item: Home):
     return "complete"
 
 # 계약이 성사된 집 삭제
-@app.delete("/delete/{host_no}")
-def delete_house(host_no):
-    db.home.delete_one({"home_no": host_no})
-    dicted_item = None
-    # 벡터값 collection에서도 삭제한다.
-    db.host_vector.delete_one({'host_vector_no': host_no})
+# @app.delete("/delete/{home_no}")
+@app.delete("/delete")
+def delete_house(home_no):
+
+    print(home_no)
+
     return "complete"
     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
-
-# # 계약이 성사된 집 삭제
-# @app.delete("/delete/{item_name}")
-# def delete_house(item_name):
-#     db.items.delete_one({"name": item_name})
-#     dicted_item = None
-#     # 벡터값 collection에서도 삭제한다.
-#     db.host_vector.delete_one({})
-#     return "complete"
-#     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
-
-# for test
-@app.get("/select/one/{home_no}")
-def get_one_home(home_no: int, q: Union[Home, None] = None):
-    data = db.home.find({'home_no': home_no})
-    # data = db.home.find({'home_no': 12},{'_id': False})
-    # print(data)
-    # print(list(data)[0])
-
-    # find().limit(7) # 7개로 출력할 횟수 제한
-
-    return data.dict()
-
+# find().limit(7) # 7개로 출력할 횟수 제한
 
 """이미지 URL 테스트 용"""
 @app.get("/select/get-url-list/{home_no}")
@@ -594,6 +557,12 @@ def convert_bool_to_int(bool):
     if(bool==True):
         return 1
     return 0
+
+# 하버사인 공식으로 계산한 결과 반환
+def get_min_length(lat1, lng1, lat2, lng2):
+    return 6371 * math.acos(
+        math.cos(math.radians(lat2)) * math.cos(math.radians(lat1)) * math.cos(math.radians(lng1) - math.radians(lng2))
+        + math.sin(math.radians(lat2)) * math.sin(math.radians(lat1)))
 
 def init():
     print("DB초기설정")
