@@ -19,10 +19,10 @@ services:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mysql:/docker-entrypoint-initdb.d
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MySQL:/app/data
     command:
-      - "--secure-file-priv=''"
       - "mysqld"
       - "--character-set-server=utf8mb4"
       - "--collation-server=utf8mb4_unicode_ci"
+      - "--secure-file-priv=''"
     restart: "no"
 
   tfeo-redis:
