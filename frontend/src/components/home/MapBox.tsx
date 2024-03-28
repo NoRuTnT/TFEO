@@ -149,6 +149,7 @@ export default function MapBox() {
       console.log(markers);
       const clusterer = makeClusterer(newMap);
       clusterer.addMarkers(markers);
+      clusterer.getCount;
       window.kakao.maps.event.addListener(newMap, 'center_changed', updateVisibleHomes);
       window.kakao.maps.event.addListener(newMap, 'zoom_changed', updateVisibleHomes);
       updateVisibleHomes();
