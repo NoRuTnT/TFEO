@@ -23,7 +23,7 @@ import traceback
 import math
 
 app = FastAPI()
-host = 'localhost'
+host = 'https://j10a707.p.ssafy.io/'
 port = 27017
 # db = None
 

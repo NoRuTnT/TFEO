@@ -114,7 +114,7 @@ class Host_Personality(BaseModel):
     no_touch: bool # 간섭안하는
 
 
-host = 'localhost'
+host = 'https://j10a707.p.ssafy.io/'
 port = 27017
 client = MongoClient(host, port)
 db = client.test # home이라는 collection이 들어있는 DB는 test!
