@@ -44,11 +44,12 @@ services:
     container_name: mongo
     ports:
       - 27017:27017
+    environment:
+      - docker-mongodb.env
     volumes:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mongo:/docker-entrypoint-initdb.d
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MongoDB:/data
-    environment:
-      - docker-db.env
+
 
 
 #  tfeo-back:
