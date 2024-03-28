@@ -18,7 +18,7 @@ export default function MapBox() {
     const fetchData = async () => {
       try {
         const requestData = {
-          internet: false,
+          internet: true,
           gas: false,
           washing_machine: false,
           air_conditioner: true,
@@ -38,7 +38,7 @@ export default function MapBox() {
           JT: true,
           DDDGG: true,
           OR: true,
-          rent_max: 100,
+          rent_max: 30,
           rent_min: 0,
         };
         const response = await axios.post('http://localhost:8000/testing/test', requestData);
