@@ -13,4 +13,5 @@ import lombok.Getter;
 public class AppliedHomeResponseDto {
 	private HomeDetailsResponseDto home;
 	private ContractResponseDto contract;
+	private MemberResponseDto member;
 }
