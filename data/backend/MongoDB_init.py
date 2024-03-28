@@ -328,8 +328,7 @@ def init_MongoDB_Naver():
                 # 'home_image_no': json_data['home_image_no'],
                 'home_image_no': picture_index,
                 # 'home_image_url': json_data['home_image_url'],
-                # URL 포맷에 맞게 수정
-                'home_image_url': 'http://{}/{}'.format(idx+1,i), # 'http://' + idx + '/' + i
+                'home_image_url': '/homeImage/{}/{}.jpg'.format(idx%360+1,f"{i:02}"), # 'http://' + idx + '/' + i
                 }
                 image_list.append(new_row)
                 picture_index+=1
@@ -339,7 +338,7 @@ def init_MongoDB_Naver():
 
             # 호스트 사진
             json_data['host_image_no'] = idx+1
-            json_data['host_image_url'] = 'host_image_url'
+            json_data['host_image_url'] = '/hostImage/{}.jpg'.format(idx%120+1) # 'host_image_url'
 
             new_row = {
                 'host_image_no': json_data['host_image_no'],
