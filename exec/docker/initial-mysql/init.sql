@@ -16,7 +16,7 @@ FLUSH PRIVILEGES;
 
 -- create schema
 
-
+USE tfeo_temp;
 create table activity (
       activity_no bigint not null auto_increment,
       activity_image_url varchar(255),
