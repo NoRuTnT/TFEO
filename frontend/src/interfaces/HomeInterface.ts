@@ -50,6 +50,7 @@ export interface IHomeOption {
   moveInDate: boolean;
   sink: boolean;
   type: string; // 아파트 or 오피스텔 or 빌라 or 주택 or 단독/다가구
+  [key: string]: number | boolean | string;
 }
 
 export interface IHomeDetail {
