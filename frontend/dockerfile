@@ -18,4 +18,4 @@ RUN yarn install
 # RUN npm i -g @quasar/cli
 
 CMD [ "yarn", "start"]
-EXPOSE 80
+EXPOSE 3000
