@@ -12,4 +12,5 @@ db.createUser({
 });
 EOF
 
+
 mongoimport --username tfeo --password tfeo123 --authenticationDatabase admin --db test --collection home --type csv --file /merged_data.csv --headerline
