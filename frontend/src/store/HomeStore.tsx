@@ -44,6 +44,8 @@ type SearchCondition = {
   OR: boolean;
   rent_max: number;
   rent_min: number;
+  lat: number;
+  lng: number;
 };
 
 type MemberPersonality = {
@@ -204,20 +206,22 @@ const initialHomeRequestDataState: HomeRequestDataState = {
     elevator: true,
     microwave: true,
     toilet: true,
-    breakfast: false,
+    breakfast: true,
     heating: true,
-    parking: false,
-    station: false,
-    move_in_date: false,
+    parking: true,
+    station: true,
+    move_in_date: true,
     sink: true,
     APT: true,
     OPST: true,
     VL: true,
     JT: true,
     DDDGG: true,
-    OR: false,
+    OR: true,
     rent_max: 100,
     rent_min: 0,
+    lat: 37.609641,
+    lng: 126.997697,
   },
   member_personality: {
     member_personality_no: 1,

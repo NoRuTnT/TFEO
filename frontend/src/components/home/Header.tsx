@@ -129,7 +129,6 @@ const Header: React.FC = () => {
       console.log('homes', visibleHomes);
     }
   };
-
   return (
     <header>
       <div className="criteria-container">
