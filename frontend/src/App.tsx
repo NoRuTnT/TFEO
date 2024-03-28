@@ -16,6 +16,7 @@ import ContractTest from './components/contract/ContractTest';
 import { IHomeDetail } from './interfaces/HomeInterface';
 import HomeDetail from './pages/HomeDetail';
 import LoginPage from './pages/Login';
+import WishList from './pages/WishList';
 
 function App() {
   return (
