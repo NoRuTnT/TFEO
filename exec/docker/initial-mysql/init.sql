@@ -286,7 +286,7 @@ IGNORE 1 ROWS;
 
 
 LOAD DATA INFILE '/etc/csv/host_personality.csv'
-INTO TABLE home_personality
+INTO TABLE host_personality
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
