@@ -281,28 +281,32 @@ INTO TABLE home
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+(home_no,host_name,host_age,host_phone,host_gender,guardian_name,guardian_phone,relation,host_register_no,host_account_no,host_bank,rent,lat,lng,introduce,host_personality_no,home_option_no,si,sgg,emd,ro);
 
 LOAD DATA INFILE '/etc/csv/home_image.csv'
 INTO TABLE home_image
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+(home_image_no,home_image_url,home_no);
 
 LOAD DATA INFILE '/etc/csv/home_option.csv'
 INTO TABLE home_option
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+(home_option_no,internet,gas,washing_machine,air_conditioner,refrigerator,elevator,microwave,breakfast,toilet,heating,parking,station,move_in_date,sink,type);
 
 LOAD DATA INFILE '/etc/csv/host_image.csv'
 INTO TABLE host_image
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
+(host_image_no,home_no,host_image_url);
 
 LOAD DATA INFILE '/etc/csv/host_personality.csv'
 INTO TABLE home_personality
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
-
+(host_personality_no,smoke,pet,clean,daytime,nighttime,extrovert,introvert,cold,hot,no_touch);
