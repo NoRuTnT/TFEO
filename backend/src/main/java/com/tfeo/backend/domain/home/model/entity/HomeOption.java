@@ -3,6 +3,8 @@ package com.tfeo.backend.domain.home.model.entity;
 import static lombok.AccessLevel.*;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -55,6 +57,7 @@ public class HomeOption {
 
 	private Integer sink;
 
+	@Enumerated(value = EnumType.STRING)
 	private BuildingType type;
 
 	public void update(HomeOptionDto homeOptionDto) {
