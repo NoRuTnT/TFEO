@@ -16,7 +16,7 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
         {/*집주인의 사진을 보여줄 캐러셀*/}
         <div className="carousel-container-left">
           <div className="slide-left">
-            <img src={home.host_image} alt={`Owner `} />
+            <img src={`http://j10a707.p.ssafy.io${home.host_image_url}`} alt={`Owner `} />
           </div>
           host
         </div>
@@ -25,7 +25,7 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
           <Slider {...settings}>
             {home.home_image.map((img: any, index: number) => (
               <div key={index} className="slide-right">
-                <img src={img.home_image_url} alt={`Home ${index + 1}`} />
+                <img src={`http://j10a707.p.ssafy.io${img.home_image_url}`} alt={`Home ${index + 1}`} />
               </div>
             ))}
           </Slider>
