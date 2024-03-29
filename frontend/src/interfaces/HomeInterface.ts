@@ -57,6 +57,15 @@ export interface IHomeDetail {
   home: IHome;
   homeOption: IHomeOption;
   hostPersonality: IHostPersonality;
-  homeImageList: string[];
-  hostImageList: string[];
+  homeImageList: IHomeImage[];
+  hostImageList: IHostImage[];
+}
+
+export interface IHomeImage {
+  homeImageNo: number;
+  homeImageUrl: string;
+}
+export interface IHostImage {
+  hostImageNo: number;
+  hostImageUrl: string;
 }
