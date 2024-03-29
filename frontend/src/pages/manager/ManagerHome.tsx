@@ -10,6 +10,10 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import StarIcon from '@mui/icons-material/Star';
 import CancelIcon from '@mui/icons-material/Cancel';
+
+import AddHomeIcon from '@mui/icons-material/AddHome';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+
 const ActivityContent: React.FC = () => {
   return (
     <div className="page-wrapper" style={{ border: '1px solid black', margin: '0px', padding: '0px' }}>
@@ -17,22 +21,33 @@ const ActivityContent: React.FC = () => {
         <h1>스물다섯 여든하나</h1>
         <h1>관리자 페이지</h1>
       </div>
-      <div className="status-container">
-        <div></div>
+      <div className="status-container" style={{ height: '200px' }}>
+        <p>2024.03.25</p>
+        <div className="status-box" style={{ borderRadius: '20px', backgroundColor: '#EEEEEE', height: '80%' }}>
+          <div className="status-info">
+            <div>
+              <p>전체 학생</p>
+              <p>100건</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="list-info">
-        <div>
-          <p>신규 등록 학생 10 건</p>
-        </div>
-        <div>
-          <p>신규 집 등록 10 건</p>
-        </div>
-        <div>
-          <p>올리 사랑 인증</p>
-        </div>
-        <div>
-          <p>계약 승인 대기</p>
-        </div>
+      <hr />
+      <div className="list-info" style={{ height: '300px' }}>
+        <ul>
+          <li>
+            <div className="list-component">신규 등록 학생 10건</div>
+          </li>
+          <li>
+            <div className="list-component">신규 집 등록 10건</div>
+          </li>
+          <li>
+            <div className="list-component">올리 사랑 인증 10건</div>
+          </li>
+          <li>
+            <div className="list-component">계약 승인 대기 10건</div>
+          </li>
+        </ul>
       </div>
     </div>
   );
