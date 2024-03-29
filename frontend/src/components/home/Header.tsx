@@ -32,6 +32,7 @@ const Header: React.FC = () => {
     member_personality,
     setIsMapLoaded,
     setHomes,
+    setSearchCondition,
   } = useHomeStore();
 
   useEffect(() => {
@@ -116,7 +117,6 @@ const Header: React.FC = () => {
           member_personality: member_personality,
         };
         // http://j10a707.p.ssafy.io:8000/recommend
-        member_personality;
         const response = await RecommendAxios.post('/recommend', requestData);
         console.log(response.data);
         setHomes(response.data); // 상태 업데이트
@@ -132,29 +132,58 @@ const Header: React.FC = () => {
     if (filterKey == 'school') {
       selectFilter({ school: !school });
       // 학교 근처 필터링
-      const homeBySchool = visibleHomes.filter((home) => home.distance < 3);
-      setVisibleHomes(homeBySchool);
-      console.log('학교 근처 필터링', homeBySchool);
+      // const homeBySchool = visibleHomes.filter((home) => home.distance < 5);
+      // setVisibleHomes(homeBySchool);
+      // console.log('학교 근처 필터링', homeBySchool);
     } else if (filterKey == 'subway') {
       selectFilter({ subway: !subway });
       // 역세권 필터링
-      const homesByStation = visibleHomes.filter((home) => home.station === 1);
-      setVisibleHomes(homesByStation);
-      console.log('역세권 필터링', homesByStation);
-      console.log('homes', visibleHomes);
+      // const homesByStation = visibleHomes.filter((home) => home.station === 1);
+      // setVisibleHomes(homesByStation);
+      toggleOption('station');
     } else if (filterKey == 'apartment') {
       selectFilter({ apartment: !apartment });
-      const homesByType = visibleHomes.filter((home) => home.type === 'APT');
-      setVisibleHomes(homesByType);
-      console.log('아파트 필터링', homesByType);
-      console.log('homes', visibleHomes);
+      // const homesByType = visibleHomes.filter((home) => home.type === 'APT');
+      // setVisibleHomes(homesByType);
+      // console.log('아파트 필터링', homesByType);
+      // console.log('homes', visibleHomes);
     } else if (filterKey == 'pets') {
       selectFilter({ pets: !pets });
-      const homesByPet = visibleHomes.filter((home) => home.pet === 1);
-      setVisibleHomes(homesByPet);
-      console.log('반려동물 필터링', homesByPet);
-      console.log('homes', visibleHomes);
+      // const homesByPet = visibleHomes.filter((home) => home.pet === 1);
+      // setVisibleHomes(homesByPet);
+      // console.log('반려동물 필터링', homesByPet);
+      // console.log('homes', visibleHomes);
     }
+  };
+
+  const searchFilterClick = () => {
+    setModalOpen(true);
+    setSearchCondition({
+      internet: false,
+      gas: false,
+      washing_machine: false,
+      air_conditioner: false,
+      refrigerator: false,
+      elevator: false,
+      microwave: false,
+      toilet: false,
+      breakfast: false,
+      heating: false,
+      parking: false,
+      station: false,
+      move_in_date: false,
+      sink: false,
+      APT: false,
+      OPST: false,
+      VL: false,
+      JT: false,
+      DDDGG: false,
+      OR: false,
+      rent_max: 100,
+      rent_min: 0,
+      lat: 37.609641,
+      lng: 126.997697,
+    });
   };
 
   return (
@@ -185,11 +214,7 @@ const Header: React.FC = () => {
           </span>
         </div>
         <div className="circle-border">
-          <TuneIcon
-            onClick={() => setModalOpen(true)}
-            fontSize="medium"
-            style={{ color: '#A0A0A0', cursor: 'pointer' }}
-          />
+          <TuneIcon onClick={searchFilterClick} fontSize="medium" style={{ color: '#A0A0A0', cursor: 'pointer' }} />
         </div>
         {modalOpen && (
           <ModalContainer>

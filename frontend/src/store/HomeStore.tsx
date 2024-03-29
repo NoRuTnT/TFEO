@@ -144,7 +144,7 @@ type Home = {
   home_image_no: number;
   home_image: HomeImage[];
   host_image_no: number;
-  host_image: string;
+  host_image_url: string;
   host_vector: HostVector;
   distance: number;
 };
@@ -154,10 +154,12 @@ interface HomeListState {
   homes: Home[];
   isMapLoaded: boolean; // 지도 로드 상태 추가
   headerFilterChanged: boolean; // 헤더 필터 상태 추가
+  searchFilterChanged: boolean; // 모달 필터 상태 추가 (확인 눌렀을 때 바뀜)
   selectedHomeNo: number | null; // 선택된 집의 ID (선택되지 않았을 경우 null)
   selectHome: (homeNo: number) => void;
   setIsMapLoaded: (isLoaded: boolean) => void;
   setHeaderFilterChanged: (isChanged: boolean) => void;
+  setSearchFilterChanged: (isChanged: boolean) => void;
   setHomes: (newHomes: any[]) => void;
 }
 
@@ -210,10 +212,12 @@ const initialListState: HomeListState = {
   isMapLoaded: false, // 지도 로드 상태 추가
   selectedHomeNo: null,
   headerFilterChanged: false, // 헤더 필터 상태 추가
+  searchFilterChanged: false, // 모달 필터 상태 추가 (확인 누를 때 변하게 할거임)
   selectHome: (homeNo: number) => {},
   setIsMapLoaded: (isLoaded: boolean) => {},
   setHeaderFilterChanged: (isChanged: boolean) => {},
   setHomes: (newHomes: any[]) => {},
+  setSearchFilterChanged: (isChanged: boolean) => {},
 };
 
 const initialHomeRequestDataState: HomeRequestDataState = {
@@ -234,7 +238,7 @@ const initialHomeRequestDataState: HomeRequestDataState = {
     sink: false,
     APT: false,
     OPST: false,
-    VL: false,
+    VL: true,
     JT: false,
     DDDGG: false,
     OR: false,
@@ -292,14 +296,13 @@ export const useHomeStore = create<HomeFilterState & HomeRequestDataState & Home
       set((state) => {
         // 타입 토글
         const newTypes = state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type));
-
+        // searchCondition 업데이트
         const newSearchCondition = {
           ...state.search_condition,
           [value]: !state.search_condition[value as keyof SearchCondition],
         };
         return { ...state, types: newTypes, search_condition: newSearchCondition };
       }),
-
     setIsMapLoaded: (isLoaded: boolean) => set({ isMapLoaded: isLoaded }), // 지도 로드 상태 업데이트 함수 추가
     setHeaderFilterChanged: (isChanged: boolean) => set({ headerFilterChanged: isChanged }),
     setHomes: (newHomes: any[]) => set((state) => ({ ...state, homes: newHomes })),
