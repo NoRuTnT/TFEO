@@ -3,8 +3,8 @@ CREATE USER 'tfeo'@'%' IDENTIFIED BY 'tfeo123';
 GRANT CREATE ON *.* TO 'tfeo'@'%';
 
 CREATE DATABASE IF NOT EXISTS tfeo;
-CREATE DATABASE IF NOT EXISTS tfeo_test;
-CREATE DATABASE IF NOT EXISTS tfeo_temp;
+CREATE DATABASE IF NOT EXISTS tfeo_test CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS tfeo_temp CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 
 GRANT ALL PRIVILEGES ON `tfeo`.* TO 'tfeo'@'%';
@@ -27,7 +27,7 @@ create table activity (
       week varchar(255),
       contract_no bigint,
       primary key (activity_no)
-) engine=InnoDB;
+) engine=InnoDB CHARACTER SET utf8mb4;
 
 create table contract (
       contract_no bigint not null auto_increment,
@@ -41,7 +41,7 @@ create table contract (
       home_no bigint,
       member_no bigint,
       primary key (contract_no)
-) engine=InnoDB;
+) engine=InnoDB CHARACTER SET utf8mb4;
 
 create table home (
       home_no bigint not null auto_increment,
@@ -68,7 +68,7 @@ create table home (
       ro varchar(255),
       register_member_role varchar(255),
       primary key (home_no)
-) engine=InnoDB;
+) engine=InnoDB CHARACTER SET utf8mb4;
 
 create table home_image (
         home_image_no bigint not null auto_increment,
@@ -95,7 +95,7 @@ create table home_option (
      sink INTEGER,
      type VARCHAR(255),
      primary key (home_option_no)
-) engine=InnoDB;
+) engine=InnoDB CHARACTER SET utf8mb4;
 
 create table host_image (
         host_image_no bigint not null auto_increment,
@@ -117,7 +117,7 @@ create table host_personality (
       hot Integer,
       no_touch Integer,
       primary key (host_personality_no)
-) engine=InnoDB;
+) engine=InnoDB CHARACTER SET utf8mb4;
 
 create table member (
         member_no bigint not null auto_increment,
@@ -147,7 +147,7 @@ create table member (
         wake_at time,
         member_personality_no bigint,
         primary key (member_no)
-) engine=InnoDB;
+) engine=InnoDB CHARACTER SET utf8mb4;
 
 create table member_personality (
         member_personality_no bigint not null auto_increment,
@@ -172,7 +172,7 @@ create table member_personality (
         smoke INTEGER,
         strong INTEGER,
         primary key (member_personality_no)
-) engine=InnoDB;
+) engine=InnoDB CHARACTER SET utf8mb4;
 
 create table review (
         review_no bigint not null auto_increment,
