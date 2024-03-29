@@ -53,7 +53,7 @@ create table home (
       guardian_name varchar(255),
       guardian_phone varchar(255),
       host_account_no varchar(255),
-      host_age integer not null,
+      host_age integer,
       host_bank varchar(255),
       host_gender varchar(255),
       host_name varchar(255),
@@ -64,7 +64,7 @@ create table home (
       lng double precision,
       register_member_role varchar(255),
       relation varchar(255),
-      rent integer not null,
+      rent integer,
       home_option_no bigint,
       host_personality_no bigint,
       primary key (home_no)
