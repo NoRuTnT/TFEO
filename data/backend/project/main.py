@@ -363,6 +363,7 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
     for doc in data:
         doc = dumps(doc)
         doc_json = json.loads(doc)
+        print(doc_json)
         distance = get_min_length(univ_lat, univ_lng, doc_json['lat'], doc_json['lng'])
         doc_json['distance'] = distance
         data_list.append(doc_json)
