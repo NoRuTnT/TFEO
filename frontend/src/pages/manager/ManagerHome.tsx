@@ -17,6 +17,7 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import AddHomeIcon from '@mui/icons-material/AddHome';
 
 // 관리자 - 학생 정보 관리
+
 const ActivityContent: React.FC = () => {
   return (
     <div className="page-wrapper" style={{ border: '1px solid black', margin: '0px', padding: '0px' }}>
