@@ -26,25 +26,25 @@ public class HostPersonality {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long hostPersonalityNo;
 
-	private Boolean smoke;
+	private Integer smoke;
 
-	private Boolean pet;
+	private Integer pet;
 
-	private Boolean clean;
+	private Integer clean;
 
-	private Boolean daytime;
+	private Integer daytime;
 
-	private Boolean nighttime;
+	private Integer nighttime;
 
-	private Boolean extrovert;
+	private Integer extrovert;
 
-	private Boolean introvert;
+	private Integer introvert;
 
-	private Boolean cold;
+	private Integer cold;
 
-	private Boolean hot;
+	private Integer hot;
 
-	private Boolean noTouch;
+	private Integer noTouch;
 
 	public void update(HostPersonalityDto hostPersonalityDto) {
 		this.smoke = hostPersonalityDto.getSmoke();

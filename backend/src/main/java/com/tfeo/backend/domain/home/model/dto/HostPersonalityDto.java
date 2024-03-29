@@ -11,16 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class HostPersonalityDto {
 	private Long hostPersonalityNo;
-	private Boolean smoke;
-	private Boolean pet;
-	private Boolean clean;
-	private Boolean extrovert;
-	private Boolean daytime;
-	private Boolean nighttime;
-	private Boolean introvert;
-	private Boolean cold;
-	private Boolean hot;
-	private Boolean noTouch;
+	private Integer smoke;
+	private Integer pet;
+	private Integer clean;
+	private Integer extrovert;
+	private Integer daytime;
+	private Integer nighttime;
+	private Integer introvert;
+	private Integer cold;
+	private Integer hot;
+	private Integer noTouch;
 
 	public HostPersonalityDto(HostPersonality hostPersonality) {
 		this.hostPersonalityNo = hostPersonality.getHostPersonalityNo();

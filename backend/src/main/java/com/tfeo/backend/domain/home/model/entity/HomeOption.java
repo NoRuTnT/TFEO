@@ -27,33 +27,33 @@ public class HomeOption {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long homeOptionNo;
 
-	private int internet;
+	private Integer internet;
 
-	private int gas;
+	private Integer gas;
 
-	private int washingMachine;
+	private Integer washingMachine;
 
-	private int airConditioner;
+	private Integer airConditioner;
 
-	private int refrigerator;
+	private Integer refrigerator;
 
-	private int elevator;
+	private Integer elevator;
 
-	private int microwave;
+	private Integer microwave;
 
-	private int breakfast;
+	private Integer breakfast;
 
-	private int toilet;
+	private Integer toilet;
 
-	private int heating;
+	private Integer heating;
 
-	private int parking;
+	private Integer parking;
 
-	private int station;
+	private Integer station;
 
-	private int moveInDate;
+	private Integer moveInDate;
 
-	private int sink;
+	private Integer sink;
 
 	private BuildingType type;
 
