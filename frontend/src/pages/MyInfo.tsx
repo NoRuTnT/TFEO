@@ -1,32 +1,89 @@
-import React, { useState } from 'react';
-import Footer from '../components/footer/Footer';
-import '../styles/MyInfo.css';
-import { Button, Box, Avatar } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button, Avatar } from '@mui/material';
 import { useMemberStore } from '../store/MemberStore';
-import axios from 'axios';
+import Footer from '../components/footer/Footer';
+import { getMember, modifyMember } from '../api/MemberApis';
 
 const MyInfo: React.FC = () => {
-  const [profileImage, setProfileImage] = useState('/test/profile.png');
+  const [isEditing, setIsEditing] = useState(false);
+  const { setMemberState, setAddressState, MemberInfo, AddressInfo } = useMemberStore();
+  const [newMemberInfo, setNewMemberInfo] = useState({
+    memberNo: MemberInfo.memberNo,
+    socialId: MemberInfo.socialId,
+    socialType: MemberInfo.socialType,
+    role: MemberInfo.role,
+    name: MemberInfo.name,
+    phone: MemberInfo.phone,
+    email: MemberInfo.email,
+    registerNo: MemberInfo.registerNo,
+    college: MemberInfo.college,
+    lat: MemberInfo.lat,
+    lng: MemberInfo.lng,
+    address: MemberInfo.address,
+    profileUrl: MemberInfo.profileUrl,
+    gender: MemberInfo.gender,
+    certificate: MemberInfo.certificate,
+    memberPersonalityNo: MemberInfo.memberPersonalityNo,
+    certificateStatus: MemberInfo.certificateStatus,
+    certificateRegisterDate: MemberInfo.certificateRegisterDate,
+    certificateExpirationDate: MemberInfo.certificateExpirationDate,
+    sleepAt: MemberInfo.sleepAt,
+    wakeAt: MemberInfo.wakeAt,
+    returnAt: MemberInfo.returnAt,
+    memberPersonality: MemberInfo.memberPersonality,
+  });
 
-  const { setAddressState, setMemberState } = useMemberStore();
-  const { name, gender, college, phone, email, register_no, certificate, certificate_expiration_date, address } =
-    useMemberStore();
-
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // 프로필 업로드
+  const [profileImage, setProfileImage] = useState(newMemberInfo.profileUrl);
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setProfileImage(URL.createObjectURL(event.target.files[0]));
     }
   };
 
-  const data = [
-    { type: '이름', value: name },
-    { type: '성별', value: gender },
-    { type: '대학교', value: college },
-    { type: '전화번호', value: phone },
-    { type: '이메일', value: email },
-    { type: '주민등록번호', value: register_no },
-    { type: '주소', value: address.si + ' ' + address.sgg + ' ' + address.ro + ' ' + address.detail },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getMember();
+      if (response != undefined) {
+        setMemberState(response);
+        setNewMemberInfo(response);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleEdit = () => {
+    setIsEditing(!isEditing);
+  };
+
+  const handleMemberChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { id, value } = event.target;
+    setNewMemberInfo({
+      ...newMemberInfo,
+      [id]: value,
+    });
+  };
+
+  const saveChanges = async () => {
+    setIsEditing(false);
+    await modifyMember(
+      newMemberInfo.name,
+      newMemberInfo.phone,
+      newMemberInfo.email,
+      newMemberInfo.registerNo,
+      newMemberInfo.address,
+      false,
+      false,
+    );
+  };
+
+  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setAddressState({
+      ...AddressInfo,
+      [name]: value,
+    });
+  };
 
   return (
     <div
@@ -39,42 +96,97 @@ const MyInfo: React.FC = () => {
         </label>
         <input type="file" id="image-upload" style={{ display: 'none' }} onChange={handleImageUpload} />
       </div>
+
       <div>
-        {data.map((item, index) => (
-          <React.Fragment key={index}>
-            <span>{item.type}</span>
-            <Box
-              height={20}
-              width={300}
-              my={1}
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              gap={4}
-              p={2}
-              sx={{ border: '1px solid #79747E', borderRadius: '5px' }}
-            >
-              {item.value}
-            </Box>
-          </React.Fragment>
-        ))}
-        <br />
+        <div>
+          <span>이름</span>
+          <br />
+          <textarea
+            id="name"
+            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            defaultValue={MemberInfo.name}
+            readOnly
+          />
+          <br />
+          <span>대학교</span>
+          <br />
+          <textarea
+            id="college"
+            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            defaultValue={MemberInfo.college}
+            readOnly
+          />
+          <br />
+          <span>이메일</span>
+          <br />
+          <textarea
+            id="email"
+            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            defaultValue={MemberInfo.email}
+            readOnly
+          />
+          <br />
+          <span>전화번호</span>
+          <br />
+          <textarea
+            className={isEditing ? 'textarea-editing' : ''}
+            id="phone"
+            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            defaultValue={MemberInfo.phone}
+            onChange={handleMemberChange}
+            readOnly={!isEditing}
+          />
+          <br />
+          <span>주민등록번호</span>
+          <br />
+          <textarea
+            className={isEditing ? 'textarea-editing' : ''}
+            id="registerNo"
+            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            defaultValue={MemberInfo.registerNo}
+            onChange={handleMemberChange}
+            readOnly={!isEditing}
+          />
+          <br />
+          <span>주소</span>
+          <br />
+          <textarea
+            className={isEditing ? 'textarea-editing' : ''}
+            id="address"
+            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            defaultValue={`${MemberInfo.address.si} ${MemberInfo.address.sgg} ${MemberInfo.address.ro}`}
+            onChange={handleAddressChange}
+            readOnly={!isEditing}
+          />
+          <br />
+          <span>상세 주소</span>
+          <textarea
+            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            defaultValue={MemberInfo.address.detail}
+            onChange={handleAddressChange}
+            readOnly={!isEditing}
+          />
+        </div>
         <span>재학증명서</span>{' '}
-        {certificate === 'CERTIFICATED' && (
+        {MemberInfo.certificate === 'CERTIFICATED' && (
           <>
-            <span>재학증명서</span>{' '}
-            <Button variant="outlined" onClick={() => null}>
+            <button style={{ border: '1px solid black ', borderRadius: '5px' }} onClick={() => null}>
               다운로드
-            </Button>{' '}
-            <span>{certificate_expiration_date} 만료</span>
+            </button>{' '}
+            <span>{MemberInfo.certificateExpirationDate} 만료</span>
           </>
         )}
+        <br />
+        {isEditing ? (
+          <Button variant="outlined" onClick={saveChanges}>
+            저장하기
+          </Button>
+        ) : (
+          <Button variant="outlined" onClick={handleEdit}>
+            수정하기
+          </Button>
+        )}
       </div>
-      <br />
-      <Button variant="outlined">수정하기</Button>
-      <br />
-      <br />
-      <br />
       <Footer />
     </div>
   );

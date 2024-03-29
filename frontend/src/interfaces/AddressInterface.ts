@@ -1,3 +1,36 @@
+export interface IAddressSearchResponse {
+  errorCode: string;
+  errorMessage: string;
+  juso: IAddressItem[];
+}
+
+export interface IAddressItem {
+  roadAddr: string;
+  roadAddrPart1: string;
+  roadAddrPart2: string;
+  jibunAddr: string;
+  engAddr: string;
+  zipNo: string;
+  admCd: string;
+  rnMgtSn: string;
+  bdMgtSn: string;
+  detBdNmList: string;
+  bdNm: string;
+  bdKdcd: string;
+  siNm: string;
+  sggNm: string;
+  emdNm: string;
+  liNm: string;
+  rn: string;
+  udrtYn: string;
+  buldMnnm: string;
+  buldSlno: string;
+  mtYn: string;
+  lnbrMnnm: string;
+  lnbrSlno: string;
+  emdNo: string;
+}
+
 export interface IAddress {
   si: string; // 시도 (ex. 서울특별시)
   sgg: string; // 시군구 (ex. 강남구)
