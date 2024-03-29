@@ -12,20 +12,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class HomeOptionDto {
 	private Long homeOptionNo;
-	private Boolean internet;
-	private Boolean gas;
-	private Boolean airConditioner;
-	private Boolean washingMachine;
-	private Boolean refrigerator;
-	private Boolean elevator;
-	private Boolean microwave;
-	private Boolean breakfast;
-	private Boolean toilet;
-	private Boolean heating;
-	private Boolean parking;
-	private Boolean station;
-	private Boolean moveInDate;
-	private Boolean sink;
+	private Integer internet;
+	private Integer gas;
+	private Integer airConditioner;
+	private Integer washingMachine;
+	private Integer refrigerator;
+	private Integer elevator;
+	private Integer microwave;
+	private Integer breakfast;
+	private Integer toilet;
+	private Integer heating;
+	private Integer parking;
+	private Integer station;
+	private Integer moveInDate;
+	private Integer sink;
 	private BuildingType type;
 
 	public HomeOptionDto(HomeOption homeOption) {

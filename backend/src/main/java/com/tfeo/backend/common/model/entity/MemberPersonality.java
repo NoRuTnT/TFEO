@@ -24,43 +24,43 @@ public class MemberPersonality {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long memberPersonalityNo;
 
-	private Boolean daytime;
+	private Integer daytime;
 
-	private Boolean nighttime;
+	private Integer nighttime;
 
-	private Boolean fast;
+	private Integer fast;
 
-	private Boolean late;
+	private Integer late;
 
-	private Boolean dinner;
+	private Integer dinner;
 
-	private Boolean smoke;
+	private Integer smoke;
 
-	private Boolean drink;
+	private Integer drink;
 
-	private Boolean outside;
+	private Integer outside;
 
-	private Boolean inside;
+	private Integer inside;
 
-	private Boolean quiet;
+	private Integer quiet;
 
-	private Boolean electronics;
+	private Integer electronics;
 
-	private Boolean strong;
+	private Integer strong;
 
-	private Boolean housework;
+	private Integer housework;
 
-	private Boolean errand;
+	private Integer errand;
 
-	private Boolean liveLong;
+	private Integer liveLong;
 
-	private Boolean liveShort;
+	private Integer liveShort;
 
-	private Boolean pet;
+	private Integer pet;
 
-	private Boolean cold;
+	private Integer cold;
 
-	private Boolean hot;
+	private Integer hot;
 
 	private Integer hostHousePrefer;
 

@@ -7,25 +7,25 @@ import lombok.Getter;
 @Getter
 public class MemberPersonalityDto {
 	private final Long memberPersonalityNo;
-	private final Boolean daytime;
-	private final Boolean nighttime;
-	private final Boolean fast;
-	private final Boolean late;
-	private final Boolean dinner;
-	private final Boolean smoke;
-	private final Boolean drink;
-	private final Boolean outside;
-	private final Boolean inside;
-	private final Boolean quiet;
-	private final Boolean electronics;
-	private final Boolean strong;
-	private final Boolean housework;
-	private final Boolean errand;
-	private final Boolean liveLong;
-	private final Boolean liveShort;
-	private final Boolean pet;
-	private final Boolean cold;
-	private final Boolean hot;
+	private final Integer daytime;
+	private final Integer nighttime;
+	private final Integer fast;
+	private final Integer late;
+	private final Integer dinner;
+	private final Integer smoke;
+	private final Integer drink;
+	private final Integer outside;
+	private final Integer inside;
+	private final Integer quiet;
+	private final Integer electronics;
+	private final Integer strong;
+	private final Integer housework;
+	private final Integer errand;
+	private final Integer liveLong;
+	private final Integer liveShort;
+	private final Integer pet;
+	private final Integer cold;
+	private final Integer hot;
 	private final Integer hostHousePrefer;
 
 	MemberPersonalityDto(MemberPersonality memberPersonality) {
