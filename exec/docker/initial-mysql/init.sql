@@ -276,7 +276,6 @@ alter table wish
             references member (member_no);
 
 
-
 LOAD DATA INFILE '/etc/csv/home_option.csv'
 INTO TABLE home_option
 FIELDS TERMINATED BY ','
