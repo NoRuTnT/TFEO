@@ -5,26 +5,26 @@ networks:
 
 
 services:
-  tfeo-mysql:
-    container_name: "mysql"
-    image: mysql:8.0.32
-    networks:
-      - tfeo-network
-    ports:
-      - "3306:3306"
-    env_file:
-      - docker-db.env
-    environment:
-      TZ: Asia/Seoul
-    volumes:
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mysql:/docker-entrypoint-initdb.d
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MySQL:/etc/csv
-    command:
-      - "mysqld"
-      - "--character-set-server=utf8mb4"
-      - "--collation-server=utf8mb4_unicode_ci"
-      - "--secure-file-priv="
-    restart: "no"
+#  tfeo-mysql:
+#    container_name: "mysql"
+#    image: mysql:8.0.32
+#    networks:
+#      - tfeo-network
+#    ports:
+#      - "3306:3306"
+#    env_file:
+#      - docker-db.env
+#    environment:
+#      TZ: Asia/Seoul
+#    volumes:
+#      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mysql:/docker-entrypoint-initdb.d
+#      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MySQL:/etc/csv
+#    command:
+#      - "mysqld"
+#      - "--character-set-server=utf8mb4"
+#      - "--collation-server=utf8mb4_unicode_ci"
+#      - "--secure-file-priv="
+#    restart: "no"
 
   tfeo-redis:
     container_name: "redis"
