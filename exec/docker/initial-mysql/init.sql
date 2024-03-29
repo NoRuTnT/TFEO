@@ -281,7 +281,7 @@ INTO TABLE home
 FIELDS TERMINATED BY ','
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS;
-(home_no,host_name,host_age,host_phone,host_gender,guardian_name,guardian_phone,relation,host_register_no,host_account_no,host_bank,rent,lat,lng,introduce,host_personality_no,home_option_no,si,sgg,emd,ro);
+(home_no,host_name,host_age,host_phone,host_gender,guardian_name,guardian_phone,relation,host_register_no,host_account_no,host_bank,rent,lat,lng,introduce,host_personality_no,home_option_no,si,sgg,emd,ro,detail);
 
 LOAD DATA INFILE '/etc/csv/home_image.csv'
 INTO TABLE home_image
