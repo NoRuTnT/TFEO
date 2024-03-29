@@ -16,6 +16,7 @@ import ContractApplyButton from './components/contract/ContractApplyButton';
 import HomeDetail from './pages/HomeDetail';
 import LoginPage from './pages/Login';
 import WishList from './pages/WishList';
+import ManageStudent from './pages/ManageStudent';
 import HomeSmallDetail from './pages/HomeSmallDetail';
 
 import ManagerHome from './pages/manager/ManagerHome';
@@ -44,6 +45,7 @@ function App() {
           <Route path="/home-small-detail" element={<HomeSmallDetail />} />
           {/* 관리자 페이지 추가 */}
           <Route path="/manager-home" element={<ManagerHome />} />
+          <Route path="/manage-student" element={<ManageStudent />} />
         </Routes>
       </Router>
     </div>
