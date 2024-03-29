@@ -24,41 +24,44 @@ export default function MapBox() {
     headerFilterChanged,
   } = useHomeStore();
 
+  // MapBox.tsx 마운트 시 최초 1회 fetch (집 리스트)
   useEffect(() => {
     // Axios 요청으로 homes 상태 업데이트
     const fetchData = async () => {
       try {
-        // 성향 반영 추천 api
         const requestData = {
           search_condition: search_condition,
           member_personality: member_personality,
         };
-        // http://j10a707.p.ssafy.io:8000/recommend
-        console.log(requestData);
         const response = await RecommendAxios.post('/recommend', requestData);
         console.log(response.data);
-        setHomes(response.data); // 상태 업데이트
-        setIsMapLoaded(true); // 지도 로드 플래그 설정
+        // response를 homes 배열로 설정한다.
+        setHomes(response.data);
+        // homes를 기반으로 지도가 로드될 수 있도록 지도 로드 플래그 설정
+        setIsMapLoaded(true);
       } catch (error) {
         console.error('집 리스트를 가져오는 데 실패했습니다 : ', error);
       }
     };
-
     fetchData();
   }, []);
 
+  // 지도 로드 플래그나, setVisibleHomes 가 호출될 때 loadMap 한다.
   useEffect(() => {
     if (isMapLoaded) {
+      console.log('homes : ', homes);
+      console.log('다시 로드');
       loadMap(); // 지도 로드 조건을 mapLoaded로 설정
     }
-  }, [isMapLoaded, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
+  }, [setIsMapLoaded, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
 
   useEffect(() => {
     if (isMapLoaded && headerFilterChanged) {
       setHomes(visibleHomes);
+      console.log('포지션 마커 필터링 완료 : visibleHomes 설정 (지도에 보이는 집 리스트)', visibleHomes);
       loadMap();
     }
-  }, [headerFilterChanged, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
+  }, [headerFilterChanged, setVisibleHomes, setHomes]); // mapLoaded에 의존하는 useEffect
 
   const makeClusterer = (map: any) => {
     console.log('클러스터 생성');
@@ -133,27 +136,36 @@ export default function MapBox() {
       };
       const newMap = new window.kakao.maps.Map(container, options);
 
+      // 집 리스트를 돌면서 마커 배열을 생성하는 함수
       const markers = homes.map((home) => {
         return new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(home.lat, home.lng),
         });
       });
+      // const markers = visibleHomes.map((home) => {
+      //   return new window.kakao.maps.Marker({
+      //     position: new window.kakao.maps.LatLng(home.lat, home.lng),
+      //   });
+      // });
 
+      // 지도 바운드 안에 들어오는 포지션의 집 마커를 visibleHomes에 추가하는 함수
       const updateVisibleHomes = () => {
         const bounds = newMap.getBounds();
         setVisibleHomes(
           homes.filter((home) => {
             const position = new window.kakao.maps.LatLng(home.lat, home.lng);
-            console.log('포지션마커추가');
-            console.log(markers);
             return bounds.contain(position);
           }),
         );
+        console.log('포지션 마커 필터링 완료 : visibleHomes 설정 (지도에 보이는 집 리스트)', homes, visibleHomes);
       };
-      console.log(markers + 'a나는마커야');
+
+      // 클러스터러 생성
       const clusterer = makeClusterer(newMap);
+      // 클러스터러에 마커 등록
       clusterer.addMarkers(markers);
-      clusterer.getCount;
+
+      // 지도 이동 or 줌 이벤트 발생 시 homes를 필터링
       window.kakao.maps.event.addListener(newMap, 'center_changed', updateVisibleHomes);
       window.kakao.maps.event.addListener(newMap, 'zoom_changed', updateVisibleHomes);
       updateVisibleHomes();
