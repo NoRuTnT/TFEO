@@ -79,43 +79,43 @@ create table home_image (
 
 create table home_option (
      home_option_no bigint not null auto_increment,
-     air_conditioner INTEGER,
-     breakfast INTEGER,
-     elevator INTEGER,
-     gas INTEGER,
-     heating INTEGER,
      internet INTEGER,
-     microwave INTEGER,
-     move_in_date INTEGER,
-     parking INTEGER,
-     refrigerator INTEGER,
-     sink INTEGER,
-     station INTEGER,
-     toilet INTEGER,
-     type integer,
+     gas INTEGER,
      washing_machine INTEGER,
+     air_conditioner INTEGER,
+     refrigerator INTEGER,
+     elevator INTEGER,
+     microwave INTEGER,
+     breakfast INTEGER,
+     toilet INTEGER,
+     heating INTEGER,
+     parking INTEGER,
+     station INTEGER,
+     move_in_date INTEGER,
+     sink INTEGER,
+     type VARCHAR(255),
      primary key (home_option_no)
 ) engine=InnoDB;
 
 create table host_image (
         host_image_no bigint not null auto_increment,
-        host_image_url varchar(255),
         home_no bigint,
+        host_image_url varchar(255),
         primary key (host_image_no)
 ) engine=InnoDB;
 
 create table host_personality (
       host_personality_no bigint not null auto_increment,
-      clean Integer,
-      cold Integer,
-      daytime Integer,
-      extrovert Integer,
-      hot Integer,
-      introvert Integer,
-      nighttime Integer,
-      no_touch Integer,
-      pet Integer,
       smoke Integer,
+      pet Integer,
+      clean Integer,
+      daytime Integer,
+      nighttime Integer,
+      extrovert Integer,
+      introvert Integer,
+      cold Integer,
+      hot Integer,
+      no_touch Integer,
       primary key (host_personality_no)
 ) engine=InnoDB;
 
