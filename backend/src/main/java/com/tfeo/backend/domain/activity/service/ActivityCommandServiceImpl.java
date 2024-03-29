@@ -3,8 +3,15 @@ package com.tfeo.backend.domain.activity.service;
 import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 import java.time.LocalDate;
 
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
@@ -13,14 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.model.StorageType;
+import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
 import com.tfeo.backend.common.model.type.Role;
+import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.common.ActivityException;
 import com.tfeo.backend.domain.activity.common.exception.AccessDeniedException;
 import com.tfeo.backend.domain.activity.common.exception.ActivityNotExistException;
+import com.tfeo.backend.domain.activity.common.exception.ImageNotExistException;
 import com.tfeo.backend.domain.activity.common.exception.PeriodException;
+import com.tfeo.backend.domain.activity.common.exception.TextBlankException;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityResponseDto;
 import com.tfeo.backend.domain.activity.model.dto.ModifyActivityRequestDto;
@@ -43,20 +54,23 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	private final MemberRepository memberRepository;
 	private final HomeRepository homeRepository;
 	private final ActivityRepository activityRepository;
+	private final FileService fileService;
 
 	@Autowired
 	public ActivityCommandServiceImpl(MemberRepository memberRepository, HomeRepository homeRepository,
 		ActivityRepository activityRepository,
-		ContractRepository contractRepository) {
+		ContractRepository contractRepository,
+		FileService fileService) {
 		this.messageService = NurigoApp.INSTANCE.initialize("NCSEFOIOGSP2WVMR", "OKB94BHPG494AHUKXGZCBPLL4YILF0DS",
 			"https://api.coolsms.co.kr");
 		this.memberRepository = memberRepository;
 		this.homeRepository = homeRepository;
 		this.activityRepository = activityRepository;
+		this.fileService = fileService;
 	}
 
 	@Override
-	public AddActivityResponseDto addActivity(Long memberNo, Role role, Long activityNo,
+	public AddActivityResponseDto addActivity(Long memberNo, Long activityNo,
 		AddActivityRequestDto request) {
 
 		Member member = memberRepository.findByMemberNo(memberNo)
@@ -73,13 +87,23 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			throw new PeriodException();
 		}
 
-		activity.writeActivity(request.getActivityImageUrl(), request.getActivityText());
+		if(request.getActivityText().isBlank()){
+			throw new TextBlankException();
+		}
+
+		if(request.getActivityImageUrl().isEmpty()){
+			throw new ImageNotExistException();
+		}
+
+		String filePath = fileService.createPath("activity");
+		String activityPresignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
+		activity.writeActivity(filePath, request.getActivityText());
 
 		AddActivityResponseDto result = AddActivityResponseDto.builder()
 			.activityNo(activity.getActivityNo())
 			.week(activity.getWeek())
 			.createdAt(activity.getCreatedAt())
-			.activityImageUrl(activity.getActivityImageUrl())
+			.activityImageUrl(activityPresignedUrlToUpload)
 			.activityText(activity.getActivityText())
 			.activityApproveType(activity.getApprove())
 			.contractNo(activity.getContract().getContractNo())
@@ -89,7 +113,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	}
 
 	@Override
-	public Long modifyActivity(Long memberNo, Role role, Long activityNo, ModifyActivityRequestDto request) {
+	public String modifyActivity(Long memberNo,  Long activityNo, ModifyActivityRequestDto request) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 
@@ -100,13 +124,21 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			throw new AccessDeniedException(memberNo);
 		}
 
-		activity.updateActivity(request.getActivityImageUrl(), request.getActivityText());
+		String filePath = activity.getActivityImageUrl();
+		String activityPresignedUrlToUpload = null;
 
-		return activity.getActivityNo();
+		if(!request.getActivityImageUrl().isEmpty()) {
+			filePath = fileService.createPath("activity");
+			activityPresignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
+		}
+
+		activity.updateActivity(filePath, request.getActivityText());
+
+		return activityPresignedUrlToUpload;
 	}
 
 	@Override
-	public void removeActivity(Long memberNo, Role role, Long activityNo) {
+	public void removeActivity(Long memberNo,  Long activityNo) {
 
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
@@ -118,7 +150,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	}
 
 	@Override
-	public SingleMessageSentResponse approveActivity(Long memberNo, Role role, Long activityNo) {
+	public SingleMessageSentResponse approveActivity(Long memberNo,Long activityNo) {
 		try {
 			Member member = memberRepository.findByMemberNo(memberNo)
 				.orElseThrow(() -> new MemberNotExistException(memberNo));
@@ -129,9 +161,21 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			//승인 처리
 			activity.setApprove(APPROVE);
 
-			ClassPathResource resource = new ClassPathResource("static/sample.jpg");
-			File file = resource.getFile();
-			String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
+			String presignedUrl = fileService.createPresignedUrlToDownload(activity.getActivityImageUrl());
+
+			URL url = new URL(presignedUrl);
+			InputStream inputStream = url.openStream();
+
+			// 파일로 데이터 복사
+			OutputStream outputStream = new FileOutputStream("tempFile"); // 임시 파일로 저장
+			ReadableByteChannel byteChannel = Channels.newChannel(inputStream);
+			((FileOutputStream)outputStream).getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
+
+			String imageId = this.messageService.uploadFile(new File("tempFile"), StorageType.MMS, null);
+
+			// 스트림 및 파일 닫기
+			inputStream.close();
+			outputStream.close();
 
 			//보호자 전화번호
 			String receiver = homeRepository.findByMemeber(memberNo).orElseThrow(
@@ -145,10 +189,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			message.setText(activity.getActivityText());
 			message.setImageId(imageId);
 
-			//돈 나가서 막음
-			// SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
-			SingleMessageSentResponse response = null;
-			System.out.println(response);
+			SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
 			return response;
 
@@ -158,7 +199,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	}
 
 	@Override
-	public Long rejectActivity(Long memberNo, Role role, Long activityNo) {
+	public Long rejectActivity(Long memberNo, Long activityNo) {
 
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));

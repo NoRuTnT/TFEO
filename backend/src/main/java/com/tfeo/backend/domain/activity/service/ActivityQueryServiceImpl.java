@@ -38,7 +38,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 	private final ContractRepository contractRepository;
 
 	@Override
-	public Page<ReadActivityResponseDto> readActivityList(Long memberNo, Role role,
+	public Page<ReadActivityResponseDto> readActivityList(Long memberNo,
 		@ModelAttribute("request") ReadActivityRequestDto request, Pageable pageable) {
 		Specification<Activity> spce = null;
 		if (request.getSgg() != null) {
@@ -71,7 +71,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 	}
 
 	@Override
-	public List<ReadActivityResponseDto> readRoadmap(Long memberNo, Role role, Long studentNo) {
+	public List<ReadActivityResponseDto> readRoadmap(Long memberNo,  Long studentNo) {
 		try {
 			Member student = memberRepository.findByMemberNo(studentNo)
 				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + studentNo));
@@ -100,7 +100,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 	}
 
 	@Override
-	public ReadActivityResponseDto readActivity(Long memberNo, Role role, Long activityNo) {
+	public ReadActivityResponseDto readActivity(Long memberNo,  Long activityNo) {
 		try {
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
