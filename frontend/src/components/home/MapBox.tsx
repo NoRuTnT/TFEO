@@ -61,6 +61,7 @@ export default function MapBox() {
   }, [headerFilterChanged, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
 
   const makeClusterer = (map: any) => {
+    console.log('클러스터 생성');
     return new window.kakao.maps.MarkerClusterer({
       map: map,
       averageCenter: true,
@@ -144,11 +145,12 @@ export default function MapBox() {
           homes.filter((home) => {
             const position = new window.kakao.maps.LatLng(home.lat, home.lng);
             console.log('포지션마커추가');
+            console.log(markers);
             return bounds.contain(position);
           }),
         );
       };
-      console.log(markers);
+      console.log(markers + 'a나는마커야');
       const clusterer = makeClusterer(newMap);
       clusterer.addMarkers(markers);
       clusterer.getCount;
