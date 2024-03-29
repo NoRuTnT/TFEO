@@ -98,7 +98,6 @@ const Header: React.FC = () => {
     setValue(newValue as number[]);
   };
 
-  // Directly use toggleOption and toggleType from the Zustand store for toggling
   const handleOptionClick = (value: string) => {
     toggleOption(value);
   };
@@ -138,21 +137,21 @@ const Header: React.FC = () => {
     } else if (filterKey == 'subway') {
       selectFilter({ subway: !subway });
       // 역세권 필터링
-      // const homesByStation = visibleHomes.filter((home) => home.station === 1);
-      // setVisibleHomes(homesByStation);
+      const homesByStation = visibleHomes.filter((home) => home.station === 1);
+      setVisibleHomes(homesByStation);
       toggleOption('station');
     } else if (filterKey == 'apartment') {
       selectFilter({ apartment: !apartment });
-      // const homesByType = visibleHomes.filter((home) => home.type === 'APT');
-      // setVisibleHomes(homesByType);
-      // console.log('아파트 필터링', homesByType);
-      // console.log('homes', visibleHomes);
+      const homesByType = visibleHomes.filter((home) => home.type === 'APT');
+      setVisibleHomes(homesByType);
+      console.log('아파트 필터링', homesByType);
+      console.log('homes', visibleHomes);
     } else if (filterKey == 'pets') {
       selectFilter({ pets: !pets });
-      // const homesByPet = visibleHomes.filter((home) => home.pet === 1);
-      // setVisibleHomes(homesByPet);
-      // console.log('반려동물 필터링', homesByPet);
-      // console.log('homes', visibleHomes);
+      const homesByPet = visibleHomes.filter((home) => home.pet === 1);
+      setVisibleHomes(homesByPet);
+      console.log('반려동물 필터링', homesByPet);
+      console.log('homes', visibleHomes);
     }
   };
 

@@ -142,7 +142,9 @@ type Home = {
   emd: string;
   ro: string;
   home_image_no: number;
-  home_image: HomeImage[];
+  home_image_0: HomeImage;
+  home_image_1: HomeImage;
+  home_image_2: HomeImage;
   host_image_no: number;
   host_image_url: string;
   host_vector: HostVector;
