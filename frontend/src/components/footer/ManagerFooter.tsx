@@ -1,15 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import HomeIcon from '@mui/icons-material/Home';
+
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
-
-// import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
-
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddHomeIcon from '@mui/icons-material/AddHome';
 import { styled, useTheme } from '@mui/material/styles';
 
