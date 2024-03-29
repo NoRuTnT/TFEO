@@ -30,7 +30,7 @@ class MemberRoleType(Enum):
     MANAGER = 3
 
 
-member_role = ['MEMBER', 'UNAUTHORIZED_MEMBER']
+member_role = ['USER', 'UNAUTHORIZED_MEMBER']
 
 gender = ['M', 'F']
 bank = ['국민', '우리', '신한',
@@ -114,7 +114,7 @@ class Host_Personality(BaseModel):
     no_touch: bool # 간섭안하는
 
 
-host = 'https://j10a707.p.ssafy.io/'
+host = 'localhost' # https://j10a707.p.ssafy.io/
 port = 27017
 client = MongoClient(host, port)
 db = client.test # home이라는 collection이 들어있는 DB는 test!
@@ -131,9 +131,9 @@ def merge_naver_home_csv():
 home_columns = ['home_no', 'host_name', 'host_age', 'host_phone',
                 'host_gender', 'guardian_name', 'guardian_phone',
                 'relation', 'host_register_no', 'host_account_no',
-                'host_bank', 'address', 'rent', 'lat', 'lng',
-                'role', 'introduce', 'host_personality_no',
-                'home_option_no', 'si', 'sgg', 'emd', 'ro'] # 시,군,구,도로명->추가 ('si', 'sgg', 'emd', 'ro')
+                'host_bank', 'rent', 'lat', 'lng',
+                 'introduce', 'host_personality_no',
+                'home_option_no', 'si', 'sgg', 'emd', 'ro', 'detail', 'register_member_role'] # 시,군,구,도로명->추가 ('si', 'sgg', 'emd', 'ro') # address, role 제거
 host_personality_columns = ['host_personality_no', 'smoke', 'pet',
                             'clean', 'daytime', 'nighttime', 'extrovert',
                             'introvert', 'cold', 'hot', 'no_touch']
@@ -172,7 +172,7 @@ def init_MongoDB_Naver():
 
     picture_index = 1
 
-    with open('CSV_Data/naver_home_merged.csv', 'r', encoding='utf-8-sig') as f:
+    with open('CSV_Data/naver_home_merged.csv', 'r', encoding='utf-8-sig') as f: # -sig
         csvReader = csv.DictReader(f)
 
         for idx, rows in enumerate(csvReader):
@@ -279,7 +279,7 @@ def init_MongoDB_Naver():
             json_data['lng']  = float(rows['lng'])  # 경도
             # json_data['noneRegisterMember'] = random.randint(0, 1) >= 0.5  # 비회원등록여부
             # json_data['noneRegisterMember'] = random.choice(list(MemberRoleType))  # 비회원등록여부
-            json_data['role'] = random.choice(list(member_role))  # 비회원등록여부
+            json_data['register_member_role'] = random.choice(list(member_role))  # 비회원등록여부
             json_data['introduce'] = rows['introduce'].strip()  # 주소
             json_data['host_personality_no'] = idx+1  # 식별키
             json_data['home_option_no'] = idx+1  # 식별자
@@ -302,18 +302,19 @@ def init_MongoDB_Naver():
                 'host_register_no': json_data['host_register_no'],
                 'host_account_no': json_data['host_account_no'],
                 'host_bank': json_data['host_bank'],
-                'address': json_data['address'],
+                # 'address': json_data['address'],
                 'rent': json_data['rent'],
                 'lat': json_data['lat'],
                 'lng': json_data['lng'],
-                'role': json_data['role'],
+                'register_member_role': json_data['register_member_role'], # role -> register_member_role
                 'introduce': json_data['introduce'],
                 'host_personality_no': json_data['host_personality_no'],
                 'home_option_no': json_data['home_option_no'],
                 'si': json_data['si'],
                 'sgg': json_data['sgg'],
                 'emd': json_data['emd'],
-                'ro': json_data['ro']
+                'ro': json_data['ro'],
+                'detail': 'empty'
             }
             df_home = df_home._append(new_row, ignore_index=True)
 
@@ -353,14 +354,15 @@ def init_MongoDB_Naver():
             json_data['host_vector'] = host_vector_json
             json_list.append(json_data)
 
-        df_home_option.to_csv('MySQL/home_option.csv')
-        df_home.to_csv('MySQL/home.csv')
-        df_host_personality.to_csv('MySQL/host_personality.csv')
+        df_home_option.to_csv('MySQL/home_option.csv', index=False, encoding='utf-8')
+        df_home.to_csv('MySQL/home.csv', index=False, encoding='utf-8')
+        df_host_personality.to_csv('MySQL/host_personality.csv', index=False, encoding='utf-8')
 
-        df_home_image.to_csv('MySQL/home_image.csv')
-        df_host_image.to_csv('MySQL/host_image.csv')
+        df_home_image.to_csv('MySQL/home_image.csv', index=False, encoding='utf-8')
+        df_host_image.to_csv('MySQL/host_image.csv', index=False, encoding='utf-8')
 
         db.home.insert_many(json_list)
+
 
 # json 입력
 def get_host_vector_json(host_personality):

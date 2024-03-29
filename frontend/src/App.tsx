@@ -20,7 +20,7 @@ import ManageStudent from './pages/ManageStudent';
 import HomeSmallDetail from './pages/HomeSmallDetail';
 
 import ManagerHome from './pages/manager/ManagerHome';
-
+import ManageActivity from './pages/manager/ManageActivity';
 function App() {
   return (
     <div className="App">
@@ -46,6 +46,7 @@ function App() {
           {/* 관리자 페이지 추가 */}
           <Route path="/manager-home" element={<ManagerHome />} />
           <Route path="/manage-student" element={<ManageStudent />} />
+          <Route path="/manage-activity" element={<ManageActivity />} />
         </Routes>
       </Router>
     </div>
