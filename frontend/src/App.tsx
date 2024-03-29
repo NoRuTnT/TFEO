@@ -16,6 +16,10 @@ import ContractApplyButton from './components/contract/ContractApplyButton';
 import HomeDetail from './pages/HomeDetail';
 import LoginPage from './pages/Login';
 import WishList from './pages/WishList';
+import ManageStudent from './pages/ManageStudent';
+import HomeSmallDetail from './pages/HomeSmallDetail';
+
+import ManagerHome from './pages/manager/ManagerHome';
 
 function App() {
   return (
@@ -38,6 +42,10 @@ function App() {
           {/* ... 여기에 더 많은 라우트를 추가할 수 있습니다 ... */}
           <Route path="/contract-test" element={<ContractApplyButton />} />
           <Route path="/wish-list" element={<WishList />} />
+          <Route path="/home-small-detail" element={<HomeSmallDetail />} />
+          {/* 관리자 페이지 추가 */}
+          <Route path="/manager-home" element={<ManagerHome />} />
+          <Route path="/manage-student" element={<ManageStudent />} />
         </Routes>
       </Router>
     </div>

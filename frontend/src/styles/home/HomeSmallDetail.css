@@ -1,49 +1,26 @@
 .page-wrapper {
-    /*text-align: center;*/
+    /* text-align: center; */
     display: flex;
     flex-direction: column; /* flex 컨테이너 설정 */
     margin-bottom: 17%;
 }
-
-.top-button-container {
-    height: 65px;
-    background-color: white;
-    z-index: 50;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    border-bottom: 1px solid #e1e1e1;
-}
-
-.swipeable-image {
-    width: 100%; /* 부모 요소에 맞게 이미지를 확장 */
-    height: 250px; /* 부모 요소에 맞게 이미지를 확장 */
-    object-fit: cover; /* 이미지를 요소에 꽉 채우도록 설정 */
-}
-
 
 .content-wrapper {
     margin-left: 30px;
     margin-right: 30px;
 }
 
-.name-description-container {
+.description-container {
     margin-top: 10px;
 }
 
-.option-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: left;
-    text-align: left;
-    margin-bottom: 10px;
+.option-left {
+    margin-left: 10px;
+    width: 50%;
 }
 
-.option {
-    display: flex;
-    flex-direction: column;
-    margin-left: 5px;
+.option-right {
+    margin-left: 10px;
     width: 50%;
 }
 
@@ -55,15 +32,17 @@
 
 .back-button {
     position: fixed;
+    border-radius: 50%;
     left: 0;
 }
 
 .heart-button {
     position: fixed;
     right: 0;
+    color: pink;
 }
 
-.detail-description {
+.owner-description {
     font-size: 15px;
     margin-bottom: 10px;
 }
@@ -99,6 +78,9 @@
     width: 30%;
     height: 70%;
     font-size: 15px;
-    color: white;
-    font-weight: bold;
+}
+
+.star-icon{
+    font-size: 20px;
+    position: fixed;
 }
