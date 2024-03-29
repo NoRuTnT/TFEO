@@ -45,6 +45,7 @@ public class Home {
 
 	private String hostName;
 
+	@Null
 	private Integer hostAge;
 
 	private String hostPhone;
@@ -67,6 +68,7 @@ public class Home {
 	@Embedded
 	private Address address;
 
+	@Null
 	private Integer rent;
 
 	@Null
