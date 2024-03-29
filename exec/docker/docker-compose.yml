@@ -39,6 +39,7 @@ services:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-redis/conf:/etc/redis/redis.conf
     restart: "no"
 
+
   tfeo-mongodb:
     image: mongo:5.0.25
     container_name: mongo
