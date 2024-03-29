@@ -1,0 +1,9 @@
+.header{
+    height: '100px';
+    backgroundColor: pink;
+    textAlign: 'center';
+    text-align: center; 
+}
+.menu > span{
+    justify-content: center;
+}
