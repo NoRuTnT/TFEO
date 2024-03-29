@@ -75,7 +75,7 @@ create table home_image (
         home_image_url varchar(255),
         home_no bigint,
         primary key (home_image_no)
-) engine=InnoDB;
+) engine=InnoDB CHARACTER SET utf8mb4;
 
 create table home_option (
      home_option_no bigint not null auto_increment,
