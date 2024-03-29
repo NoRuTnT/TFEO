@@ -34,7 +34,7 @@ public class ActivityCommandController {
 		@RequestBody AddActivityRequestDto request) {
 		Long memberNo = 1L;
 		Role role = USER;
-		AddActivityResponseDto result = activityCommandService.addActivity(memberNo, role, activityNo, request);
+		AddActivityResponseDto result = activityCommandService.addActivity(memberNo,  activityNo, request);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 작성 성공", result));
 	}
 
@@ -43,8 +43,7 @@ public class ActivityCommandController {
 	public ResponseEntity<?> activityModify(@PathVariable("activityNo") Long activityNo,
 		@RequestBody ModifyActivityRequestDto request) {
 		Long memberNo = 1L;
-		Role role = USER;
-		Long result = activityCommandService.modifyActivity(memberNo, role, activityNo, request);
+		String result = activityCommandService.modifyActivity(memberNo, activityNo, request);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 수정 성공", result));
 	}
 
@@ -52,8 +51,7 @@ public class ActivityCommandController {
 	@PutMapping("/{activityNo}/delete")
 	public ResponseEntity<?> activityRemove(@PathVariable("activityNo") Long activityNo) {
 		Long memberNo = 1L;
-		Role role = USER;
-		activityCommandService.removeActivity(memberNo, role, activityNo);
+		activityCommandService.removeActivity(memberNo, activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 삭제 성공", null));
 	}
 
@@ -61,8 +59,7 @@ public class ActivityCommandController {
 	@PutMapping("/{activityNo}/approve")
 	public ResponseEntity<?> activityApprove(@PathVariable("activityNo") Long activityNo) {
 		Long memberNo = 1L;
-		Role role = USER;
-		SingleMessageSentResponse result = activityCommandService.approveActivity(memberNo, role, activityNo);
+		SingleMessageSentResponse result = activityCommandService.approveActivity(memberNo,  activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 승인 성공", result));
 	}
 
@@ -70,8 +67,7 @@ public class ActivityCommandController {
 	@PutMapping("/{activityNo}/reject")
 	public ResponseEntity<?> activityReject(@PathVariable("activityNo") Long activityNo) {
 		Long memberNo = 1L;
-		Role role = USER;
-		Long result = activityCommandService.rejectActivity(memberNo, role, activityNo);
+		Long result = activityCommandService.rejectActivity(memberNo, activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 반려 성공", result));
 	}
 

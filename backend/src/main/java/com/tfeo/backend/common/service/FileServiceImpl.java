@@ -1,5 +1,6 @@
 package com.tfeo.backend.common.service;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -15,6 +16,8 @@ import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.tfeo.backend.common.model.dto.FileNotExistException;
 
 import lombok.RequiredArgsConstructor;

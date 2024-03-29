@@ -1,5 +1,7 @@
 package com.tfeo.backend.common.service;
 
+import java.io.InputStream;
+
 public interface FileService {
 
 	String createPresignedUrlToUpload(String filePath);

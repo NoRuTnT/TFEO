@@ -38,8 +38,7 @@ public class ActivityQueryController {
 		@PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
 	) {
 		Long memberNo = 1L;
-		Role role = USER;
-		Page<ReadActivityResponseDto> result = activityQueryService.readActivityList(memberNo, role, request, pageable);
+		Page<ReadActivityResponseDto> result = activityQueryService.readActivityList(memberNo,  request, pageable);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 목록 조회 성공", result));
 	}
 
@@ -47,8 +46,7 @@ public class ActivityQueryController {
 	@GetMapping(value = "/{studentNo}")
 	public ResponseEntity<?> roadmapRead(@PathVariable("studentNo") Long studentNo) {
 		Long memberNo = 1L;
-		Role role = USER;
-		List<ReadActivityResponseDto> result = activityQueryService.readRoadmap(memberNo, role, studentNo);
+		List<ReadActivityResponseDto> result = activityQueryService.readRoadmap(memberNo,  studentNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "로드맵 조회 성공", result));
 	}
 
@@ -56,9 +54,8 @@ public class ActivityQueryController {
 	@GetMapping(value = "/{activityNo}/detail")
 	public ResponseEntity<?> activityRead(@PathVariable("activityNo") Long activityNo) {
 		Long memberNo = 1L;
-		Role role = USER;
 
-		ReadActivityResponseDto result = activityQueryService.readActivity(memberNo, role, activityNo);
+		ReadActivityResponseDto result = activityQueryService.readActivity(memberNo,  activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 상세 조회 성공", result));
 	}
 
