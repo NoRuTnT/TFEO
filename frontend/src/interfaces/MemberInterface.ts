@@ -2,6 +2,8 @@ import { IAddress } from './AddressInterface';
 
 export interface IMember {
   memberNo: number;
+  socialId: string;
+  socialType: string;
   name: string;
   phone: string;
   email: string;
@@ -11,9 +13,15 @@ export interface IMember {
   profileUrl: string;
   gender: string;
   role: string;
+  lat: number;
+  lng: number;
+  memberPersonalityNo: number;
   certificate: string;
   certificateStatus: string;
   certificateRegisterDate: string;
+  sleepAt: string;
+  wakeAt: string;
+  returnAt: string;
   certificateExpirationDate: string;
   memberPersonality: IMemberPersonality;
 }
