@@ -317,6 +317,8 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
         building_option_list.append('OR')
 
     print(building_option_list)
+    if(len(building_option_list)==0):
+        building_option_list = ['APT', 'OPST', 'VL', 'JT', 'DDDGG', 'OR']
 
     internet_list = get_permit_list(search_condition.internet)
     gas_list = get_permit_list(search_condition.gas)
