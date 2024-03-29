@@ -3,6 +3,7 @@ import '../../styles/home/MapBox.css';
 import { theme } from '../../styles/Theme'; // 테마에서 기본 색상을 사용하기 위해 가져옵니다.
 import { useHomeStore } from '../../store/HomeStore';
 import axios from 'axios';
+import { RecommendAxios } from '../../api/RecommendAxios';
 
 declare global {
   interface Window {
@@ -27,36 +28,15 @@ export default function MapBox() {
     // Axios 요청으로 homes 상태 업데이트
     const fetchData = async () => {
       try {
+        // 성향 반영 추천 api
         const requestData = {
-          internet: true,
-          gas: false,
-          washing_machine: false,
-          air_conditioner: true,
-          refrigerator: true,
-          elevator: true,
-          microwave: true,
-          toilet: true,
-          breakfast: true,
-          heating: true,
-          parking: true,
-          station: false,
-          move_in_date: true,
-          sink: true,
-          APT: true,
-          OPST: true,
-          VL: true,
-          JT: true,
-          DDDGG: true,
-          OR: true,
-          rent_max: 50,
-          rent_min: 0,
+          search_condition: search_condition,
+          member_personality: member_personality,
         };
-        // 성향 반영 추천 api 반영 시 주석 해제
-        // const requestData = {
-        //   search_condition: search_condition,
-        //   member_personality: member_personality,
-        // };
-        const response = await axios.post('http://localhost:8000/testing/test', requestData);
+        // http://j10a707.p.ssafy.io:8000/recommend
+        console.log(requestData);
+        const response = await RecommendAxios.post('/recommend', requestData);
+        console.log(response.data);
         setHomes(response.data); // 상태 업데이트
         setIsMapLoaded(true); // 지도 로드 플래그 설정
       } catch (error) {
@@ -81,6 +61,7 @@ export default function MapBox() {
   }, [headerFilterChanged, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
 
   const makeClusterer = (map: any) => {
+    console.log('클러스터 생성');
     return new window.kakao.maps.MarkerClusterer({
       map: map,
       averageCenter: true,
@@ -164,11 +145,12 @@ export default function MapBox() {
           homes.filter((home) => {
             const position = new window.kakao.maps.LatLng(home.lat, home.lng);
             console.log('포지션마커추가');
+            console.log(markers);
             return bounds.contain(position);
           }),
         );
       };
-      console.log(markers);
+      console.log(markers + 'a나는마커야');
       const clusterer = makeClusterer(newMap);
       clusterer.addMarkers(markers);
       clusterer.getCount;

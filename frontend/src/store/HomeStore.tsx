@@ -21,6 +21,7 @@ interface HomeRequestDataState {
   setMemberPersonality: (value: MemberPersonality) => void;
 }
 
+// 집 검색 조건
 type SearchCondition = {
   internet: boolean;
   gas: boolean;
@@ -44,8 +45,11 @@ type SearchCondition = {
   OR: boolean;
   rent_max: number;
   rent_min: number;
+  lat: number;
+  lng: number;
 };
 
+// 학생 성향
 type MemberPersonality = {
   member_personality_no: number;
   daytime: boolean;
@@ -66,13 +70,27 @@ type MemberPersonality = {
   host_house_prefer: number;
 };
 
+// 집 이미지 단일 객체 타입
 type HomeImage = {
   home_no: number;
   home_image_no: number;
   home_image_url: string;
 };
 
-// 집 상세 정보
+// 호스트 성향
+type HostVector = {
+  day_element: number;
+  night_element: number;
+  smoke_element: number;
+  extro_element: number;
+  intro_element: number;
+  mannered_element: number;
+  pet_lover_element: number;
+  cold_element: number;
+  hot_element: number;
+};
+
+// 집 상세 정보 (리스트 조회 시 단일 집 객체 타입)
 type Home = {
   _id: any;
   internet: number;
@@ -126,7 +144,8 @@ type Home = {
   home_image_no: number;
   home_image: HomeImage[];
   host_image_no: number;
-  host_image: string;
+  host_image_url: string;
+  host_vector: HostVector;
   distance: number;
 };
 
@@ -135,10 +154,12 @@ interface HomeListState {
   homes: Home[];
   isMapLoaded: boolean; // 지도 로드 상태 추가
   headerFilterChanged: boolean; // 헤더 필터 상태 추가
+  searchFilterChanged: boolean; // 모달 필터 상태 추가 (확인 눌렀을 때 바뀜)
   selectedHomeNo: number | null; // 선택된 집의 ID (선택되지 않았을 경우 null)
   selectHome: (homeNo: number) => void;
   setIsMapLoaded: (isLoaded: boolean) => void;
   setHeaderFilterChanged: (isChanged: boolean) => void;
+  setSearchFilterChanged: (isChanged: boolean) => void;
   setHomes: (newHomes: any[]) => void;
 }
 
@@ -158,6 +179,7 @@ const initialFilterState: HomeFilterState = {
   subway: false,
   apartment: false,
   pets: false,
+  // UI 상의 집 옵션 태그
   options: [
     { option: '인터넷', value: 'internet', choice: false },
     { option: '가스레인지', value: 'gas', choice: false },
@@ -172,11 +194,13 @@ const initialFilterState: HomeFilterState = {
     { option: '주차', value: 'parking', choice: false },
     { option: '싱크대', value: 'sink', choice: false },
   ],
+  // UI 상의 집 타입 태그
   types: [
-    { type: '아파트', value: 'apt', choice: false },
-    { type: '빌라', value: 'vl', choice: false },
-    { type: '오피스텔', value: 'opst', choice: false },
-    { type: '원룸', value: 'oneroom', choice: false },
+    { type: '아파트', value: 'APT', choice: false },
+    { type: '빌라', value: 'VL', choice: false },
+    { type: '오피스텔', value: 'OPST', choice: false },
+    { type: '원룸', value: 'OR', choice: false },
+    { type: '단독/다가구', value: 'DDDGG', choice: false },
   ],
   selectFilter: (newState: Partial<HomeFilterState>) => {},
   toggleOption: (value: string) => {},
@@ -188,36 +212,40 @@ const initialListState: HomeListState = {
   isMapLoaded: false, // 지도 로드 상태 추가
   selectedHomeNo: null,
   headerFilterChanged: false, // 헤더 필터 상태 추가
+  searchFilterChanged: false, // 모달 필터 상태 추가 (확인 누를 때 변하게 할거임)
   selectHome: (homeNo: number) => {},
   setIsMapLoaded: (isLoaded: boolean) => {},
   setHeaderFilterChanged: (isChanged: boolean) => {},
   setHomes: (newHomes: any[]) => {},
+  setSearchFilterChanged: (isChanged: boolean) => {},
 };
 
 const initialHomeRequestDataState: HomeRequestDataState = {
   search_condition: {
-    internet: true,
-    gas: true,
-    washing_machine: true,
-    air_conditioner: true,
-    refrigerator: true,
-    elevator: true,
-    microwave: true,
-    toilet: true,
+    internet: false,
+    gas: false,
+    washing_machine: false,
+    air_conditioner: false,
+    refrigerator: false,
+    elevator: false,
+    microwave: false,
+    toilet: false,
     breakfast: false,
-    heating: true,
+    heating: false,
     parking: false,
     station: false,
     move_in_date: false,
-    sink: true,
-    APT: true,
-    OPST: true,
+    sink: false,
+    APT: false,
+    OPST: false,
     VL: true,
-    JT: true,
-    DDDGG: true,
+    JT: false,
+    DDDGG: false,
     OR: false,
     rent_max: 100,
     rent_min: 0,
+    lat: 37.609641,
+    lng: 126.997697,
   },
   member_personality: {
     member_personality_no: 1,
@@ -252,15 +280,29 @@ export const useHomeStore = create<HomeFilterState & HomeRequestDataState & Home
     selectHome: (homeNo: number) => set({ selectedHomeNo: homeNo }),
     setVisibleHomes: (homes: Home[]) => set({ visibleHomes: homes }), // 현재 보이는 집들을 설정하는 함수
     toggleOption: (value: string) =>
-      set((state) => ({
-        options: state.options.map((option) =>
+      set((state) => {
+        // 옵션 토글
+        const newOptions = state.options.map((option) =>
           option.value === value ? { ...option, choice: !option.choice } : option,
-        ),
-      })),
+        );
+        // searchCondition 업데이트
+        const newSearchCondition = {
+          ...state.search_condition,
+          [value]: !state.search_condition[value as keyof SearchCondition],
+        };
+        return { ...state, options: newOptions, search_condition: newSearchCondition };
+      }),
     toggleType: (value: string) =>
-      set((state) => ({
-        types: state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type)),
-      })),
+      set((state) => {
+        // 타입 토글
+        const newTypes = state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type));
+        // searchCondition 업데이트
+        const newSearchCondition = {
+          ...state.search_condition,
+          [value]: !state.search_condition[value as keyof SearchCondition],
+        };
+        return { ...state, types: newTypes, search_condition: newSearchCondition };
+      }),
     setIsMapLoaded: (isLoaded: boolean) => set({ isMapLoaded: isLoaded }), // 지도 로드 상태 업데이트 함수 추가
     setHeaderFilterChanged: (isChanged: boolean) => set({ headerFilterChanged: isChanged }),
     setHomes: (newHomes: any[]) => set((state) => ({ ...state, homes: newHomes })),
