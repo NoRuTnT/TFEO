@@ -1,6 +1,6 @@
 import create from 'zustand';
 import { IMember } from '../interfaces/MemberInterface';
-import { IAddressSearchResponse, IAddressItem, IAddress } from '../interfaces/AddressInterface';
+import { IAddress } from '../interfaces/AddressInterface';
 
 interface MemberState {
   MemberInfo: IMember;
