@@ -10,11 +10,11 @@ import com.tfeo.backend.domain.activity.model.dto.ReadActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityResponseDto;
 
 public interface ActivityQueryService {
-	Page<ReadActivityResponseDto> readActivityList(Long memberNo, Role role,
+	Page<ReadActivityResponseDto> readActivityList(Long memberNo,
 		ReadActivityRequestDto request, Pageable pageable);
 
-	List<ReadActivityResponseDto> readRoadmap(Long memberNo, Role role, Long studentNo);
+	List<ReadActivityResponseDto> readRoadmap(Long memberNo, Long studentNo);
 
-	ReadActivityResponseDto readActivity(Long memberNo, Role role, Long activityNo);
+	ReadActivityResponseDto readActivity(Long memberNo, Long activityNo);
 
 }

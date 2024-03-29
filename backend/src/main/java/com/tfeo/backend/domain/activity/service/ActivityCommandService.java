@@ -8,15 +8,15 @@ import com.tfeo.backend.domain.activity.model.dto.AddActivityResponseDto;
 import com.tfeo.backend.domain.activity.model.dto.ModifyActivityRequestDto;
 
 public interface ActivityCommandService {
-	AddActivityResponseDto addActivity(Long memberNo, Role role, Long activityNo, AddActivityRequestDto request);
+	AddActivityResponseDto addActivity(Long memberNo,  Long activityNo, AddActivityRequestDto request);
 
-	Long modifyActivity(Long memberNo, Role role, Long activityNo,
+	String modifyActivity(Long memberNo,  Long activityNo,
 		ModifyActivityRequestDto request);
 
-	void removeActivity(Long memberNo, Role role, Long activityNo);
+	void removeActivity(Long memberNo,  Long activityNo);
 
-	SingleMessageSentResponse approveActivity(Long memberNo, Role role, Long activityNo);
+	SingleMessageSentResponse approveActivity(Long memberNo, Long activityNo);
 
-	Long rejectActivity(Long memberNo, Role role, Long activityNo);
+	Long rejectActivity(Long memberNo,  Long activityNo);
 
 }
