@@ -18,9 +18,10 @@ const ContractHomeCard = ({ status, homeDetail, contract }: Props) => {
   const { home, homeOption, hostPersonality, homeImageList, hostImageList } = homeDetail;
   return (
     <div className="homeCard">
-      <h2>계약 중인 집 카드</h2>
       <Card>
-        <div className="cardImg">{homeImageList.length > 0 && <img src={homeImageList[0]} />}</div>
+        <CardMedia sx={{ height: (theme) => theme.spacing(30) }}>
+          {homeImageList.length > 0 && <img src={`http://j10a707.p.ssafy.io${homeImageList[0].homeImageUrl}`} />}
+        </CardMedia>
         <CardContent className="cardContent">
           <div>{contract.progress === 'DONE' ? '태그보여줘야함' : ''}</div>
           <div className="address">
