@@ -47,7 +47,7 @@ class Home(BaseModel):
     # 집
     home_no: int # 식별키
     host_name: str # 이름
-    price: float # 나이
+    host_age: int # 나이
     host_phone: str # 전화번호
     host_gender: str # 성별 (M/F)
     guardian_name: str # 보호자 이름
