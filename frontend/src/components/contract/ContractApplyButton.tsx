@@ -13,7 +13,7 @@ const ContractApplyButton = () => {
   const [contractFormData, setContractFormData] = useState<IContractForm>();
   const applyApprove = async () => {
     if (!contractInfo) return;
-    const fetchData = await applyApproval(contractInfo.home.home.homeNo, memberStore.member_no);
+    const fetchData = await applyApproval(contractInfo.home.home.homeNo, memberStore.MemberInfo.memberNo);
     setContractFormData(fetchData);
   };
   const generateBlobFromPdf = async () => {
