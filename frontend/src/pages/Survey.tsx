@@ -8,6 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import { Link } from 'react-router-dom';
 
 const Survey: React.FC = () => {
   const [slider, setSlider] = useState<Slider | null>(null);
@@ -27,11 +28,14 @@ const Survey: React.FC = () => {
     marginTop: '40px',
     textAlign: 'center',
     whiteSpace: 'pre-wrap',
+    height: '80vh',
   });
 
   const AnswerButton = styled(Button)({
     margin: '10px',
     width: '100%',
+    height: '50px',
+    fontSize: '18px',
     marginBottom: '10px',
   });
 
@@ -46,7 +50,7 @@ const Survey: React.FC = () => {
 
   const data = [
     {
-      question: '성별과 다니고 있는 학교를\n알려주세요',
+      question: '다니고 있는 학교를\n알려주세요',
       answer: ['남성', '여성'],
       nextButton: true,
     },
@@ -138,35 +142,21 @@ const Survey: React.FC = () => {
           {data.map((item, idx) => (
             <QuestionContainer key={idx}>
               <Box sx={{ position: 'relative', margin: '40px' }}>
-                <Typography variant="body2" color="textSecondary">
+                <Typography variant="body2" color="black" fontSize="15px" marginBottom="10px" marginTop="80px">
                   {idx + 1}/{data.length}
                 </Typography>
                 <BorderLinearProgress variant="determinate" value={((idx + 1) * 100) / data.length} />
               </Box>
-              <Typography variant="h6" component="h2" gutterBottom>
+              <Typography marginTop="60px" fontSize="20px">
                 {item.question}
               </Typography>
               {idx == 0 && (
                 <div>
-                  <Box sx={{ textAlign: 'left', marginLeft: '30px', marginTop: '30px' }}>성별</Box>
-                  <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={5} md={6}>
-                      <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[0]`)}>
-                        {item.answer[0]}
-                      </AnswerButton>
-                    </Grid>
-                    <Grid item xs={5} md={6}>
-                      <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[1]`)}>
-                        {item.answer[1]}
-                      </AnswerButton>
-                    </Grid>
-                  </Grid>
-                  <Box sx={{ textAlign: 'left' }}>대학교</Box>
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
                     options={collage}
-                    sx={{ width: 300 }}
+                    sx={{ width: 295, margin: '70px auto' }}
                     renderInput={(params) => <TextField {...params} label="대학교" />}
                   />
                 </div>
@@ -175,28 +165,62 @@ const Survey: React.FC = () => {
                 <div>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['MobileTimePicker', 'MobileTimePicker', 'MobileTimePicker']}>
-                      <DemoItem>
-                        <Box sx={{ textAlign: 'left' }}>취침</Box>
-                        <TimePicker views={['hours']} label="시간" />
-                      </DemoItem>
-                      <Box sx={{ textAlign: 'left' }}>기상</Box>
-                      <DemoItem>
-                        <TimePicker views={['hours']} label="시간" />
-                      </DemoItem>
+                      <div style={{ display: 'flex', marginTop: '-30px' }}>
+                        <DemoItem>
+                          <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
+                            <div
+                              style={{
+                                textAlign: 'left',
+                                marginLeft: '80px',
+                                marginTop: '30px',
+                                marginRight: '10px',
+                                fontWeight: 'bold',
+                              }}
+                            >
+                              취침
+                            </div>
+                            <TimePicker
+                              sx={{ width: '120px', marginTop: '10px', marginLeft: '80px' }}
+                              views={['hours']}
+                              label="시간"
+                            />
+                          </div>
+                        </DemoItem>
+                        <DemoItem>
+                          <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
+                            <div
+                              style={{
+                                textAlign: 'left',
+                                marginLeft: '30px',
+                                marginTop: '30px',
+                                marginRight: '10px',
+                                fontWeight: 'bold',
+                              }}
+                            >
+                              기상
+                            </div>
+                            <TimePicker
+                              sx={{ width: '120px', marginTop: '10px', marginLeft: '30px' }}
+                              views={['hours']}
+                              label="시간"
+                            />
+                          </div>
+                        </DemoItem>
+                      </div>
                     </DemoContainer>
                   </LocalizationProvider>
-                  <Typography variant="h6" component="h2" gutterBottom>
+                  <Typography gutterBottom style={{ fontSize: '20px', marginTop: '40px' }}>
                     주로 생활하는 시간대가
                     <br />
                     언제인가요
                   </Typography>
                   <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={6} md={6}>
+                    <Grid item xs={4} md={6}>
                       <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[0]`)}>
                         {item.answer[0]}
                       </AnswerButton>
                     </Grid>
-                    <Grid item xs={6} md={6}>
+                    <Grid item xs={4} md={6}>
                       <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[1]`)}>
                         {item.answer[1]}
                       </AnswerButton>
@@ -208,24 +232,40 @@ const Survey: React.FC = () => {
                 <div>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DemoContainer components={['MobileTimePicker', 'MobileTimePicker', 'MobileTimePicker']}>
-                      <DemoItem>
-                        <TimePicker views={['hours']} label="시간" />
-                      </DemoItem>
+                      <div
+                        style={{
+                          width: '150px',
+                          marginLeft: 'auto',
+                          marginRight: 'auto',
+                          marginTop: '10px',
+                          marginBottom: '30px',
+                        }}
+                      >
+                        <DemoItem>
+                          <TimePicker views={['hours']} label="시간" />
+                        </DemoItem>
+                      </div>
                     </DemoContainer>
                   </LocalizationProvider>
-                  <Typography variant="h5" component="h2" gutterBottom margin={2}>
+                  <Typography style={{ fontSize: '20px' }} variant="h5" component="h2" gutterBottom margin={2}>
                     저는 집에
                   </Typography>
                   <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={8} md={6}>
                       <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[0]`)}>
                         {item.answer[0]}
                       </AnswerButton>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                      <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[1]`)}>
-                        {item.answer[1]}
-                      </AnswerButton>
+                    <Grid item xs={8} md={6}>
+                      <div style={{ marginTop: '-20px' }}>
+                        <AnswerButton
+                          variant="outlined"
+                          color="primary"
+                          onClick={() => handleResponse(`item.answer[1]`)}
+                        >
+                          {item.answer[1]}
+                        </AnswerButton>
+                      </div>
                     </Grid>
                   </Grid>
                 </div>
@@ -234,7 +274,7 @@ const Survey: React.FC = () => {
               {!item.nextButton && (
                 <Grid container spacing={2} justifyContent="center">
                   {item.answer.map((answerItem, answerIdx) => (
-                    <Grid item xs={12} md={6} key={answerIdx}>
+                    <Grid item xs={8} md={6} key={answerIdx}>
                       <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(answerItem)}>
                         {answerItem}
                       </AnswerButton>
@@ -243,10 +283,12 @@ const Survey: React.FC = () => {
                 </Grid>
               )}
               {idx == 11 && (
-                <div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
                   <Box sx={{ width: 300 }}>
                     <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
-                      <Typography variant="body1">사람</Typography>
+                      <div style={{ width: '50px' }}>
+                        <Typography variant="body1">사람</Typography>
+                      </div>
                       <MSlider
                         aria-label="importance"
                         defaultValue={50}
@@ -263,29 +305,30 @@ const Survey: React.FC = () => {
                 </div>
               )}
               {item.nextButton && (
-                <Box mt={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Box mt={2} sx={{ position: 'fixed', bottom: '60px', marginLeft: '300px' }}>
                   <NavigationButton
                     variant="text"
-                    color="primary"
+                    color="inherit"
                     onClick={handleNext}
                     disabled={index === data.length - 1}
                   >
-                    다음
+                    다음 &gt;&gt;
                   </NavigationButton>
                 </Box>
               )}
             </QuestionContainer>
           ))}
           <QuestionContainer>
-            <Typography variant="h6">
-              <br />
-              <br />
-              🥳 설문을 완료했어요! <br />
-              마이페이지에서 내 정보를 <br />
-              추가적으로 입력할 수 있어요
-            </Typography>
-            <br />
-            <Button>집보러가기</Button>
+            <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+              <Typography variant="h6">
+                🥳 설문을 완료했어요! <br />
+                마이페이지에서 내 정보를 <br />
+                추가적으로 입력할 수 있어요 <br /> <br />
+                <Button component={Link} to="/">
+                  집보러가기
+                </Button>
+              </Typography>
+            </div>
           </QuestionContainer>
         </Slider>
       </Box>
