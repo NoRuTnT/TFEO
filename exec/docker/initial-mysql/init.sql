@@ -71,7 +71,6 @@ create table home (
 ) engine=InnoDB;
 
 create table home_image (
-
         home_image_no bigint not null auto_increment,
         home_image_url varchar(255),
         home_no bigint,
