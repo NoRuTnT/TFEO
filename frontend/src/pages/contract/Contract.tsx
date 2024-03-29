@@ -37,7 +37,7 @@ const Contract = () => {
     switch (status) {
       case 'APPLIED':
         console.log('applied');
-        return <ContractAppliedContent />;
+        return <ContractAppliedContent homeNo={contractInfo.home.home.homeNo} />;
       case 'IN_PROGRESS':
         console.log('in-progress');
         return (
@@ -53,7 +53,12 @@ const Contract = () => {
     }
   };
   if (!contractInfo) {
-    return <div>신청한 집이 없습니다.</div>;
+    return (
+      <>
+        <div>신청한 집이 없습니다.</div>
+        <Footer />
+      </>
+    );
   } else {
     return (
       <div className="contract">
@@ -64,9 +69,6 @@ const Contract = () => {
           contract={contractInfo.contract}
         />
         {renderByStatus(contractInfo.contract.progress)}
-        <button onClick={setApplied}>APPLIED</button>
-        <button onClick={setInProgress}>IN_PROGRESS</button>
-        <button onClick={setCompleted}>DONE</button>
         <hr />
         <Footer />
       </div>
