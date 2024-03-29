@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import '../styles/MainPage.css'; // 상대경로 수정 필요
-// import '../styles/home/HomeDetail.css'; // 상대경로 수정 필요
+import '../../styles/MainPage.css';
+import '../../styles/home/HomeDetail.css';
 import '../../styles/manager/ManagerHome.css';
 
 import { radians } from 'pdf-lib';
@@ -22,14 +22,10 @@ const ActivityContent: React.FC = () => {
       </div>
       <div className="list-info">
         <div>
-          <p>
-            신규 등록 학생 <h2>10</h2>건
-          </p>
+          <p>신규 등록 학생 10 건</p>
         </div>
         <div>
-          <p>
-            신규 집 등록 <h2>10</h2>건
-          </p>
+          <p>신규 집 등록 10 건</p>
         </div>
         <div>
           <p>올리 사랑 인증</p>
