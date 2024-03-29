@@ -46,7 +46,7 @@ public class Home {
 	private String hostName;
 
 	@Null
-	private Integer hostAge;
+	private float hostAge;
 
 	private String hostPhone;
 
