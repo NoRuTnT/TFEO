@@ -53,7 +53,7 @@ create table home (
       guardian_name varchar(255),
       guardian_phone varchar(255),
       host_account_no varchar(255),
-      host_age integer,
+      host_age bigint,
       host_bank varchar(255),
       host_gender varchar(255),
       host_name varchar(255),
