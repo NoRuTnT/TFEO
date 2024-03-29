@@ -1,14 +1,21 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import '../styles/MainPage.css';
 import '../styles/home/HomeDetail.css';
 import MapDetailBox from '../components/home/MapDetailBox';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import { IHomeDetail, IHomeImage } from '../interfaces/HomeInterface';
+import { applyHomeApi, getHomeDetail } from '../api/HomeApis';
+import { getEMDNameAddress } from '../utils/addressUtils';
+import { getHomeOptionTags } from '../utils/homeOptionTagUtils';
+import { Button } from '@mui/material';
+import { getRent } from '../utils/moneyUtils';
+import { getKoreanDate } from '../utils/timeUtils';
 import SwipeableViews from 'react-swipeable-views';
 
-const ActivityContent: React.FC = () => {
+const HomeDetail: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
@@ -17,22 +24,48 @@ const ActivityContent: React.FC = () => {
   };
 
   const nextImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1));
+    if (homeDetail && homeDetail.homeImageList) {
+      setCurrentImageIndex((prevIndex) => (prevIndex === homeDetail.homeImageList.length - 1 ? 0 : prevIndex + 1));
+    }
   };
 
   const prevImage = () => {
-    setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1));
+    if (homeDetail && homeDetail.homeImageList) {
+      setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? homeDetail.homeImageList.length - 1 : prevIndex - 1));
+    }
   };
 
-  const images: string[] = [
-    '/test/owner1.png',
-    '/test/home1.png',
-    '/test/home2.png',
-    '/test/home3.png',
-    // 추가 이미지를 계속 넣어주세요
-  ];
-
-  const options = ['배고파', '졸려', '나빼고', '다 자다니', '너무해', '그치만', '나는 잘 못하니까..'];
+  const location = useLocation();
+  const [homeDetail, setHomeDetail] = useState<IHomeDetail>();
+  const [startAt, setStartAt] = useState<string>(getKoreanDate());
+  useEffect(() => {
+    const homeNofromUrl = new URLSearchParams(location.search).get('homeNo');
+    const homeNo = homeNofromUrl ? parseInt(homeNofromUrl, 10) : null;
+    const fetchData = async () => {
+      if (!homeNo) return;
+      const response = await getHomeDetail(homeNo);
+      if (response) {
+        console.log(response.homeImageList);
+        setHomeDetail(response);
+      }
+    };
+    if (homeNo) fetchData();
+  }, []);
+  if (!homeDetail)
+    return (
+      <>
+        <div>요청하신 집의 정보를 찾을 수 없습니다.</div>
+      </>
+    );
+  const applyHome = async () => {
+    const response = await applyHomeApi(homeDetail.home.homeNo, startAt);
+    if (response) alert(response);
+  };
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedDate = e.target.value;
+    setStartAt(selectedDate);
+    console.log(startAt);
+  };
   return (
     <div className="page-wrapper">
       <div className="top-button-container"></div>
@@ -75,68 +108,62 @@ const ActivityContent: React.FC = () => {
           <FavoriteBorderIcon style={{ color: '#E07068' }} />
         )}
       </div>
-
       <SwipeableViews
         style={{ zIndex: 52 }}
         enableMouseEvents
         index={currentImageIndex}
         onChangeIndex={(index: number) => setCurrentImageIndex(index)}
       >
-        {images.map((image, index) => (
-          <div key={index} style={{ width: '100%', height: '100%' }}>
-            <img src={image} className="swipeable-image" alt="House" />
+        {homeDetail.homeImageList.map((homeImage: IHomeImage, key: number) => (
+          <div key={key} style={{ width: '100%', height: '100%' }}>
+            <img src={`http://j10a707.p.ssafy.io${homeImage.homeImageUrl}`} className="swipeable-image" alt="House" />
           </div>
         ))}
       </SwipeableViews>
-
       <div className="content-wrapper">
-        <div className="name-description-container" style={{ fontSize: '23px', fontWeight: 'bold', margin: '20px 0' }}>
-          <p>집주인(김옥순 어르신의 집)</p>
-        </div>
-
         <div className="detail-description">
-          <p style={{ fontWeight: 'bold', fontSize: '17px' }}>위치(관악구 신림동)</p>
-          집에 대한 설명이 간략하게 들어가는 부분. (방2개, 화장실 2개)
+          <p style={{ fontWeight: 'bold', fontSize: '17px' }}>{getEMDNameAddress(homeDetail.home.address)}</p>
         </div>
 
         <div className="owner-description" style={{ fontSize: '20px' }}>
           <hr style={{ margin: '15px 0' }} />
-          {/*<p>집 주인에 대한 설명이 들어가는 부분</p>*/}
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src="/test/owner3.png" alt="Profile" style={{ width: '50px', height: '50px', borderRadius: '50%' }} />
+            <img
+              src={`http://j10a707.p.ssafy.io${homeDetail.hostImageList[0].hostImageUrl}`}
+              alt="Profile"
+              style={{ width: '50px', height: '50px', borderRadius: '50%' }}
+            />
             <div style={{ marginLeft: '10px', fontSize: '18px' }}>
               <div>
-                안녕하세요, ~~~ 입니다.
+                안녕하세요, {homeDetail.home.hostName} 입니다.
                 <br />
-                dsfsafdsfs
+                {homeDetail.home.hostAge}세,{homeDetail.home.hostGender === 'M' ? '할아버지' : '할머니'}
               </div>
             </div>
           </div>
-          <div style={{ fontSize: '16px', marginTop: '20px' }}>
-            소개 또는 태그 가져오기. 저는 ~~~ 살입니다.
-            ㅁㄴㅇㄻㄴㅇㄹㅇㄴㅁㄹㄴㅁㅇㄹㅇㄴㅇㄴㅁㄴㅁㅇㅁㄴㅇㄴㅁㅇㅁㄴㅇㅁㄴㅇㄴㅁ
-          </div>
+          <div style={{ fontSize: '16px', marginTop: '20px' }}>{homeDetail.home.introduce}</div>
           <hr style={{ margin: '15px 0' }} />
         </div>
 
+        <div className="option-wrapper" style={{ textAlign: 'center', display: 'inline-block' }}></div>
+
         <div style={{ fontWeight: 'bold', marginBottom: '15px' }}>함께 사용해요!</div>
-        {options.reduce((acc: JSX.Element[], option: string, index: number) => {
-          if (index % 2 === 0) {
-            acc.push(
-              <div className="option-wrapper" key={index}>
-                <div className="option">{option}</div>
-                {options[index + 1] && <div className="option">{options[index + 1]}</div>}
-              </div>,
-            );
-          }
-          return acc;
-        }, [])}
+        {getHomeOptionTags(homeDetail.homeOption) &&
+          getHomeOptionTags(homeDetail.homeOption).reduce((acc: ReactNode[], option: string, index: number) => {
+            if (index % 2 === 0) {
+              acc.push(
+                <div className="option-wrapper" key={index}>
+                  <div className="option">{option}</div>
+                  {getHomeOptionTags(homeDetail.homeOption)[index + 1] && (
+                    <div className="option">{getHomeOptionTags(homeDetail.homeOption)[index + 1]}</div>
+                  )}
+                </div>,
+              );
+            }
+            return acc;
+          }, [])}
 
         <hr style={{ margin: '15px 0' }} />
-
-        <div className="mapbox">
-          <MapDetailBox />
-        </div>
 
         <div className="reviews-container">
           <div className="review-box" style={{ border: '1px solid black', marginTop: '10px', padding: '10px' }}>
@@ -157,16 +184,22 @@ const ActivityContent: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* 집 신청 버튼과 찜 버튼 */}
       <div className="bottom-container">
         <div className="left-container">
-          <div className="register-div">월세 : ~~~원</div>
+          <div className="register-div">월세 : {getRent(homeDetail.home.rent)}만원</div>
+        </div>
+        <div className="center-container">
+          <div>
+            입주 일자 : <input type="date" value={startAt} onChange={onChange} />
+          </div>
         </div>
         <div className="register-btn">
-          <button>집 신청하기</button>
+          <button onClick={applyHome}>집 신청하기</button>
         </div>
       </div>
     </div>
   );
 };
 
-export default ActivityContent;
+export default HomeDetail;

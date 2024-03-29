@@ -17,12 +17,20 @@ const dummyData = {
   oneroom: { lat: 37.566022, lng: 126.977969 }, // 배열이 아닌 객체로 수정합니다.
 };
 
-export default function MapBox() {
+interface Props {
+  lat: number;
+  lng: number;
+}
+
+export default function MapBox({ lat, lng }: Props) {
   const [map, setMap] = useState(null);
 
   useEffect(() => {
+    console.log(lat);
+    console.log(lng);
     window.kakao.maps.load(() => {
       const container = document.getElementById('map');
+
       const options = {
         center: new window.kakao.maps.LatLng(dummyData.oneroom.lat, dummyData.oneroom.lng),
         level: 4,

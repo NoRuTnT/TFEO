@@ -51,7 +51,20 @@ export const getContractFormPreSignedUrl = async (contractNo: number) => {
 export const getMemberContract = async () => {
   try {
     const response = await customAxios.get<ISuccessResponse>('/api/members/home');
-    return response.data.result;
+    console.log(response.data.result);
+    return response.data.result as IContractInfo;
+  } catch (e) {
+    // 학생이 신청한 계약이 없는 경우가 고려되어야 한다. 신청한 계약 없을 경우 계약 없음 페이지 띄워야함
+    console.log(e);
+  }
+};
+
+//집 신청 취소
+export const cancelApply = async (homeNo: number) => {
+  try {
+    const response = await customAxios.delete<ISuccessResponse>(`/api/members/home/${homeNo}`);
+    alert(response.data.message);
+    return response.data.message;
   } catch (e) {
     // 학생이 신청한 계약이 없는 경우가 고려되어야 한다. 신청한 계약 없을 경우 계약 없음 페이지 띄워야함
     console.log(e);
