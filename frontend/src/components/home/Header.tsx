@@ -33,6 +33,7 @@ const Header: React.FC = () => {
     setIsMapLoaded,
     setHomes,
     setSearchCondition,
+    homes,
   } = useHomeStore();
 
   useEffect(() => {
@@ -131,27 +132,34 @@ const Header: React.FC = () => {
     if (filterKey == 'school') {
       selectFilter({ school: !school });
       // 학교 근처 필터링
-      // const homeBySchool = visibleHomes.filter((home) => home.distance < 5);
-      // setVisibleHomes(homeBySchool);
-      // console.log('학교 근처 필터링', homeBySchool);
+      const homeBySchool = visibleHomes.filter((home) => home.distance < 5);
+      setVisibleHomes(homeBySchool);
+      console.log('학교 근처 필터링', homeBySchool);
+      console.log('homes', homes);
+      console.log('visiblehomes', visibleHomes);
     } else if (filterKey == 'subway') {
       selectFilter({ subway: !subway });
       // 역세권 필터링
       const homesByStation = visibleHomes.filter((home) => home.station === 1);
       setVisibleHomes(homesByStation);
       toggleOption('station');
+      console.log('아파트 필터링', homesByStation);
+      console.log('homes', homes);
+      console.log('visiblehomes', visibleHomes);
     } else if (filterKey == 'apartment') {
       selectFilter({ apartment: !apartment });
       const homesByType = visibleHomes.filter((home) => home.type === 'APT');
       setVisibleHomes(homesByType);
       console.log('아파트 필터링', homesByType);
-      console.log('homes', visibleHomes);
+      console.log('homes', homes);
+      console.log('visiblehomes', visibleHomes);
     } else if (filterKey == 'pets') {
       selectFilter({ pets: !pets });
       const homesByPet = visibleHomes.filter((home) => home.pet === 1);
       setVisibleHomes(homesByPet);
       console.log('반려동물 필터링', homesByPet);
-      console.log('homes', visibleHomes);
+      console.log('homes', homes);
+      console.log('visibleHomes', visibleHomes);
     }
   };
 
