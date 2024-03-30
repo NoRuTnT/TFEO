@@ -2,7 +2,8 @@ package com.tfeo.backend.domain.member.controller;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,6 +33,7 @@ import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 import com.tfeo.backend.domain.member.model.dto.SmsRequestDto;
 import com.tfeo.backend.domain.member.model.dto.SmsVerifyDto;
 import com.tfeo.backend.domain.member.model.dto.SurveyRequestDto;
+import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 import com.tfeo.backend.domain.member.service.JwtService;
 import com.tfeo.backend.domain.member.service.MemberService;
@@ -62,6 +64,29 @@ public class MemberController {
 		boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !isAnonymous;
 
 		return ResponseEntity.ok(Collections.singletonMap("isAuthenticated", isAuthenticated));
+	}
+
+	@GetMapping("/detail")
+	public ResponseEntity<?> getMemberInfo(HttpServletRequest request) {
+		Optional<String> jwtdetail = jwtService.extractEmailFromAccessToken(request);
+
+		if (jwtdetail.isPresent()) {
+			Optional<Member> emaildetail = memberRepository.findByEmail(jwtdetail.get());
+
+			if (emaildetail.isPresent()) {
+				Member member = emaildetail.get();
+				Map<String, Object> memberInfo = new HashMap<>();
+				memberInfo.put("name", member.getName());
+				memberInfo.put("email", member.getEmail());
+				memberInfo.put("memberNo", member.getMemberNo());
+
+				return ResponseEntity.ok(memberInfo);
+			} else {
+				return ResponseEntity.status(404).body("가입된 사용자데이터를 찾을수없습니다.");
+			}
+		} else {
+			return ResponseEntity.status(400).body("유효한 토큰을 찾을수없습니다");
+		}
 	}
 
 	@GetMapping("/reaccesstoken")
