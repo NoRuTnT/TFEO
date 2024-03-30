@@ -22,7 +22,7 @@ interface HomeRequestDataState {
 }
 
 // 집 검색 조건
-type SearchCondition = {
+interface SearchCondition {
   internet: boolean;
   gas: boolean;
   washing_machine: boolean;
@@ -47,10 +47,10 @@ type SearchCondition = {
   rent_min: number;
   lat: number;
   lng: number;
-};
+}
 
 // 학생 성향
-type MemberPersonality = {
+interface MemberPersonality {
   member_personality_no: number;
   daytime: boolean;
   nighttime: boolean;
@@ -68,17 +68,17 @@ type MemberPersonality = {
   cold: boolean;
   hot: boolean;
   host_house_prefer: number;
-};
+}
 
 // 집 이미지 단일 객체 타입
-type HomeImage = {
+interface HomeImage {
   home_no: number;
   home_image_no: number;
   home_image_url: string;
-};
+}
 
 // 호스트 성향
-type HostVector = {
+interface HostVector {
   day_element: number;
   night_element: number;
   smoke_element: number;
@@ -88,10 +88,10 @@ type HostVector = {
   pet_lover_element: number;
   cold_element: number;
   hot_element: number;
-};
+}
 
 // 집 상세 정보 (리스트 조회 시 단일 집 객체 타입)
-type Home = {
+interface Home {
   _id: any;
   internet: number;
   gas: number;
@@ -149,20 +149,20 @@ type Home = {
   host_image_url: string;
   host_vector: HostVector;
   distance: number;
-};
+}
 
 // 집 리스트 상태 타입 정의
 interface HomeListState {
   homes: Home[];
+  setHomes: (newHomes: Home[]) => void;
   isMapLoaded: boolean; // 지도 로드 상태 추가
+  setIsMapLoaded: (isLoaded: boolean) => void;
   headerFilterChanged: boolean; // 헤더 필터 상태 추가
+  setHeaderFilterChanged: (isChanged: boolean) => void;
   searchFilterChanged: boolean; // 모달 필터 상태 추가 (확인 눌렀을 때 바뀜)
+  setSearchFilterChanged: (isChanged: boolean) => void;
   selectedHomeNo: number | null; // 선택된 집의 ID (선택되지 않았을 경우 null)
   selectHome: (homeNo: number) => void;
-  setIsMapLoaded: (isLoaded: boolean) => void;
-  setHeaderFilterChanged: (isChanged: boolean) => void;
-  setSearchFilterChanged: (isChanged: boolean) => void;
-  setHomes: (newHomes: any[]) => void;
 }
 
 interface VisibleHomesState {
