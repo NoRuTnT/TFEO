@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import { Autocomplete, TextField, Button, Box, Paper, Typography, Grid, Slider as MSlider, Stack } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { styled } from '@mui/system';
-import collage from '../api/surveyData';
+import colleges from '../api/surveyData';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers';
@@ -155,7 +155,7 @@ const Survey: React.FC = () => {
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
-                    options={collage}
+                    options={colleges.map((college) => college.name)}
                     sx={{ width: 295, margin: '70px auto' }}
                     renderInput={(params) => <TextField {...params} label="대학교" />}
                   />
