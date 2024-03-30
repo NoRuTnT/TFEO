@@ -7,13 +7,11 @@ RUN apk --no-cache add tzdata && \
 
 WORKDIR /app
 
-
 COPY . .
 
 # RUN npm install -g yarn
 
 RUN yarn install
-
 
 # RUN npm i -g @quasar/cli
 
