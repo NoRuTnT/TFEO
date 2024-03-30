@@ -187,7 +187,7 @@ const HomeDetail: React.FC = () => {
       {/* 집 신청 버튼과 찜 버튼 */}
       <div className="bottom-container">
         <div className="left-container">
-          <div className="register-div">월세 : {getRent(homeDetail.home.rent)}만원</div>
+          <div className="register-div">월세 : {homeDetail.home.rent}만원</div>
         </div>
         <div className="center-container">
           <div>

@@ -24,7 +24,7 @@ export function getHomeOptionTags(homeOption: IHomeOption) {
     VL: '빌라',
     JT: '주택',
     DDDGG: '단독다가구',
-    OR: '이거 뭔지 모름', //Todo: homeTypeName 정확히 정의하기
+    OR: '원룸',
   };
   // true인 속성들의 키(key)를 저장할 배열
   const trueKeys: string[] = [];
