@@ -36,7 +36,7 @@ services:
     environment:
       TZ: Asia/Seoul
     volumes:
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-redis/data:/data
+      - /home/ubuntu/redis-data:/data
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-redis/conf:/etc/redis/redis.conf
     restart: "no"
 
@@ -50,7 +50,7 @@ services:
       - docker-mongodb.env
     volumes:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mongo:/docker-entrypoint-initdb.d
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/data/backend/MongoDB:/data
+      - /home/ubuntu/mongo-data:/data/db
 
 
 
