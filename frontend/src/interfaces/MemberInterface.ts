@@ -28,23 +28,23 @@ export interface IMember {
 
 export interface IMemberPersonality {
   memberPersonalityNo: number;
-  daytime: boolean;
-  nighttime: boolean;
-  fast: boolean;
-  late: boolean;
-  dinner: boolean;
-  smoke: boolean;
-  drink: boolean;
-  outside: boolean;
-  inside: boolean;
-  quiet: boolean;
-  electronics: boolean;
-  strong: boolean;
-  housework: boolean;
-  errand: boolean;
-  liveLong: boolean;
-  liveShort: boolean;
-  pet: boolean;
-  cold: boolean;
-  hot: boolean;
+  daytime: number;
+  nighttime: number;
+  fast: number;
+  late: number;
+  dinner: number;
+  smoke: number;
+  drink: number;
+  outside: number;
+  inside: number;
+  quiet: number;
+  electronics: number;
+  strong: number;
+  housework: number;
+  errand: number;
+  liveLong: number;
+  liveShort: number;
+  pet: number;
+  cold: number;
+  hot: number;
 }

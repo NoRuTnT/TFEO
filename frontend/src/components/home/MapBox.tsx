@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import '../../styles/home/MapBox.css';
 import { theme } from '../../styles/Theme'; // 테마에서 기본 색상을 사용하기 위해 가져옵니다.
 import { useHomeStore } from '../../store/HomeStore';
-import axios from 'axios';
 import { RecommendAxios } from '../../api/RecommendAxios';
 
 declare global {
@@ -37,6 +36,7 @@ export default function MapBox() {
         console.log(response.data);
         // response를 homes 배열로 설정한다.
         setHomes(response.data);
+        setVisibleHomes(response.data);
         // homes를 기반으로 지도가 로드될 수 있도록 지도 로드 플래그 설정
         setIsMapLoaded(true);
       } catch (error) {
@@ -50,7 +50,6 @@ export default function MapBox() {
   useEffect(() => {
     if (isMapLoaded) {
       console.log('homes : ', homes);
-      console.log('다시 로드');
       loadMap(); // 지도 로드 조건을 mapLoaded로 설정
     }
   }, [setIsMapLoaded, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
@@ -126,6 +125,7 @@ export default function MapBox() {
       ],
     });
   };
+
   const loadMap = () => {
     window.kakao.maps.load(() => {
       const container = document.getElementById('map');
@@ -136,17 +136,17 @@ export default function MapBox() {
       };
       const newMap = new window.kakao.maps.Map(container, options);
 
-      // 집 리스트를 돌면서 마커 배열을 생성하는 함수
-      const markers = homes.map((home) => {
+      // 집 리스트를 돌면서 마커 배열을 생성
+      const markers = visibleHomes.map((home) => {
         return new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(home.lat, home.lng),
         });
       });
-      // const markers = visibleHomes.map((home) => {
-      //   return new window.kakao.maps.Marker({
-      //     position: new window.kakao.maps.LatLng(home.lat, home.lng),
-      //   });
-      // });
+
+      // 클러스터러 생성
+      const clusterer = makeClusterer(newMap);
+      // 클러스터러에 마커 등록
+      clusterer.addMarkers(markers);
 
       // 지도 바운드 안에 들어오는 포지션의 집 마커를 visibleHomes에 추가하는 함수
       const updateVisibleHomes = () => {
@@ -159,11 +159,6 @@ export default function MapBox() {
         );
         console.log('포지션 마커 필터링 완료 : visibleHomes 설정 (지도에 보이는 집 리스트)', homes, visibleHomes);
       };
-
-      // 클러스터러 생성
-      const clusterer = makeClusterer(newMap);
-      // 클러스터러에 마커 등록
-      clusterer.addMarkers(markers);
 
       // 지도 이동 or 줌 이벤트 발생 시 homes를 필터링
       window.kakao.maps.event.addListener(newMap, 'center_changed', updateVisibleHomes);
