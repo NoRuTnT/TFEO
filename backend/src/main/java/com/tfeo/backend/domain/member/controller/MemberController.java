@@ -79,6 +79,9 @@ public class MemberController {
 				memberInfo.put("name", member.getName());
 				memberInfo.put("email", member.getEmail());
 				memberInfo.put("memberNo", member.getMemberNo());
+				memberInfo.put("college", member.getCollege());
+				memberInfo.put("lat", member.getLat());
+				memberInfo.put("lng", member.getLng());
 
 				return ResponseEntity.ok(memberInfo);
 			} else {
