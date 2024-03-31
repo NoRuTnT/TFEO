@@ -32,12 +32,6 @@ const Header: React.FC = () => {
 
   const headerFilterClick = (filterKey: string) => {
     toggleFilter(filterKey);
-    setFilterCondition({
-      school: options[0].choice,
-      subway: options[1].choice,
-      apartment: options[2].choice,
-      pets: options[3].choice,
-    });
     setHeaderFilterChanged(true);
   };
 
