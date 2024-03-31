@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../styles/home/MapBox.css';
 import { theme } from '../../styles/Theme'; // 테마에서 기본 색상을 사용하기 위해 가져옵니다.
 import { useHomeStore } from '../../store/HomeStore';
@@ -12,55 +12,51 @@ declare global {
 
 export default function MapBox() {
   const {
-    homes,
-    visibleHomes,
-    setVisibleHomes,
+    homes, // 집 전체 조회 목록 (추천 반영)
+    visibleHomes, // 지도 bounds 안에 들어오는 집들 (클러스터 및 마커 배열 생성 시 필요)
     setHomes,
-    isMapLoaded,
-    setIsMapLoaded,
-    search_condition,
-    member_personality,
+    setVisibleHomes,
     headerFilterChanged,
+    searchFilterChanged,
+    setHeaderFilterChanged,
+    setSearchFilterChanged,
+    filter_condition,
+    search_condition, // 집 검색 조건
+    member_personality, // 학생 성향
   } = useHomeStore();
+
+  const fetchData = async () => {
+    try {
+      const requestData = {
+        filter_condition: filter_condition,
+        search_condition: search_condition,
+        member_personality: member_personality,
+      };
+      const response = await RecommendAxios.post('/recommend', requestData);
+      setHomes(response.data);
+      setHeaderFilterChanged(false);
+      setSearchFilterChanged(false);
+    } catch (error) {
+      console.error('집 리스트 조회 실패 : ', error);
+    }
+  };
 
   // MapBox.tsx 마운트 시 최초 1회 fetch (집 리스트)
   useEffect(() => {
-    // Axios 요청으로 homes 상태 업데이트
-    const fetchData = async () => {
-      try {
-        const requestData = {
-          search_condition: search_condition,
-          member_personality: member_personality,
-        };
-        const response = await RecommendAxios.post('/recommend', requestData);
-        console.log(response.data);
-        // response를 homes 배열로 설정한다.
-        setHomes(response.data);
-        setVisibleHomes(response.data);
-        // homes를 기반으로 지도가 로드될 수 있도록 지도 로드 플래그 설정
-        setIsMapLoaded(true);
-      } catch (error) {
-        console.error('집 리스트를 가져오는 데 실패했습니다 : ', error);
-      }
-    };
-    fetchData();
+    fetchData()
+      .then(() => loadMap())
+      .catch((error) => console.error(error));
   }, []);
 
-  // 지도 로드 플래그나, setVisibleHomes 가 호출될 때 loadMap 한다.
   useEffect(() => {
-    if (isMapLoaded) {
-      console.log('homes : ', homes);
-      loadMap(); // 지도 로드 조건을 mapLoaded로 설정
+    if (headerFilterChanged || searchFilterChanged) {
+      console.log('들어옴?');
+      console.log(filter_condition);
+      fetchData()
+        .then(() => loadMap())
+        .catch((error) => console.error(error));
     }
-  }, [setIsMapLoaded, setVisibleHomes]); // mapLoaded에 의존하는 useEffect
-
-  useEffect(() => {
-    if (isMapLoaded && headerFilterChanged) {
-      setHomes(visibleHomes);
-      console.log('포지션 마커 필터링 완료 : visibleHomes 설정 (지도에 보이는 집 리스트)', visibleHomes);
-      loadMap();
-    }
-  }, [headerFilterChanged, setVisibleHomes, setHomes]); // mapLoaded에 의존하는 useEffect
+  }, [headerFilterChanged, searchFilterChanged]);
 
   const makeClusterer = (map: any) => {
     console.log('클러스터 생성');
@@ -137,15 +133,13 @@ export default function MapBox() {
       const newMap = new window.kakao.maps.Map(container, options);
 
       // 집 리스트를 돌면서 마커 배열을 생성
-      const markers = visibleHomes.map((home) => {
+      const markers = homes.map((home) => {
         return new window.kakao.maps.Marker({
           position: new window.kakao.maps.LatLng(home.lat, home.lng),
         });
       });
 
-      // 클러스터러 생성
       const clusterer = makeClusterer(newMap);
-      // 클러스터러에 마커 등록
       clusterer.addMarkers(markers);
 
       // 지도 바운드 안에 들어오는 포지션의 집 마커를 visibleHomes에 추가하는 함수
@@ -157,10 +151,9 @@ export default function MapBox() {
             return bounds.contain(position);
           }),
         );
-        console.log('포지션 마커 필터링 완료 : visibleHomes 설정 (지도에 보이는 집 리스트)', homes, visibleHomes);
+        console.log('HomeList.tsx에 보일 visibleHomes :', visibleHomes);
       };
 
-      // 지도 이동 or 줌 이벤트 발생 시 homes를 필터링
       window.kakao.maps.event.addListener(newMap, 'center_changed', updateVisibleHomes);
       window.kakao.maps.event.addListener(newMap, 'zoom_changed', updateVisibleHomes);
       updateVisibleHomes();
