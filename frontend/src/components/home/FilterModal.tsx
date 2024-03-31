@@ -18,6 +18,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     marks,
     options,
     types,
+    toggleRentRange,
     toggleOption,
     toggleType,
     setSearchFilterChanged,
@@ -53,13 +54,12 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
   };
   const handleChange = (event: Event, newRange: number | number[]) => {
     setRange(newRange as number[]);
-    console.log(newRange);
+    toggleRentRange(newRange as number[]);
   };
 
   const handleButtonClick = () => {
     setSearchCondition(newSearchCondition);
     setModalOpen(false);
-    setSearchFilterChanged(true);
   };
 
   const handleOptionClick = (optionName: string, optionChoice: boolean) => {
@@ -77,6 +77,14 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
       [typeName]: !typeChoice,
     }));
   };
+
+  useEffect(() => {
+    return () => {
+      console.log('unmount');
+      setSearchFilterChanged(true);
+    };
+  }, []);
+
   return (
     <ModalContainer>
       <ModalContent>
@@ -89,8 +97,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
             value={range}
             onChange={handleChange}
             marks={marks}
-            min={0}
-            max={100}
+            min={marks[0].value}
+            max={marks[1].value}
             valueLabelDisplay="on"
             // getAriaValueText={valuetext}
           />
