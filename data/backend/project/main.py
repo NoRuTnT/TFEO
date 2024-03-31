@@ -23,7 +23,7 @@ import traceback
 import math
 
 app = FastAPI()
-host = 'mongodb://j10a707.p.ssafy.io'
+host = 'mongodb://tfeo:tfeo123@j10a707.p.ssafy.io:27017/?authSource=admin&authMechanism=DEFAULT'
 port = 27017
 # db = None
 
