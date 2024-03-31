@@ -253,22 +253,6 @@ class Filter_Condition(BaseModel):
 # def home():
 #     return {"message": "home"}
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-@app.put("/items/{item_id}")
-def update_item(item_id: int, item: Item):
-    # db.items.update({"$set":{"name": item.name, "price": item.price}})
-    return "updated"
-
-"""
-# 집 정보 update(가장 후 순위, 거의 사용하지 않음)
-@app.put("/update")
-def update_house():
-    return "없뎃"
-"""
-
 ## 비회원 추천 getMapping API 추가로 개발해야 됨 ##
 
 
@@ -309,6 +293,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     # 4. 우선순위가 높은 순서대로 json list 반환
 
     building_option_list = []
+    apart_flag = False # 아파트 포함 여부 확인
     if search_condition.APT:
         building_option_list.append('APT')
     if search_condition.OPST:
@@ -322,10 +307,14 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     if search_condition.OR:
         building_option_list.append('OR')
 
-    print(building_option_list)
+
     if(len(building_option_list)==0):
         building_option_list = ['APT', 'OPST', 'VL', 'JT', 'DDDGG', 'OR']
-
+    # filter_condition 과 search_condtion에서 아파트가 둘 중 하나라도 true이면
+    # 선택되도록 로직 변경
+    if(filter_condition.apartment and (not ('APT' in building_option_list))):
+        building_option_list.append('APT')
+    print(building_option_list)
     internet_list = get_permit_list(search_condition.internet)
     gas_list = get_permit_list(search_condition.gas)
     washing_machine_list = get_permit_list(search_condition.washing_machine)
@@ -357,7 +346,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
                         'move_in_date': {'$in':move_in_date_list},
                         'type': {'$in':building_option_list},
                          })
-    # 서울대임
+    # 입력받은 대학의 위도,경도 좌표값을 가져옴
     univ_lat = search_condition.lat
     univ_lng = search_condition.lng
     # univ_distance = math.sqrt(univ_lat**2+univ_lng**2)
@@ -369,7 +358,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     for doc in data:
         doc = dumps(doc)
         doc_json = json.loads(doc)
-        print(doc_json)
+        # print(doc_json) # 추출된 전체 결과를 확인할 때 사용
         distance = get_min_length(univ_lat, univ_lng, doc_json['lat'], doc_json['lng'])
         doc_json['distance'] = distance
         data_list.append(doc_json)
@@ -377,8 +366,10 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     print("확인된 내용물의 개수는??", len(data_list))
     data_list_filtered = []
     school_limit = 3
+
+    # 아파트 조건은 db에서 query할 때 미리 거른다.
     for data in data_list:
-        if ((data['distance']<=school_limit and filter_condition.school) or not filter_condition.school) and ((data['station']==1 and filter_condition.subway) or not filter_condition.subway) and ((data['type']=='APT' and filter_condition.apartment) or not filter_condition.apartment) and ((data['pet']==1 and filter_condition.pets) or not filter_condition.pets):
+        if ((data['distance']<=school_limit and filter_condition.school) or not filter_condition.school) and ((data['station']==1 and filter_condition.subway) or not filter_condition.subway) and ((data['pet']==1 and filter_condition.pets) or not filter_condition.pets):
             data_list_filtered.append(data)
 
     data_list = data_list_filtered
