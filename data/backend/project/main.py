@@ -152,7 +152,7 @@ class Home(BaseModel):
 
 
 ###############################
-# 아래부터 검색에 필요한 2개의 DTO #
+# 아래부터 검색에 필요한 3개의 DTO #
 ###############################
 
 # 둘 중에 하나 선택
@@ -237,6 +237,12 @@ class Host_Personality(BaseModel):
     hot: bool # 더위잘타는
     no_touch: bool # 간섭안하는
 
+class Filter_Condition(BaseModel):
+    school: bool
+    subway: bool
+    apartment: bool
+    pets: bool
+
 ##########################################
 
 # @app.get("/")
@@ -285,7 +291,7 @@ def get_recommended_list(home_option: Home_Option, member_personality: Member_Pe
 
 
 @app.post("/recommend")
-def filter_by_search_condition(search_condition: Search_Condition, member_personality: Optional[Member_Personality]=None):
+def filter_by_search_condition(search_condition: Search_Condition, filter_condition: Filter_Condition, member_personality: Optional[Member_Personality]=None):
     ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
     # s_c 가 false 이면 그냥 전부 채택
     # s_c 가 true 이면 s_c가 있는 것만 선택됨
@@ -367,6 +373,15 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
         distance = get_min_length(univ_lat, univ_lng, doc_json['lat'], doc_json['lng'])
         doc_json['distance'] = distance
         data_list.append(doc_json)
+    # 프론트엔드 4가지 조건에 맞게 필터링하는 과정
+    print("확인된 내용물의 개수는??", len(data_list))
+    data_list_filtered = []
+    school_limit = 3
+    for data in data_list:
+        if ((data['distance']<=school_limit and filter_condition.school) or not filter_condition.school) and ((data['station']==1 and filter_condition.subway) or not filter_condition.subway) and ((data['type']=='APT' and filter_condition.apartment) or not filter_condition.apartment) and ((data['pet']==1 and filter_condition.pets) or not filter_condition.pets):
+            data_list_filtered.append(data)
+
+    data_list = data_list_filtered
     """
     학생성향이 들어오지 않은 경우
     추천 알고리즘 적용 안하고 필터링 결과만 반환
@@ -382,25 +397,28 @@ def filter_by_search_condition(search_condition: Search_Condition, member_person
 
     # 벡터 추출 -> 위키독스 참고
 
+    prefer = 0
+    if(member_personality.host_house_prefer>=5):
+        prefer=1
     # 임시 json 객체
     member_personality_json_info = {
-        'member_personality_no': 1,
-        'daytime': True,
-        'nighttime': True,
-        'fast': True,
-        'late': True,
-        'dinner': True,
-        'smoke': True,
-        'drink': True,
-        'outside': True,
-        'inside': True,
-        'quite': True,
-        'live_long': True,
-        'live_short': True,
-        'pet': True,
-        'cold': True,
-        'hot': True,
-        'host_house_prefer': True,
+        'member_personality_no': member_personality.member_personality_no,
+        'daytime': member_personality.daytime,
+        'nighttime': member_personality.nighttime,
+        'fast': member_personality.fast,
+        'late': member_personality.late,
+        'dinner': member_personality.dinner,
+        'smoke': member_personality.smoke,
+        'drink': member_personality.drink,
+        'outside': member_personality.outside,
+        'inside': member_personality.inside,
+        'quite': member_personality.quite,
+        'live_long': member_personality.live_long,
+        'live_short': member_personality.live_short,
+        'pet': member_personality.pet,
+        'cold': member_personality.cold,
+        'hot': member_personality.hot,
+        'host_house_prefer': prefer,
     }
     member_vector = get_member_vector(member_personality_json_info)
     print('vector-format')
@@ -573,6 +591,9 @@ def get_min_length(lat1, lng1, lat2, lng2):
 
 def init():
     print("DB초기설정")
+
+# def filter_option(json):
+#     return True if json['op1'] and json['op2'] and json['op3'] and json['op4'] else False
 
 # 터미널창에
 # python -m uvicorn main:app --reload
