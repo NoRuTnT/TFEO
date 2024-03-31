@@ -18,6 +18,7 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     marks,
     options,
     types,
+    toggleRentRange,
     toggleOption,
     toggleType,
     setSearchFilterChanged,
