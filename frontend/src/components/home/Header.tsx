@@ -6,35 +6,14 @@ import ApartmentIcon from '@mui/icons-material/Apartment';
 import PetsIcon from '@mui/icons-material/Pets';
 import TuneIcon from '@mui/icons-material/Tune';
 import '../../styles/home/Header.css';
-import styled from '@emotion/styled';
-import { Slider, Box, Typography, Button, Grid } from '@mui/material';
 import { useHomeStore } from '../../store/HomeStore';
-import { RecommendAxios } from '../../api/RecommendAxios';
+import FilterModal from './FilterModal';
 
 const Header: React.FC = () => {
   const theme = useTheme();
-  const {
-    school,
-    subway,
-    apartment,
-    pets,
-    selectFilter,
-    options,
-    types,
-    toggleType,
-    toggleOption,
-    visibleHomes,
-    setVisibleHomes,
-    isMapLoaded,
-    headerFilterChanged,
-    setHeaderFilterChanged,
-    search_condition,
-    member_personality,
-    setIsMapLoaded,
-    setHomes,
-    setSearchCondition,
-    homes,
-  } = useHomeStore();
+  const [modalOpen, setModalOpen] = useState(false);
+  const { options, setFilterCondition, toggleFilter, filters, setVisibleHomes, isMapLoaded, setHeaderFilterChanged } =
+    useHomeStore();
 
   useEffect(() => {
     if (isMapLoaded) {
@@ -223,64 +202,7 @@ const Header: React.FC = () => {
         <div className="circle-border">
           <TuneIcon onClick={searchFilterClick} fontSize="medium" style={{ color: '#A0A0A0', cursor: 'pointer' }} />
         </div>
-        {modalOpen && (
-          <ModalContainer>
-            <ModalContent>
-              <Box sx={style}>
-                <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
-                  가격 범위
-                </Typography>
-                <Slider
-                  getAriaLabel={() => 'Price range'}
-                  value={value}
-                  onChange={handleChange}
-                  marks={marks}
-                  min={0}
-                  max={100}
-                  valueLabelDisplay="on"
-                  // getAriaValueText={valuetext}
-                />
-                <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
-                  집 옵션
-                </Typography>
-                <Grid container spacing={1}>
-                  {options.map((option) => (
-                    <Grid item xs={6} key={option.option}>
-                      <Button
-                        onClick={() => handleOptionClick(option.value)}
-                        style={{ width: '120px', height: '40px' }}
-                        variant={option.choice ? 'contained' : 'outlined'}
-                      >
-                        {option.option}
-                      </Button>
-                    </Grid>
-                  ))}
-                </Grid>
-                <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
-                  집 타입
-                </Typography>
-                <Grid container spacing={1}>
-                  {types.map((type) => (
-                    <Grid item xs={6} key={type.type}>
-                      <Button
-                        onClick={() => handleTypeClick(type.value)}
-                        style={{ width: '120px', height: '40px' }}
-                        variant={type.choice ? 'contained' : 'outlined'}
-                      >
-                        {type.type}
-                      </Button>
-                    </Grid>
-                  ))}
-                </Grid>
-                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button onClick={handleSearchClick} color="primary">
-                    확인
-                  </Button>
-                </Box>
-              </Box>
-            </ModalContent>
-          </ModalContainer>
-        )}
+        {modalOpen && <FilterModal modalOpen={modalOpen} setModalOpen={setModalOpen} />}
       </div>
     </header>
   );
