@@ -11,18 +11,18 @@ declare global {
 }
 
 export default function MapBox() {
+  const [isMounted, setIsMounted] = useState(false);
   const {
     homes, // 집 전체 조회 목록 (추천 반영)
-    visibleHomes, // 지도 bounds 안에 들어오는 집들 (클러스터 및 마커 배열 생성 시 필요)
     setHomes,
     setVisibleHomes,
     headerFilterChanged,
     searchFilterChanged,
-    setHeaderFilterChanged,
-    setSearchFilterChanged,
     filter_condition,
     search_condition, // 집 검색 조건
     member_personality, // 학생 성향
+    setHeaderFilterChanged,
+    setSearchFilterChanged,
   } = useHomeStore();
 
   const fetchData = async () => {
@@ -49,14 +49,23 @@ export default function MapBox() {
   }, []);
 
   useEffect(() => {
-    if (headerFilterChanged || searchFilterChanged) {
-      console.log('들어옴?');
-      console.log(filter_condition);
+    if (headerFilterChanged) {
+      // console.log(filter_condition);
       fetchData()
         .then(() => loadMap())
         .catch((error) => console.error(error));
     }
-  }, [headerFilterChanged, searchFilterChanged]);
+  }, [headerFilterChanged]);
+
+  useEffect(() => {
+    console.log('동작을하긴하는거지?');
+    if (searchFilterChanged) {
+      // console.log(filter_condition);
+      fetchData()
+        .then(() => loadMap())
+        .catch((error) => console.error(error));
+    }
+  }, [searchFilterChanged]);
 
   const makeClusterer = (map: any) => {
     console.log('클러스터 생성');
@@ -133,17 +142,22 @@ export default function MapBox() {
       const newMap = new window.kakao.maps.Map(container, options);
 
       // 집 리스트를 돌면서 마커 배열을 생성
-      const markers = homes.map((home) => {
-        return new window.kakao.maps.Marker({
-          position: new window.kakao.maps.LatLng(home.lat, home.lng),
+      const updateMarkers = () => {
+        return homes.map((home) => {
+          return new window.kakao.maps.Marker({
+            position: new window.kakao.maps.LatLng(home.lat, home.lng),
+          });
         });
-      });
+      };
+
+      let markers = updateMarkers();
 
       const clusterer = makeClusterer(newMap);
       clusterer.addMarkers(markers);
 
       // 지도 바운드 안에 들어오는 포지션의 집 마커를 visibleHomes에 추가하는 함수
       const updateVisibleHomes = () => {
+        markers = updateMarkers();
         const bounds = newMap.getBounds();
         setVisibleHomes(
           homes.filter((home) => {
@@ -151,7 +165,6 @@ export default function MapBox() {
             return bounds.contain(position);
           }),
         );
-        console.log('HomeList.tsx에 보일 visibleHomes :', visibleHomes);
       };
 
       window.kakao.maps.event.addListener(newMap, 'center_changed', updateVisibleHomes);

@@ -25,15 +25,11 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
         {/* 집의 사진을 보여줄 캐러셀 */}
         <div className="carousel-container">
           <Slider {...settings}>
-            <div className="slide-right">
-              <img src={`http://j10a707.p.ssafy.io${home.home_image_0}`} alt={`Home 0`} />
-            </div>
-            <div className="slide-right">
-              <img src={`http://j10a707.p.ssafy.io${home.home_image_1}`} alt={`Home 1`} />
-            </div>
-            <div className="slide-right">
-              <img src={`http://j10a707.p.ssafy.io${home.home_image_2}`} alt={`Home 2`} />
-            </div>
+            {home.home_image.map((img: any, index: number) => (
+              <div key={index} className="slide-right">
+                <img src={`http://j10a707.p.ssafy.io${img.home_image_url}`} alt={`Home ${index}`} />
+              </div>
+            ))}
           </Slider>
         </div>
       </div>
