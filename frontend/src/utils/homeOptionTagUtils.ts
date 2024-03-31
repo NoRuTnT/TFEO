@@ -31,7 +31,7 @@ export function getHomeOptionTags(homeOption: IHomeOption) {
 
   // 객체의 속성들을 순회하면서 true인 속성들의 키(key)를 배열에 추가
   for (const key in homeOption) {
-    if ((homeOption.hasOwnProperty(key) && typeof homeOption[key] === 'boolean', homeOption[key] === true)) {
+    if ((homeOption.hasOwnProperty(key) && typeof homeOption[key] === 'number', homeOption[key] === 1)) {
       trueKeys.push(key);
     }
     if (homeOption.hasOwnProperty(key) && key === 'type') {
