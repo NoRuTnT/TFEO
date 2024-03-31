@@ -60,7 +60,6 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
   const handleButtonClick = () => {
     setSearchCondition(newSearchCondition);
     setModalOpen(false);
-    setSearchFilterChanged(true);
   };
 
   const handleOptionClick = (optionName: string, optionChoice: boolean) => {
@@ -78,6 +77,14 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
       [typeName]: !typeChoice,
     }));
   };
+
+  useEffect(() => {
+    return () => {
+      console.log('unmount');
+      setSearchFilterChanged(true);
+    };
+  }, []);
+
   return (
     <ModalContainer>
       <ModalContent>
