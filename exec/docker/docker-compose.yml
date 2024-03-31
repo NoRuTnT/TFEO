@@ -51,7 +51,7 @@ services:
     volumes:
       - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/initial-mongo:/docker-entrypoint-initdb.d
       - /home/ubuntu/mongo-data:/data/db
-      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-redis/conf/mongod.conf:/etc/mongo/mongod.conf
+      - /home/ubuntu/jenkins-data/workspace/jenkins_pipeline/exec/docker/tfeo-mongo/conf/mongod.conf:/etc/mongo/mongod.conf
     command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
 
 
