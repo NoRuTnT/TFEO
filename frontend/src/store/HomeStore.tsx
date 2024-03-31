@@ -1,24 +1,30 @@
 import create from 'zustand';
 
 // 집 검색 필터
-interface HomeFilterState {
-  school: boolean;
-  subway: boolean;
-  apartment: boolean;
-  pets: boolean;
+interface HomeFilter {
+  marks: { value: number; label: string }[];
+  filters: { option: string; value: string; choice: boolean }[];
   options: { option: string; value: string; choice: boolean }[];
   types: { type: string; value: string; choice: boolean }[];
-  // 상태를 업데이트하는 함수
-  selectFilter: (newState: Partial<HomeFilterState>) => void;
+  toggleFilter: (value: string) => void;
   toggleOption: (value: string) => void;
   toggleType: (value: string) => void;
 }
 
-interface HomeRequestDataState {
+interface HomeRequestData {
+  filter_condition: FilterCondition;
   search_condition: SearchCondition;
   member_personality: MemberPersonality;
+  setFilterCondition: (value: FilterCondition) => void;
   setSearchCondition: (value: SearchCondition) => void;
   setMemberPersonality: (value: MemberPersonality) => void;
+}
+
+interface FilterCondition {
+  school: boolean;
+  subway: boolean;
+  apartment: boolean;
+  pets: boolean;
 }
 
 // 집 검색 조건
@@ -154,15 +160,13 @@ interface Home {
 // 집 리스트 상태 타입 정의
 interface HomeListState {
   homes: Home[];
-  setHomes: (newHomes: Home[]) => void;
   isMapLoaded: boolean; // 지도 로드 상태 추가
-  setIsMapLoaded: (isLoaded: boolean) => void;
   headerFilterChanged: boolean; // 헤더 필터 상태 추가
-  setHeaderFilterChanged: (isChanged: boolean) => void;
   searchFilterChanged: boolean; // 모달 필터 상태 추가 (확인 눌렀을 때 바뀜)
+  setHomes: (newHomes: Home[]) => void;
+  setIsMapLoaded: (isLoaded: boolean) => void;
+  setHeaderFilterChanged: (isChanged: boolean) => void;
   setSearchFilterChanged: (isChanged: boolean) => void;
-  selectedHomeNo: number | null; // 선택된 집의 ID (선택되지 않았을 경우 null)
-  selectHome: (homeNo: number) => void;
 }
 
 interface VisibleHomesState {
@@ -176,12 +180,17 @@ const initialVisibleHomesState: VisibleHomesState = {
 };
 
 // 초기 상태
-const initialFilterState: HomeFilterState = {
-  school: false,
-  subway: false,
-  apartment: false,
-  pets: false,
-  // UI 상의 집 옵션 태그
+const initialFilter: HomeFilter = {
+  marks: [
+    { value: 0, label: '0만원' },
+    { value: 100, label: '100만원' },
+  ],
+  filters: [
+    { option: '학교 근처', value: 'school', choice: false },
+    { option: '역세권', value: 'subway', choice: false },
+    { option: '아파트', value: 'apartment', choice: false },
+    { option: '반려동물', value: 'pets', choice: false },
+  ],
   options: [
     { option: '인터넷', value: 'internet', choice: false },
     { option: '가스레인지', value: 'gas', choice: false },
@@ -196,7 +205,6 @@ const initialFilterState: HomeFilterState = {
     { option: '주차', value: 'parking', choice: false },
     { option: '싱크대', value: 'sink', choice: false },
   ],
-  // UI 상의 집 타입 태그
   types: [
     { type: '아파트', value: 'APT', choice: false },
     { type: '빌라', value: 'VL', choice: false },
@@ -204,25 +212,29 @@ const initialFilterState: HomeFilterState = {
     { type: '원룸', value: 'OR', choice: false },
     { type: '단독/다가구', value: 'DDDGG', choice: false },
   ],
-  selectFilter: (newState: Partial<HomeFilterState>) => {},
+  toggleFilter: (value: string) => {},
   toggleOption: (value: string) => {},
   toggleType: (value: string) => {},
 };
 
-const initialListState: HomeListState = {
+const initialList: HomeListState = {
   homes: [],
   isMapLoaded: false, // 지도 로드 상태 추가
-  selectedHomeNo: null,
   headerFilterChanged: false, // 헤더 필터 상태 추가
   searchFilterChanged: false, // 모달 필터 상태 추가 (확인 누를 때 변하게 할거임)
-  selectHome: (homeNo: number) => {},
   setIsMapLoaded: (isLoaded: boolean) => {},
   setHeaderFilterChanged: (isChanged: boolean) => {},
   setHomes: (newHomes: any[]) => {},
   setSearchFilterChanged: (isChanged: boolean) => {},
 };
 
-const initialHomeRequestDataState: HomeRequestDataState = {
+const initialHomeRequestData: HomeRequestData = {
+  filter_condition: {
+    school: false,
+    subway: false,
+    apartment: false,
+    pets: false,
+  },
   search_condition: {
     internet: false,
     gas: false,
@@ -268,47 +280,52 @@ const initialHomeRequestDataState: HomeRequestDataState = {
     hot: true,
     host_house_prefer: 0,
   },
+  setFilterCondition: (value: FilterCondition) => {},
   setSearchCondition: (value: SearchCondition) => {},
   setMemberPersonality: (value: MemberPersonality) => {},
 };
 
-export const useHomeStore = create<HomeFilterState & HomeRequestDataState & HomeListState & VisibleHomesState>(
-  (set) => ({
-    ...initialFilterState,
-    ...initialHomeRequestDataState,
-    ...initialListState,
-    ...initialVisibleHomesState,
-    selectFilter: (newState: Partial<HomeFilterState>) => set((state) => ({ ...state, ...newState })),
-    selectHome: (homeNo: number) => set({ selectedHomeNo: homeNo }),
-    setVisibleHomes: (homes: Home[]) => set({ visibleHomes: homes }), // 현재 보이는 집들을 설정하는 함수
-    toggleOption: (value: string) =>
-      set((state) => {
-        // 옵션 토글
-        const newOptions = state.options.map((option) =>
-          option.value === value ? { ...option, choice: !option.choice } : option,
-        );
-        // searchCondition 업데이트
-        const newSearchCondition = {
-          ...state.search_condition,
-          [value]: !state.search_condition[value as keyof SearchCondition],
-        };
-        return { ...state, options: newOptions, search_condition: newSearchCondition };
-      }),
-    toggleType: (value: string) =>
-      set((state) => {
-        // 타입 토글
-        const newTypes = state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type));
-        // searchCondition 업데이트
-        const newSearchCondition = {
-          ...state.search_condition,
-          [value]: !state.search_condition[value as keyof SearchCondition],
-        };
-        return { ...state, types: newTypes, search_condition: newSearchCondition };
-      }),
-    setIsMapLoaded: (isLoaded: boolean) => set({ isMapLoaded: isLoaded }), // 지도 로드 상태 업데이트 함수 추가
-    setHeaderFilterChanged: (isChanged: boolean) => set({ headerFilterChanged: isChanged }),
-    setHomes: (newHomes: any[]) => set((state) => ({ ...state, homes: newHomes })),
-    setSearchCondition: (newData: SearchCondition) => set((state) => ({ ...state, search_condition: newData })),
-    setMemberPersonality: (newData: MemberPersonality) => set((state) => ({ ...state, member_personality: newData })),
-  }),
-);
+export const useHomeStore = create<HomeFilter & HomeRequestData & HomeListState & VisibleHomesState>((set) => ({
+  ...initialFilter,
+  ...initialHomeRequestData,
+  ...initialList,
+  ...initialVisibleHomesState,
+  setVisibleHomes: (homes: Home[]) => set({ visibleHomes: homes }), // 현재 보이는 집들을 설정하는 함수
+  toggleFilter: (value: string) =>
+    set((state) => {
+      const newFilters = state.filters.map((option) =>
+        option.value === value ? { ...option, choice: !option.choice } : option,
+      );
+      const newFilterCondition = {
+        ...state.filter_condition,
+        [value]: !state.filter_condition[value as keyof FilterCondition],
+      };
+      return { ...state, options: newFilters, filter_condition: newFilterCondition };
+    }),
+  toggleOption: (value: string) =>
+    set((state) => {
+      const newOptions = state.options.map((option) =>
+        option.value === value ? { ...option, choice: !option.choice } : option,
+      );
+      const newSearchCondition = {
+        ...state.search_condition,
+        [value]: !state.search_condition[value as keyof SearchCondition],
+      };
+      return { ...state, options: newOptions, search_condition: newSearchCondition };
+    }),
+  toggleType: (value: string) =>
+    set((state) => {
+      const newTypes = state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type));
+      const newSearchCondition = {
+        ...state.search_condition,
+        [value]: !state.search_condition[value as keyof SearchCondition],
+      };
+      return { ...state, types: newTypes, search_condition: newSearchCondition };
+    }),
+  setIsMapLoaded: (isLoaded: boolean) => set({ isMapLoaded: isLoaded }), // 지도 로드 상태 업데이트 함수 추가
+  setHeaderFilterChanged: (isChanged: boolean) => set({ headerFilterChanged: isChanged }),
+  setHomes: (newHomes: any[]) => set((state) => ({ ...state, homes: newHomes })),
+  setFilterCondition: (newData: FilterCondition) => set((state) => ({ ...state, filter_condition: newData })),
+  setSearchCondition: (newData: SearchCondition) => set((state) => ({ ...state, search_condition: newData })),
+  setMemberPersonality: (newData: MemberPersonality) => set((state) => ({ ...state, member_personality: newData })),
+}));
