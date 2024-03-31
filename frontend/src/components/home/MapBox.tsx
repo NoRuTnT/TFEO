@@ -25,6 +25,69 @@ export default function MapBox() {
     setSearchFilterChanged,
   } = useHomeStore();
 
+  const fetchFirstData = async () => {
+    try {
+      const requestData = {
+        filter_condition: {
+          school: false,
+          subway: false,
+          apartment: false,
+          pets: false,
+        },
+        search_condition: {
+          internet: true,
+          gas: false,
+          washing_machine: false,
+          air_conditioner: false,
+          refrigerator: false,
+          elevator: false,
+          microwave: false,
+          toilet: false,
+          breakfast: false,
+          heating: false,
+          parking: false,
+          station: false,
+          move_in_date: false,
+          sink: false,
+          APT: true,
+          OPST: true,
+          VL: true,
+          JT: true,
+          DDDGG: true,
+          OR: false,
+          rent_max: 100,
+          rent_min: 0,
+          lat: 37.609641,
+          lng: 126.997697,
+        },
+        member_personality: {
+          member_personality_no: 1,
+          daytime: true,
+          nighttime: true,
+          fast: true,
+          late: true,
+          dinner: true,
+          smoke: true,
+          drink: true,
+          outside: true,
+          inside: true,
+          quite: true,
+          live_long: true,
+          live_short: true,
+          pet: true,
+          cold: true,
+          hot: true,
+          host_house_prefer: 1,
+        },
+      };
+      const response = await RecommendAxios.post('/recommend', requestData);
+      setHomes(response.data);
+      setHeaderFilterChanged(false);
+    } catch (error) {
+      console.error('집 리스트 조회 실패 : ', error);
+    }
+  };
+
   const fetchData = async () => {
     try {
       const requestData = {
@@ -32,8 +95,10 @@ export default function MapBox() {
         search_condition: search_condition,
         member_personality: member_personality,
       };
+      console.log(requestData);
       const response = await RecommendAxios.post('/recommend', requestData);
       setHomes(response.data);
+      console.log(response.data);
       setHeaderFilterChanged(false);
       setSearchFilterChanged(false);
     } catch (error) {
@@ -43,10 +108,22 @@ export default function MapBox() {
 
   // MapBox.tsx 마운트 시 최초 1회 fetch (집 리스트)
   useEffect(() => {
-    fetchData()
-      .then(() => loadMap())
+    fetchFirstData()
+      .then(() => {
+        setIsMounted(true);
+      })
       .catch((error) => console.error(error));
   }, []);
+
+  useEffect(() => {
+    if (isMounted) {
+      loadMap();
+    }
+  }, [isMounted]);
+
+  useEffect(() => {
+    loadMap();
+  }, [homes]);
 
   useEffect(() => {
     if (headerFilterChanged) {
