@@ -1,5 +1,7 @@
 package com.tfeo.backend.common.handler;
 
+import static com.tfeo.backend.common.model.type.Role.*;
+
 import java.io.IOException;
 
 import javax.persistence.EntityNotFoundException;
@@ -13,6 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import com.tfeo.backend.common.config.PathProperty;
+import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.member.model.dto.auth.CustomOAuth2User;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
@@ -63,6 +66,15 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 		//redis에 리프레쉬토큰저장
 		jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
 
-		response.sendRedirect(pathProperty.getDOMAIN());
+		Role role = member.getRole();
+		String redirectUrl = pathProperty.getDOMAIN();
+		if (member.getMemberPersonality().getCold() == null) {
+			redirectUrl = "/survey";
+		}
+		if (MANAGER.equals(role)) {
+			redirectUrl = "/manage-home";
+		}
+		response.sendRedirect(redirectUrl);
+
 	}
 }
