@@ -16,16 +16,6 @@ import { getMemberDetail } from '../../api/MemberApis';
 
 const Contract = () => {
   const [contractInfo, setContractInfo] = useState<IContractInfo>();
-  const [status, setStatus] = useState<string>('');
-  const [memberRole, setMemberRole] = useState<string>();
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const result = await getMemberDetail();
-  //     if (!result) return;
-  //     setMemberRole(result.role);
-  //   };
-  //   fetchData();
-  // }, []);
   useEffect(() => {
     const fetchData = async () => {
       const result = await getMemberContract();
@@ -34,21 +24,18 @@ const Contract = () => {
     };
     fetchData();
   }, []);
-  const setApplied = () => {
-    setStatus('APPLIED');
-  };
-  const setInProgress = () => {
-    setStatus('IN_PROGRESS');
-  };
-  const setCompleted = () => {
-    setStatus('DONE');
-  };
   const renderByStatus = (status: string) => {
     if (!contractInfo) return;
     switch (status) {
       case 'APPLIED':
         console.log('applied');
-        return <ContractAppliedContent homeNo={contractInfo.home.home.homeNo} />;
+        return (
+          <ContractAppliedContent
+            homeNo={contractInfo.home.home.homeNo}
+            memberNo={contractInfo.member.memberNo}
+            role="USER"
+          />
+        );
       case 'IN_PROGRESS':
         console.log('in-progress');
         return (
@@ -56,11 +43,12 @@ const Contract = () => {
             homeDetail={contractInfo.home}
             contract={contractInfo.contract}
             member={contractInfo.member}
+            role="USER"
           />
         );
       case 'DONE':
         console.log('completed');
-        return <ContractCompletedContent contractNo={contractInfo.contract.contractNo} />;
+        return <ContractCompletedContent contractNo={contractInfo.contract.contractNo} role="USER" />;
     }
   };
   if (!contractInfo) {

@@ -174,10 +174,10 @@ const ContractSignatureModal = ({ open, handleClose, contract, role }: Props) =>
       const modifiedPdfBytes = await pdfDoc.save();
       //pdf s3에 업로드
       const blob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = 'combined_pdf.pdf';
-      link.click();
+      // const link = document.createElement('a');
+      // link.href = window.URL.createObjectURL(blob);
+      // link.download = 'combined_pdf.pdf';
+      // link.click();
       const preSignedUrl = await signContract(contract.contractNo);
       if (preSignedUrl) await uploadFileToS3({ preSignedUrlToUpload: preSignedUrl, uploadFile: blob });
       window.alert('서명이 완료되었습니다.');
