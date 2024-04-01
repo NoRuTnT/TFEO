@@ -21,7 +21,7 @@ export const getFileFromS3 = async (preSignedUrlToDownload: string) => {
     const response = await axios.get(preSignedUrlToDownload, {
       responseType: 'blob',
     });
-    console.log('S3 upload finished');
+    console.log('S3 Download finished');
     return response.data as Blob;
   } catch (e) {
     console.error('S3 다운로드 중 오류 발생', e);

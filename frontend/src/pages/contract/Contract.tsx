@@ -14,7 +14,7 @@ import { getMemberContract } from '../../api/ContractApis';
 
 const Contract = () => {
   const [contractInfo, setContractInfo] = useState<IContractInfo>();
-  const [status, setStatus] = useState<string>('applied');
+  const [status, setStatus] = useState<string>('');
   useEffect(() => {
     const fetchData = async () => {
       const result = await getMemberContract();

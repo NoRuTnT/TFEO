@@ -24,14 +24,14 @@ export function getHomeOptionTags(homeOption: IHomeOption) {
     VL: '빌라',
     JT: '주택',
     DDDGG: '단독다가구',
-    OR: '이거 뭔지 모름', //Todo: homeTypeName 정확히 정의하기
+    OR: '원룸',
   };
   // true인 속성들의 키(key)를 저장할 배열
   const trueKeys: string[] = [];
 
   // 객체의 속성들을 순회하면서 true인 속성들의 키(key)를 배열에 추가
   for (const key in homeOption) {
-    if ((homeOption.hasOwnProperty(key) && typeof homeOption[key] === 'boolean', homeOption[key] === true)) {
+    if ((homeOption.hasOwnProperty(key) && typeof homeOption[key] === 'number', homeOption[key] === 1)) {
       trueKeys.push(key);
     }
     if (homeOption.hasOwnProperty(key) && key === 'type') {
