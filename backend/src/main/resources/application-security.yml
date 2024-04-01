@@ -46,13 +46,3 @@ coolsms:
 tfeo:
   domain: ${TFEO_DOMAIN}
 
-logging:
-  level:
-    org:
-      springframework:
-        security: trace
-        web: trace
-        oauth2:
-          client: trace
-        data:
-          redis: trace
