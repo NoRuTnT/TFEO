@@ -97,11 +97,4 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 		return memberRepository.save(createdUser);
 	}
 
-	// @Override
-	// public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-	// 	Member member = memberRepository.findByEmail(email)
-	// 		.orElseThrow(() -> new UsernameNotFoundException(email));
-	//
-	// 	return new MemberAccount(member);
-	// }
 }

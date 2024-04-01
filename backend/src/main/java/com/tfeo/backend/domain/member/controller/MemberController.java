@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +34,6 @@ import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 import com.tfeo.backend.domain.member.model.dto.SmsRequestDto;
 import com.tfeo.backend.domain.member.model.dto.SmsVerifyDto;
 import com.tfeo.backend.domain.member.model.dto.SurveyRequestDto;
-import com.tfeo.backend.domain.member.model.dto.auth.CustomOAuth2User;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 import com.tfeo.backend.domain.member.service.JwtService;
@@ -132,8 +131,12 @@ public class MemberController {
 	//회원 상세정보 조회
 	@GetMapping("")
 	//Todo: Auth 적용 이후 memberId 갱신
-	public ResponseEntity<SuccessResponse> memberDetails(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
-		Long memberNo = customOAuth2User.getMemberNo();
+	public ResponseEntity<SuccessResponse> memberDetails(HttpServletRequest request) {
+		Member member = jwtService.extractEmailFromAccessToken(request)
+			.flatMap(email -> memberRepository.findByEmail(email))
+			.orElseThrow(() -> new NoSuchElementException("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
+
+		Long memberNo = member.getMemberNo();
 		MemberResponseDto memberResponseDto = memberService.findMember(memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
