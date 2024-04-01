@@ -128,6 +128,15 @@ const HomeDetail: React.FC = () => {
           </div>
         ))}
       </SwipeableViews>
+      <div className="small-indicators">
+        {homeDetail.homeImageList.map((_, index) => (
+          <span
+            key={index}
+            className={`small-dot ${index === currentImageIndex ? 'active' : ''}`}
+            onClick={() => setCurrentImageIndex(index)}
+          ></span>
+        ))}
+      </div>
       <div className="content-wrapper">
         <div className="detail-description">
           <p style={{ fontWeight: 'bold', fontSize: '17px' }}>{getEMDNameAddress(homeDetail.home.address)}</p>
