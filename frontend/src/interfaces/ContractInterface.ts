@@ -1,5 +1,6 @@
 import { IHome, IHomeDetail } from './HomeInterface';
 import { IMember } from './MemberInterface';
+import { IAddress } from './AddressInterface';
 
 export interface IContract {
   contractNo: number;
@@ -20,4 +21,13 @@ export interface IContractForm {
   home: IHome;
   contract: IContract;
   member: IMember;
+}
+
+export interface IContractManageList {
+  contractNo: number;
+  hostName: string;
+  memberName: string;
+  address: IAddress;
+  startAt: string;
+  expiredAt: string;
 }
