@@ -216,7 +216,7 @@ class Member_Personality(BaseModel): # 집추천 설문내용 DTO
     drink: bool # 술 자주 마시는
     outside: bool # 집을 잘 비우는
     inside: bool # 집돌이/집순이
-    quite: bool # 조용한
+    quiet: bool # 조용한
     live_long: bool # 장기거주
     live_short: bool # 단기거주
     pet: bool # 반려동물
@@ -255,7 +255,8 @@ class Filter_Condition(BaseModel):
 
 ## 비회원 추천 getMapping API 추가로 개발해야 됨 ##
 
-
+# 성능 최적화를 위해 200개 까지만 추천
+SEARCH_LIMIT = 200
 
 
 
@@ -347,7 +348,31 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
                         'station': {'$in':station_list},
                         'move_in_date': {'$in':move_in_date_list},
                         'type': {'$in':building_option_list},
-                         })
+                         }, {'type': 1,
+                             'smoke': 1,
+                             'pet': 1,
+                             'clean': 1,
+                             'daytime': 1,
+                             'nighttime': 1,
+                             'extrovert': 1,
+                             'introvert': 1,
+                             'cold': 1,
+                             'hot': 1,
+                             'no_touch': 1,
+                             'host_name': 1,
+                             'host_age': 1,
+                             'host_gender': 1,
+                             'address': 1,
+                             'rent': 1,
+                             'lat': 1,
+                             'lng': 1,
+                             'home_image': 1,
+                             'host_image_url': 1,
+                             # 아래 항목은 output에 존재하지 않아도 filter조건때문에 필요
+                             'station': 1,
+                             'host_vector': 1,
+                             'home_no': 1,
+                             })
     # 입력받은 대학의 위도,경도 좌표값을 가져옴
     univ_lat = search_condition.lat
     univ_lng = search_condition.lng
@@ -380,7 +405,13 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     추천 알고리즘 적용 안하고 필터링 결과만 반환
     """
     if(member_personality is None):
+        data_list = data_list[:SEARCH_LIMIT] # 최대 200개까지 출력
+        for item in data_list:
+            del item['host_vector']
+            del item['station']
+            del item['home_no']
         return data_list
+
 
     print(len(data_list))
     print(data_list)
@@ -405,7 +436,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         'drink': member_personality.drink,
         'outside': member_personality.outside,
         'inside': member_personality.inside,
-        'quite': member_personality.quite,
+        'quiet': member_personality.quiet,
         'live_long': member_personality.live_long,
         'live_short': member_personality.live_short,
         'pet': member_personality.pet,
@@ -445,10 +476,30 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     # indices = indices[:3]  # 3개만 추출
 
 
-
     output_list = [] # 최종적으로 추천된 부동산 내용들의 list, 필요시 원하는 성분들만 추출해서 사용
-    for index in priorities:
-        item = db.home.find({'home_no': index[1]})
+    for lim, index in enumerate(priorities):
+        if(lim >= SEARCH_LIMIT):
+            break
+        item = db.home.find({'home_no': index[1]}, {'type': 1,
+                             'smoke': 1,
+                             'pet': 1,
+                             'clean': 1,
+                             'daytime': 1,
+                             'nighttime': 1,
+                             'extrovert': 1,
+                             'introvert': 1,
+                             'cold': 1,
+                             'hot': 1,
+                             'no_touch': 1,
+                             'host_name': 1,
+                             'host_age': 1,
+                             'host_gender': 1,
+                             'address': 1,
+                             'rent': 1,
+                             'lat': 1,
+                             'lng': 1,
+                             'home_image': 1,
+                             'host_image_url': 1})
         for doc in item:
             doc = dumps(doc)
             item_json = json.loads(doc)
@@ -536,7 +587,7 @@ def get_member_vector(member_personality):
     night = convert_bool_to_int(member_personality['nighttime'])+convert_bool_to_int(member_personality['late'])
     smoke = convert_bool_to_int(member_personality['smoke'])
     extro = convert_bool_to_int(member_personality['outside'])
-    intro = convert_bool_to_int(member_personality['inside'])+convert_bool_to_int(member_personality['quite'])
+    intro = convert_bool_to_int(member_personality['inside'])+convert_bool_to_int(member_personality['quiet'])
     host_related = convert_bool_to_int(member_personality['live_long'])
     pet_lover = convert_bool_to_int(member_personality['pet'])
     cold = convert_bool_to_int(member_personality['cold'])
