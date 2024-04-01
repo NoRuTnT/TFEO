@@ -4,13 +4,6 @@ import '../../styles/MainPage.css';
 import '../../styles/home/HomeDetail.css';
 import '../../styles/manager/ManagerHome.css';
 
-import { radians } from 'pdf-lib';
-
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import StarIcon from '@mui/icons-material/Star';
-import CancelIcon from '@mui/icons-material/Cancel';
-
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
@@ -20,61 +13,149 @@ import AddHomeIcon from '@mui/icons-material/AddHome';
 
 const ActivityContent: React.FC = () => {
   return (
-    <div className="page-wrapper" style={{ border: '1px solid black', margin: '0px', padding: '0px' }}>
+    <div style={{ height: '100vh' }}>
       <div
-        className="page-header"
-        style={{ height: '100px', backgroundColor: 'pink', textAlign: 'center', fontSize: '20px' }}
+        style={{
+          height: '80px',
+          backgroundColor: '#E07068',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          textAlign: 'center',
+          fontSize: '20px',
+          color: 'white',
+        }}
       >
-        <h1>스물다섯 여든하나</h1>
-        <h1>관리자 페이지</h1>
+        스물다섯 여든하나
+        <br />
+        관리자 홈
       </div>
-      <div className="status-container" style={{ height: '200px', textAlign: 'center' }}>
-        <p>2024.03.25</p>
-        <div className="status-box" style={{ borderRadius: '20px', backgroundColor: '#EEEEEE', height: '80%' }}>
+      <div
+        className="status-container"
+        style={{
+          height: '300px',
+          textAlign: 'center',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <div
+          className="status-box"
+          style={{
+            borderRadius: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+            backgroundColor: '#EEEEEE',
+            width: '90%',
+            height: '90%',
+          }}
+        >
+          <p style={{ color: 'gray' }}>2024.03.25</p>
           <div className="status-info">
-            <div style={{ textAlign: 'center' }}>
-              <p>전체 학생</p>
-              <p>100건</p>
+            <div className="status-content">
+              <div className="status-title">전체 학생</div>
+              <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
+                100
+                <p
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 'normal',
+                    color: 'black',
+                    marginLeft: '5px',
+                    marginTop: '15px',
+                  }}
+                >
+                  건
+                </p>
+              </div>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <p>전체 학생</p>
-              <p>100건</p>
+            <div className="status-content">
+              <div className="status-title">올리사랑 인증</div>
+              <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
+                100
+                <p
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 'normal',
+                    color: 'black',
+                    marginLeft: '5px',
+                    marginTop: '15px',
+                  }}
+                >
+                  건
+                </p>
+              </div>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <p>전체 학생</p>
-              <p>100건</p>
+            <div className="status-content">
+              <div className="status-title">전체 매칭 수</div>
+              <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
+                100
+                <p
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 'normal',
+                    color: 'black',
+                    marginLeft: '5px',
+                    marginTop: '15px',
+                  }}
+                >
+                  건
+                </p>
+              </div>
             </div>
-            <div style={{ textAlign: 'center' }}>
-              <p>전체 학생</p>
-              <p>100건</p>
+            <div className="status-content">
+              <div className="status-title">전체 집</div>
+              <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
+                100
+                <p
+                  style={{
+                    fontSize: '17px',
+                    fontWeight: 'normal',
+                    color: 'black',
+                    marginLeft: '5px',
+                    marginTop: '15px',
+                  }}
+                >
+                  건
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <hr />
-      <div className="list-info" style={{ height: '300px' }}>
-        <ul>
-          <li>
-            <div className="list-component">
-              <ManageAccountsIcon className="icon"></ManageAccountsIcon>신규 등록 학생 10건
-            </div>
-          </li>
-          <li>
-            <div className="list-component">
-              <VolunteerActivismIcon className="icon"></VolunteerActivismIcon>신규 집 등록 10건
-            </div>
-          </li>
-          <li>
-            <div className="list-component">
-              <Diversity1Icon className="icon"></Diversity1Icon>올리 사랑 인증 10건
-            </div>
-          </li>
-          <li>
-            <div className="list-component">
-              <AddHomeIcon className="icon"></AddHomeIcon>계약 승인 대기 10건
-            </div>
-          </li>
-        </ul>
+      <hr style={{ margin: '0 auto', width: '90%' }} />
+      <div className="manager-list-container">
+        <div className="list-component">
+          <ManageAccountsIcon style={{ fontSize: '50px', color: '#b7b7b7' }} className="icon"></ManageAccountsIcon>
+          <div className="new-list">신규 등록 학생</div>
+          <div className="new-count"> 10</div>
+          <div style={{ fontSize: '22px' }}>건</div>
+        </div>
+
+        <div className="list-component">
+          <Diversity1Icon style={{ fontSize: '50px', color: '#b7b7b7' }} className="icon"></Diversity1Icon>
+          <div className="new-list">올리 사랑 인증</div>
+          <div className="new-count"> 10</div>
+          <div style={{ fontSize: '22px' }}>건</div>
+        </div>
+
+        <div className="list-component">
+          <AddHomeIcon style={{ fontSize: '50px', color: '#b7b7b7' }} className="icon"></AddHomeIcon>
+          <div className="new-list">계약 승인 대기</div>
+          <div className="new-count"> 10</div>
+          <div style={{ fontSize: '22px' }}>건</div>
+        </div>
+
+        <div className="list-component">
+          <VolunteerActivismIcon
+            style={{ fontSize: '50px', color: '#b7b7b7' }}
+            className="icon"
+          ></VolunteerActivismIcon>
+          <div className="new-list">신규 집 등록</div>
+          <div className="new-count"> 10</div>
+          <div style={{ fontSize: '22px' }}>건</div>
+        </div>
       </div>
     </div>
   );

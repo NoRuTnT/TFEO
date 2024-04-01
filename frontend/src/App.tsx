@@ -16,11 +16,12 @@ import ContractApplyButton from './components/contract/ContractApplyButton';
 import HomeDetail from './pages/HomeDetail';
 import LoginPage from './pages/Login';
 import WishList from './pages/WishList';
-import ManageStudent from './pages/ManageStudent';
+import ManageStudent from './pages/manager/ManageStudent';
 import HomeSmallDetail from './pages/HomeSmallDetail';
 
 import ManagerHome from './pages/manager/ManagerHome';
 import ManageActivity from './pages/manager/ManageActivity';
+import ManageList from './pages/manager/ManageList';
 function App() {
   return (
     <div className="App">
@@ -45,9 +46,10 @@ function App() {
           <Route path="/wish-list" element={<Survey />} />
           <Route path="/home-small-detail" element={<HomeSmallDetail />} />
           {/* 관리자 페이지 추가 */}
-          <Route path="/manager-home" element={<ManagerHome />} />
+          <Route path="/manage-home" element={<ManagerHome />} />
           <Route path="/manage-student" element={<ManageStudent />} />
           <Route path="/manage-activity" element={<ManageActivity />} />
+          <Route path="/manage-list" element={<ManageList />} />
         </Routes>
       </Router>
     </div>

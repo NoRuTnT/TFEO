@@ -1,0 +1,14 @@
+.match-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.match-list-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    margin: 10px auto;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 12px;
+}
