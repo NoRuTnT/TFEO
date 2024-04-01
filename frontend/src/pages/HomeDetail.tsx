@@ -124,7 +124,7 @@ const HomeDetail: React.FC = () => {
       >
         {homeDetail.homeImageList.map((homeImage: IHomeImage, key: number) => (
           <div key={key} style={{ width: '100%', height: '100%' }}>
-            <img src={`https://j10a707.p.ssafy.io${homeImage.homeImageUrl}`} className="swipeable-image" alt="House" />
+            <img src={`http://j10a707.p.ssafy.io${homeImage.homeImageUrl}`} className="swipeable-image" alt="House" />
           </div>
         ))}
       </SwipeableViews>
@@ -137,7 +137,7 @@ const HomeDetail: React.FC = () => {
           <hr style={{ margin: '15px 0' }} />
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <img
-              src={`https://j10a707.p.ssafy.io${homeDetail.hostImageList[0].hostImageUrl}`}
+              src={`http://j10a707.p.ssafy.io${homeDetail.hostImageList[0].hostImageUrl}`}
               alt="Profile"
               style={{ width: '50px', height: '50px', borderRadius: '50%' }}
             />
