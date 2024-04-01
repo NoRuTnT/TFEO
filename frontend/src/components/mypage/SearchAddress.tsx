@@ -9,8 +9,9 @@ interface Props {
   handleModal: () => void;
   newMemberInfo: IMember;
   handleAddressChange: (data: any) => void;
+  isEditing: boolean;
 }
-const SearchAddress = ({ open, handleModal, newMemberInfo, handleAddressChange }: Props) => {
+const SearchAddress = ({ open, handleModal, newMemberInfo, handleAddressChange, isEditing }: Props) => {
   const [modalState, setModalState] = useState<boolean>(false);
   const [inputAddressValue, setInputAddressValue] = useState<string>();
   const [inputZipCodeValue, setInputZipCodeValue] = useState<string>();
@@ -33,7 +34,9 @@ const SearchAddress = ({ open, handleModal, newMemberInfo, handleAddressChange }
   };
   return (
     <>
-      <button onClick={handleModal}>주소 찾기</button>
+      <button onClick={handleModal} style={{ display: isEditing ? '' : 'none' }}>
+        주소 찾기
+      </button>
       <Modal isOpen={open} ariaHideApp={true} style={customStyles}>
         <DaumPostcode onComplete={onCompletePost} />
       </Modal>
