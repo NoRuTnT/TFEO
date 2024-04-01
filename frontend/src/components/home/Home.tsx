@@ -11,8 +11,6 @@ interface HomeProps {
   home: any;
 }
 
-const dummys = ['/test/home1.png', '/test/home2.png', '/test/home3.png'];
-
 const Home: React.FC<HomeProps> = ({ settings, home }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
