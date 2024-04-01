@@ -294,8 +294,10 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
 
     building_option_list = []
     apart_flag = False # 아파트 포함 여부 확인
-    if search_condition.APT:
+    if search_condition.APT or filter_condition.apartment:
         building_option_list.append('APT')
+    # filter_condition 과 search_condtion에서 아파트가 둘 중 하나라도 true이면
+    # 선택되도록 로직 변경
     if search_condition.OPST:
         building_option_list.append('OPST')
     if search_condition.VL:
@@ -312,8 +314,8 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         building_option_list = ['APT', 'OPST', 'VL', 'JT', 'DDDGG', 'OR']
     # filter_condition 과 search_condtion에서 아파트가 둘 중 하나라도 true이면
     # 선택되도록 로직 변경
-    if(filter_condition.apartment and (not ('APT' in building_option_list))):
-        building_option_list.append('APT')
+    # if(filter_condition.apartment and (not ('APT' in building_option_list))):
+    #     building_option_list.append('APT')
     print(building_option_list)
     internet_list = get_permit_list(search_condition.internet)
     gas_list = get_permit_list(search_condition.gas)
@@ -455,8 +457,9 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
             output_list.append(item_json)
     # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
     # print(output_list)
+    if len(output_list)!=0:
+        print(output_list[0])
     return output_list
-    # return data_list
 
 
 # 등록된 아이템 추가
