@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.tfeo.backend.domain.member.model.dto.auth.MemberAccount;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 
@@ -22,7 +21,7 @@ public class LoginService implements UserDetailsService {
 		Member member = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new UsernameNotFoundException("해당 이메일이 존재하지 않습니다."));
 
-		return MemberAccount.builder()
+		return org.springframework.security.core.userdetails.User.builder()
 			.username(member.getEmail())
 			.roles(member.getRole().name())
 			.build();
