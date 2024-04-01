@@ -412,7 +412,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         'pet': member_personality.pet,
         'cold': member_personality.cold,
         'hot': member_personality.hot,
-        'host_house_prefer': prefer,
+        'host_house_prefer': prefer, # int
     }
     member_vector = get_member_vector(member_personality_json_info)
     print('vector-format')
@@ -475,8 +475,8 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
             output_list.append(item_json)
     # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
     # print(output_list)
-    if len(output_list)!=0:
-        print(output_list[0])
+    # if len(output_list)!=0:
+    #     print(output_list[0]) # debug
     return output_list
 
 
@@ -549,16 +549,20 @@ def get_member_vector(member_personality):
     <대학생>
     주간지수, 야간지수, 흡연지수, 외향, 내향, 호스트 습관의 중요함, 동물애호가, 추위잘탐, 더위잘탐
     """
-    # index = 12
-    day = convert_bool_to_int(member_personality['daytime'])+convert_bool_to_int(member_personality['fast'])
-    night = convert_bool_to_int(member_personality['nighttime'])+convert_bool_to_int(member_personality['late'])
-    smoke = convert_bool_to_int(member_personality['smoke'])
-    extro = convert_bool_to_int(member_personality['outside'])
-    intro = convert_bool_to_int(member_personality['inside'])+convert_bool_to_int(member_personality['quiet'])
-    host_related = convert_bool_to_int(member_personality['live_long'])
-    pet_lover = convert_bool_to_int(member_personality['pet'])
-    cold = convert_bool_to_int(member_personality['cold'])
-    hot = convert_bool_to_int(member_personality['hot'])
+    # host_house_prefer ->
+    # 0 : 나는 무조건 사람만 본다
+    # 10 : 나는 집 상태만 본다
+    weight = 1 - member_personality['host_house_prefer']*0.1 # 0.0 ~ 1.0
+    # 추천 알고리즘의 성능이 오히려 저하될 경우 *weight 삭제!
+    day = convert_bool_to_int(member_personality['daytime'])+convert_bool_to_int(member_personality['fast'])*weight
+    night = convert_bool_to_int(member_personality['nighttime'])+convert_bool_to_int(member_personality['late'])*weight
+    smoke = convert_bool_to_int(member_personality['smoke'])*weight
+    extro = convert_bool_to_int(member_personality['outside'])*weight
+    intro = convert_bool_to_int(member_personality['inside'])+convert_bool_to_int(member_personality['quiet'])*weight
+    host_related = convert_bool_to_int(member_personality['live_long'])*weight
+    pet_lover = convert_bool_to_int(member_personality['pet'])*weight
+    cold = convert_bool_to_int(member_personality['cold'])*weight
+    hot = convert_bool_to_int(member_personality['hot'])*weight
     member_vector = [day, night, smoke, extro, intro,
                      host_related, pet_lover, cold, hot]
 
