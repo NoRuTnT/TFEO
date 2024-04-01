@@ -132,8 +132,9 @@ public class MemberController {
 	@GetMapping("")
 	//Todo: Auth 적용 이후 memberId 갱신
 	public ResponseEntity<SuccessResponse> memberDetails(HttpServletRequest request) {
-		Member member = jwtService.extractEmailFromAccessToken(request)
-			.flatMap(email -> memberRepository.findByEmail(email))
+		String email = jwtService.extractEmailFromAccessToken(request)
+			.orElseThrow(() -> new NoSuchElementException("유효한 이메일을 토큰에서 찾을 수 없습니다."));
+		Member member = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new NoSuchElementException("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
 
 		Long memberNo = member.getMemberNo();
