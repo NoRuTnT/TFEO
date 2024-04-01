@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Footer from '../components/footer/ManagerFooter';
-import '../styles/ManageStudent.css';
+import Footer from '../../components/footer/ManagerFooter';
+import '../../styles/ManageStudent.css';
 import HomeIcon from '@mui/icons-material/Home';
 
-// 학생 타입을 정의합니다.
 interface Student {
   id: number;
   name: string;
@@ -26,7 +25,7 @@ const students: Student[] = [
     name: '이사람',
     gender: '여성',
     college: '연세대학교',
-    isNew: false,
+    isNew: true,
   },
   {
     id: 3,
@@ -54,14 +53,14 @@ const students: Student[] = [
     name: '박사람',
     gender: '남성',
     college: '고려대학교',
-    isNew: true,
+    isNew: false,
   },
   {
     id: 7,
     name: '김사람',
     gender: '남성',
     college: '서울대학교',
-    isNew: true,
+    isNew: false,
   },
   {
     id: 8,
@@ -75,28 +74,31 @@ const students: Student[] = [
     name: '박사람',
     gender: '남성',
     college: '고려대학교',
-    isNew: true,
+    isNew: false,
   },
 ];
 const ManageStudent: React.FC = () => {
   return (
-    <div className="main-page">
+    <div>
       <header className="student-header">
-        <Link to="/home" className="home-button">
-          <HomeIcon />
+        <Link to="/manager-home" className="home-button">
+          <HomeIcon style={{ color: 'white', fontSize: '30px' }} />
         </Link>
-        <h1 style={{ margin: 'auto' }}>학생 관리</h1>
+        <h1 style={{ margin: 'auto', color: 'white', fontSize: '22px' }}>학생 관리</h1>
       </header>
       <div className="student-list">
         {students.map((student) => (
           <div key={student.id} className="student-item">
-            {student.name}
-            {student.gender}
-            {student.isNew && <span className="new-badge">new!</span>}
+            <div className="date">2024-04-01 22:17:34</div>
+            <div className="info">
+              {student.name}
+              <div className="info-detail">({student.gender} / 나이)</div>
+              <div className="isNew">{student.isNew && <span>new!</span>}</div>
+            </div>
+            <div style={{ color: 'gray' }}> {student.college} 재학생</div>
           </div>
         ))}
       </div>
-      <div style={{ height: '700px' }}>sadasd</div>
       <Footer />
     </div>
   );
