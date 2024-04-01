@@ -53,6 +53,7 @@ hr.custom-hr {
 
 .home-count {
     margin-top: 15px;
+    margin-bottom: 20px;
     font-size: 15px;
 }
 
@@ -70,6 +71,51 @@ hr.custom-hr {
     height: 240px; /* 이미지와 도트를 포함할 수 있는 높이로 설정 */
 }
 
+.home-content-container {
+    position: relative;
+    padding-top: 10px;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.filters-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.filter {
+    position: relative;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+    padding: 7px;
+    padding-left: 20px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+.filter::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px; /* 원의 크기 */
+    height: 8px; /* 원의 크기 */
+    background-color: #E07068; /* 원의 색상 */
+    border-radius: 50%;
+}
+
+.button-container {
+    position: absolute;
+    bottom: 0px;
+    right: 50px;
+}
 .content-container {
     padding-top: 10px;
     margin-bottom: 40px;
@@ -80,6 +126,14 @@ hr.custom-hr {
 
 .carousel-container-left {
     width: 40%;
+    height: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative; /* 도트를 위한 상대 위치 설정 */
+}
+
+.carousel-home-container {
+    width: 60%;
     height: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
