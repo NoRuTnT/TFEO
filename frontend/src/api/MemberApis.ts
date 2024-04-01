@@ -1,6 +1,6 @@
 import { ISuccessResponse } from '../interfaces/SuccessResponseInterface';
 import { customAxios } from './customAxios';
-import { IMember, IMemberPersonality } from '../interfaces/MemberInterface';
+import { IMember, IMemberDetail, IMemberPersonality } from '../interfaces/MemberInterface';
 import { IAddress } from '../interfaces/AddressInterface';
 import { ISurvey } from '../interfaces/SuerveyInterface';
 import { IMemberUrl } from '../interfaces/MemberUrlInterface';
@@ -48,6 +48,16 @@ export const surveyMember = async (surveyData: ISurvey) => {
   try {
     const response = await customAxios.post<ISuccessResponse>(`/api/members/survey`, request);
     return response.data.result;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
+// get member detail
+export const getMemberDetail = async () => {
+  try {
+    const response = await customAxios.post<ISuccessResponse>('/api/members/detail');
+    return response.data.result as IMemberDetail;
   } catch (e) {
     console.log(e);
   }
