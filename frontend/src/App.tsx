@@ -22,6 +22,7 @@ import HomeSmallDetail from './pages/HomeSmallDetail';
 import ManagerHome from './pages/manager/ManagerHome';
 import ManageActivity from './pages/manager/ManageActivity';
 import ManageList from './pages/manager/ManageList';
+import ManageStudentDetail from './pages/manager/ManageStudentDetail';
 function App() {
   return (
     <div className="App">
@@ -50,6 +51,7 @@ function App() {
           <Route path="/manage-student" element={<ManageStudent />} />
           <Route path="/manage-activity" element={<ManageActivity />} />
           <Route path="/manage-list" element={<ManageList />} />
+          <Route path="/manage-student-detail" element={<ManageStudentDetail />} />
         </Routes>
       </Router>
     </div>
