@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
+import com.tfeo.backend.common.service.AuthenticationService;
 import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
 import com.tfeo.backend.domain.member.model.dto.MemberHomeApplicationRequestDto;
 import com.tfeo.backend.domain.member.model.dto.MemberRequestDto;
@@ -52,9 +53,7 @@ public class MemberController {
 	private final MemberRepository memberRepository;
 	private final RedisService redisService;
 	private final MemberService memberService;
-
-	//auth 적용 이전 임시
-	private final Long temporaryMemberNo = 1L;
+	private final AuthenticationService authenticationService;
 
 	@GetMapping("/status")
 	public ResponseEntity<?> getAuthStatus() {
@@ -130,30 +129,32 @@ public class MemberController {
 	//회원 상세정보 조회
 	@GetMapping("")
 	public ResponseEntity<?> memberDetails(HttpServletRequest request) {
-		Optional<String> jwtdetail = jwtService.extractEmailFromAccessToken(request);
-		if (jwtdetail.isPresent()) {
-			Optional<Member> emaildetail = memberRepository.findByEmail(jwtdetail.get());
-			if (emaildetail.isPresent()) {
-				Member member = emaildetail.get();
-
-				Long memberNo = member.getMemberNo();
-				MemberResponseDto memberResponseDto = memberService.findMember(memberNo);
-				SuccessResponse successResponse = SuccessResponse.builder()
-					.status(HttpStatus.OK)
-					.result(memberResponseDto)
-					.build();
-				return ResponseEntity.ok(successResponse);
-			}
-			return ResponseEntity.status(404).body("가입된 사용자데이터를 찾을수없습니다.");
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
 		}
-		return ResponseEntity.status(400).body("유효한 토큰을 찾을수없습니다");
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
+		MemberResponseDto memberResponseDto = memberService.findMember(memberNo);
+		SuccessResponse successResponse = SuccessResponse.builder()
+			.status(HttpStatus.OK)
+			.result(memberResponseDto)
+			.build();
+		return ResponseEntity.ok(successResponse);
+
 	}
 
 	//회원 설문조사 제출
 	@PostMapping("/survey")
-	public ResponseEntity<SuccessResponse> memberSurvey(@RequestBody SurveyRequestDto memberSurveyRequestDto) {
-		//Todo: Auth 적용 이후 memberNo 갱신
-		memberService.submitSurvey(memberSurveyRequestDto, temporaryMemberNo);
+	public ResponseEntity<?> memberSurvey(@RequestBody SurveyRequestDto memberSurveyRequestDto,
+		HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
+		memberService.submitSurvey(memberSurveyRequestDto, memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("설문 제출이 완료되었습니다.")
@@ -163,18 +164,30 @@ public class MemberController {
 
 	//회원 상세정보 수정
 	@PutMapping("")
-	public ResponseEntity<SuccessResponse> memberModify(@RequestBody MemberRequestDto memberRequestDto) {
+	public ResponseEntity<?> memberModify(@RequestBody MemberRequestDto memberRequestDto, HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
 		return ResponseEntity.ok(SuccessResponse.builder()
 			.status(HttpStatus.OK)
-			.result(memberService.modifyMember(temporaryMemberNo, memberRequestDto))
+			.result(memberService.modifyMember(memberNo, memberRequestDto))
 			.build());
 	}
 
 	//회원 탈퇴
 	@DeleteMapping("")
-	public ResponseEntity<SuccessResponse> memberRemove() {
-		//Todo: auth memberId 적용
-		memberService.deleteMember(temporaryMemberNo);
+	public ResponseEntity<?> memberRemove(HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
+		memberService.deleteMember(memberNo);
 		return ResponseEntity.ok(SuccessResponse.builder()
 			.status(HttpStatus.OK).message("회원 탈퇴가 완료되었습니다.")
 			.build());
@@ -182,8 +195,14 @@ public class MemberController {
 
 	// 회원이 신청한 집(계약) 조회
 	@GetMapping("/home")
-	public ResponseEntity<SuccessResponse> AppliedHomeList() {
-		AppliedHomeResponseDto appliedHomeResponseDto = memberService.findAppliedHome(temporaryMemberNo);
+	public ResponseEntity<?> AppliedHomeList(HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
+		AppliedHomeResponseDto appliedHomeResponseDto = memberService.findAppliedHome(memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.result(appliedHomeResponseDto)
@@ -193,9 +212,15 @@ public class MemberController {
 
 	//회원이 집을 신청한다
 	@PostMapping("/home/{homeNo}")
-	public ResponseEntity<SuccessResponse> homeApplicationAdd(@PathVariable Long homeNo,
-		@RequestBody MemberHomeApplicationRequestDto memberHomeApplicationRequestDto) {
-		memberService.addHomeApplication(homeNo, temporaryMemberNo, memberHomeApplicationRequestDto);
+	public ResponseEntity<?> homeApplicationAdd(@PathVariable Long homeNo,
+		@RequestBody MemberHomeApplicationRequestDto memberHomeApplicationRequestDto, HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
+		memberService.addHomeApplication(homeNo, memberNo, memberHomeApplicationRequestDto);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("집 신청이 성공했습니다.")
@@ -205,8 +230,14 @@ public class MemberController {
 
 	//집 신청 취소
 	@DeleteMapping("/home/{homeNo}")
-	public ResponseEntity<SuccessResponse> memberRequestedHomeRemove(@PathVariable Long homeNo) {
-		memberService.deleteApplication(homeNo, temporaryMemberNo);
+	public ResponseEntity<?> memberRequestedHomeRemove(@PathVariable Long homeNo, HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
+		memberService.deleteApplication(homeNo, memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("집 신청이 취소되었습니다.")
@@ -223,28 +254,32 @@ public class MemberController {
 
 	// 담당자가 학생 승인상태로 바꿈
 	@PutMapping("/approve/{memberNo}")
-	public ResponseEntity<SuccessResponse> memberApprove(@PathVariable("memberNo") Long memberNo) {
+	public ResponseEntity<SuccessResponse> memberApprove(@PathVariable("memberNo") Long memberNo,
+		HttpServletRequest request) {
 		memberService.approveMember(memberNo);
 		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).message("학생이 승인되었습니다.").build());
 	}
 
 	// 담당자가 학생 거절상태로 바꿈
 	@PutMapping("/reject/{memberNo}")
-	public ResponseEntity<SuccessResponse> memberReject(@PathVariable("memberNo") Long memberNo) {
+	public ResponseEntity<SuccessResponse> memberReject(@PathVariable("memberNo") Long memberNo,
+		HttpServletRequest request) {
 		memberService.rejectMember(memberNo);
 		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).message("학생이 거절되었습니다.").build());
 	}
 
 	//sms 인증번호 요청
 	@PostMapping("sms-request")
-	public ResponseEntity<SuccessResponse> smsRequest(@RequestBody SmsRequestDto smsRequestDto) {
+	public ResponseEntity<SuccessResponse> smsRequest(@RequestBody SmsRequestDto smsRequestDto,
+		HttpServletRequest request) {
 		SingleMessageSentResponse response = memberService.requestSms(smsRequestDto);
 		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).result(response).build());
 	}
 
 	//sms 인증번호 확인
 	@PostMapping("sms-verify")
-	public ResponseEntity<SuccessResponse> smsVerify(@RequestBody SmsVerifyDto smsVerifyDto) {
+	public ResponseEntity<SuccessResponse> smsVerify(@RequestBody SmsVerifyDto smsVerifyDto,
+		HttpServletRequest request) {
 		memberService.verifySms(smsVerifyDto);
 		return ResponseEntity.ok(SuccessResponse.builder().status(HttpStatus.OK).message("인증이 성공했습니다.").build());
 	}
