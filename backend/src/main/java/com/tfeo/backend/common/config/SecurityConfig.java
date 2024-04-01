@@ -74,8 +74,7 @@ public class SecurityConfig {
 			// 로그인은 항상 접근가능
 
 			// api 제한
-			.antMatchers("/api/members/update_nickname", "/api/members/profile-image",
-				"/api/members/{memberId}/videos")
+			.antMatchers("/api/members/update_nickname", "/api/members/profile-image")
 			.hasRole("USER")
 
 			// 페이지접근 제한

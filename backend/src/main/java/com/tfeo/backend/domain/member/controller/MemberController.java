@@ -34,7 +34,7 @@ import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 import com.tfeo.backend.domain.member.model.dto.SmsRequestDto;
 import com.tfeo.backend.domain.member.model.dto.SmsVerifyDto;
 import com.tfeo.backend.domain.member.model.dto.SurveyRequestDto;
-import com.tfeo.backend.domain.member.model.dto.auth.MemberAccount;
+import com.tfeo.backend.domain.member.model.dto.auth.CustomOAuth2User;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 import com.tfeo.backend.domain.member.service.JwtService;
@@ -132,8 +132,8 @@ public class MemberController {
 	//회원 상세정보 조회
 	@GetMapping("")
 	//Todo: Auth 적용 이후 memberId 갱신
-	public ResponseEntity<SuccessResponse> memberDetails(@AuthenticationPrincipal MemberAccount memberAccount) {
-		Long memberNo = memberAccount.getMemberNo();
+	public ResponseEntity<SuccessResponse> memberDetails(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+		Long memberNo = customOAuth2User.getMemberNo();
 		MemberResponseDto memberResponseDto = memberService.findMember(memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
