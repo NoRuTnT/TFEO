@@ -14,13 +14,21 @@ import { Button } from '@mui/material';
 import { getRent } from '../utils/moneyUtils';
 import { getKoreanDate } from '../utils/timeUtils';
 import SwipeableViews from 'react-swipeable-views';
+import { addWish, removeWish } from '../api/WishApis';
 
 const HomeDetail: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
-  const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
+  const toggleFavorite = async () => {
+    if (!homeDetail) return;
+    if (isFavorite) {
+      const response = await removeWish(homeDetail.home.homeNo);
+      setIsFavorite(!isFavorite);
+    } else {
+      const response = await addWish(homeDetail.home.homeNo);
+      setIsFavorite(!isFavorite);
+    }
   };
 
   const nextImage = () => {
@@ -187,7 +195,7 @@ const HomeDetail: React.FC = () => {
       {/* 집 신청 버튼과 찜 버튼 */}
       <div className="bottom-container">
         <div className="left-container">
-          <div className="register-div">월세 : {getRent(homeDetail.home.rent)}만원</div>
+          <div className="register-div">월세 : {homeDetail.home.rent}만원</div>
         </div>
         <div className="center-container">
           <div>
