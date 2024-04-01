@@ -3,9 +3,9 @@ import { customAxios } from './customAxios';
 import { IContractForm, IContractInfo } from '../interfaces/ContractInterface';
 
 // pdf 생성
-export const createForm = async (homeNo: number) => {
+export const createForm = async (contractNo: number) => {
   try {
-    const response = await customAxios.get<ISuccessResponse>(`/api/contracts/creation-form/${homeNo}`);
+    const response = await customAxios.get<ISuccessResponse>(`/api/contracts/creation-form/${contractNo}`);
     return response.data.result;
   } catch (e) {
     console.log(e);
