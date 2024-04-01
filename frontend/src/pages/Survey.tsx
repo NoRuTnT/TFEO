@@ -233,6 +233,7 @@ const Survey: React.FC = () => {
         updateMemberPersonality('hostHousePrefer', response);
       }
     });
+    window.location.href = '/home';
   };
 
   return (
@@ -323,7 +324,7 @@ const Survey: React.FC = () => {
                 🥳 설문을 완료했어요! <br />
                 마이페이지에서 내 정보를 <br />
                 추가적으로 입력할 수 있어요 <br /> <br />
-                <Button onClick={sendData} component={Link} to="/">
+                <Button onClick={sendData} component={Link} to="/home">
                   집보러가기
                 </Button>
               </Typography>
