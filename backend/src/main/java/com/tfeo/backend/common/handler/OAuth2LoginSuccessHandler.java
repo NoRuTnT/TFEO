@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Component;
 
 import com.tfeo.backend.common.config.PathProperty;
+import com.tfeo.backend.common.model.entity.MemberPersonality;
 import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.member.model.dto.auth.CustomOAuth2User;
 import com.tfeo.backend.domain.member.model.entity.Member;
@@ -47,7 +48,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 		} catch (Exception e) {
 			throw e;
 		}
-
 	}
 
 	private void loginSuccess(HttpServletResponse response, CustomOAuth2User oAuth2User) throws IOException {
@@ -58,6 +58,11 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
 		Member member = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new EntityNotFoundException("해당이메일은 가입되지않은 이메일입니다: " + email));
+
+		if (member.getMemberPersonality() == null) {
+			MemberPersonality newMemberPersonality = new MemberPersonality();
+			member.setMemberPersonality(newMemberPersonality);
+		}
 
 		memberRepository.save(member);
 		//쿠키생성
