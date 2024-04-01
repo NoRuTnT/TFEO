@@ -21,6 +21,7 @@ import com.tfeo.backend.domain.review.common.exception.ReviewNotExistException;
 import com.tfeo.backend.domain.review.model.dto.AddReviewRequestDto;
 import com.tfeo.backend.domain.review.model.dto.AddReviewResponseDto;
 import com.tfeo.backend.domain.review.model.dto.ModifyReviewRequestDto;
+import com.tfeo.backend.domain.review.model.dto.ReviewKeywordDto;
 import com.tfeo.backend.domain.review.model.entity.Review;
 import com.tfeo.backend.domain.review.model.entity.ReviewKeyword;
 import com.tfeo.backend.domain.review.repository.ReviewKeywordRepository;
@@ -51,17 +52,17 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
 			.orElseThrow(() -> new AccessDeniedException(memberNo));
 
 		ReviewKeyword keyword = ReviewKeyword.builder()
-			.kindElderly(request.getKeywordValues().get("kindElderly"))
-			.cleanHouse(request.getKeywordValues().get("cleanH"))
-			.spaciousRoom(request.getKeywordValues().get("spaciousRoom"))
-			.manyNearbyAmenities(request.getKeywordValues().get("manyNearbyAmenities"))
-			.matchesStatedOptions(request.getKeywordValues().get("matchesStatedOptions"))
-			.affordableRent(request.getKeywordValues().get("affordableRent"))
-			.nearSchool(request.getKeywordValues().get("nearSchool"))
-			.convenientTransportation(request.getKeywordValues().get("convenientTransportation"))
-			.easyAccessToHome(request.getKeywordValues().get("easyAccessToHome"))
-			.goodSecurity(request.getKeywordValues().get("goodSecurity"))
-			.respectfulElderly(request.getKeywordValues().get("respectfulElderly"))
+			.kindElderly(request.getKeywordValues().isKindElderly())
+			.cleanHouse(request.getKeywordValues().isCleanHouse())
+			.spaciousRoom(request.getKeywordValues().isSpaciousRoom())
+			.manyNearbyAmenities(request.getKeywordValues().isManyNearbyAmenities())
+			.matchesStatedOptions(request.getKeywordValues().isMatchesStatedOptions())
+			.affordableRent(request.getKeywordValues().isAffordableRent())
+			.nearSchool(request.getKeywordValues().isNearSchool())
+			.convenientTransportation(request.getKeywordValues().isConvenientTransportation())
+			.easyAccessToHome(request.getKeywordValues().isEasyAccessToHome())
+			.goodSecurity(request.getKeywordValues().isGoodSecurity())
+			.respectfulElderly(request.getKeywordValues().isRespectfulElderly())
 			.build();
 
 		reviewKeywordRepository.save(keyword);
@@ -102,18 +103,19 @@ public class ReviewCommandServiceImpl implements ReviewCommandService {
 
 		ReviewKeyword keyword = review.getReviewKeyword();
 
-		List<Boolean> keywordValues = new ArrayList<>();
-		keywordValues.add(request.getKeywordValues().get("kindElderly"));
-		keywordValues.add(request.getKeywordValues().get("cleanHouse"));
-		keywordValues.add(request.getKeywordValues().get("spaciousRoom"));
-		keywordValues.add(request.getKeywordValues().get("manyNearbyAmenities"));
-		keywordValues.add(request.getKeywordValues().get("matchesStatedOptions"));
-		keywordValues.add(request.getKeywordValues().get("affordableRent"));
-		keywordValues.add(request.getKeywordValues().get("nearSchool"));
-		keywordValues.add(request.getKeywordValues().get("convenientTransportation"));
-		keywordValues.add(request.getKeywordValues().get("easyAccessToHome"));
-		keywordValues.add(request.getKeywordValues().get("goodSecurity"));
-		keywordValues.add(request.getKeywordValues().get("respectfulElderly"));
+		ReviewKeywordDto keywordValues = ReviewKeywordDto.builder()
+			.kindElderly(request.getKeywordValues().isKindElderly())
+			.cleanHouse(request.getKeywordValues().isCleanHouse())
+			.spaciousRoom(request.getKeywordValues().isSpaciousRoom())
+			.manyNearbyAmenities(request.getKeywordValues().isManyNearbyAmenities())
+			.matchesStatedOptions(request.getKeywordValues().isMatchesStatedOptions())
+			.affordableRent(request.getKeywordValues().isAffordableRent())
+			.nearSchool(request.getKeywordValues().isNearSchool())
+			.convenientTransportation(request.getKeywordValues().isConvenientTransportation())
+			.easyAccessToHome(request.getKeywordValues().isEasyAccessToHome())
+			.goodSecurity(request.getKeywordValues().isGoodSecurity())
+			.respectfulElderly(request.getKeywordValues().isRespectfulElderly())
+			.build();
 
 		keyword.setAllKeywordValues(keywordValues);
 
