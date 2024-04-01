@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class ModifyReviewRequestDto {
 	 String homeContent;
-	 Map<String, Boolean> keywordValues;
+	 ReviewKeywordDto keywordValues;
 }

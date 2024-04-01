@@ -1,67 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/MainPage.css';
 import Footer from '../components/footer/Footer';
 import '../styles/Footer.css';
 import '../styles/ActivityContent.css'; // 이 페이지 전용 스타일을 위한 새 CSS 파일 경로
+import { writeReview } from '../api/ReviewApis';
+import { useReviewStore } from '../store/ReviewStore';
+import { IReviewKeyword } from '../interfaces/ReviewKeywordInterface';
 
-// ToggleButton 컴포넌트의 Props 타입을 정의합니다.
-interface ToggleButtonProps {
-  text: string;
-}
+const ActivityContent: React.FC = ({ history }: any) => {
+  const [homeNo, setHomeNo] = useState<number>(0);
+  const { ReviewInfo, setReview } = useReviewStore();
+  const [homeContent, setHomeContent] = useState<string>('');
 
-// ToggleButton 컴포넌트를 타입스크립트로 정의합니다.
-const ToggleButton: React.FC<ToggleButtonProps> = ({ text }) => {
-  const [isActive, setIsActive] = useState<boolean>(false); // 버튼 활성화 상태
+  useEffect(() => {
+    const homeNofromUrl = new URLSearchParams(location.search).get('homeNo');
+    const parsedHomeNo = homeNofromUrl ? parseInt(homeNofromUrl, 10) : 0;
+    setHomeNo(parsedHomeNo);
+  });
 
-  const toggleButton = () => {
-    setIsActive(!isActive);
+  //글 입력
+  const handleHomeContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setHomeContent(event.target.value);
   };
 
-  const buttonStyle: React.CSSProperties = {
-    // 버튼 스타일을 정의합니다.
-    backgroundColor: isActive ? '#F9EAE1' : 'transparent',
-    border: '1px solid black',
-    borderRadius: '20px',
-    padding: '10px 20px',
-    margin: '5px',
-    cursor: 'pointer',
+  //키워드 선택
+  const toggleKeywordChoice = (value: string) => {
+    setReview((currentState) => ({
+      ...currentState,
+      reviewKeyword: currentState.keywordValues.map((kw) => (kw.value === value ? { ...kw, choice: !kw.choice } : kw)),
+    }));
   };
 
-  return (
-    <button style={buttonStyle} onClick={toggleButton}>
-      {text}
-    </button>
-  );
-};
+  //작성 취소
+  const handleCancel = () => {
+    if (history) {
+      history.goBack(); // 이전 페이지로 이동
+    } else {
+      console.error('History object is undefined.');
+    }
+  };
 
-const ActivityContent: React.FC = () => {
-  const keywords: string[] = [
-    // 키워드 목록을 정의합니다.
-    '친절해요',
-    '주변에 편의시설이 많아요',
-    '집이 깨끗해요',
-    '옵션이 설명과 같아요',
-    '치안이 좋아요',
-    '어르신이 저를 존중해요',
-    '학교와 가까워요',
-    '월세가 저렴해요',
-    '방이 넓어요',
-    '집까지 가는 길이 편해요',
-    '교통이 편해요',
-  ];
+  //리뷰 제출
+  const handleSubmit = async () => {
+    if (!homeNo) {
+      console.error('Home number is not available.');
+      return;
+    }
+
+    const reviewKeywords: IReviewKeyword = {
+      kindElderly: false,
+      cleanHouse: false,
+      spaciousRoom: false,
+      manyNearbyAmenities: false,
+      matchesStatedOptions: false,
+      affordableRent: false,
+      nearSchool: false,
+      convenientTransportation: false,
+      easyAccessToHome: false,
+      goodSecurity: false,
+      respectfulElderly: false,
+    };
+
+    ReviewInfo.keywordValues.forEach((keyword) => {
+      if (keyword.value in reviewKeywords) {
+        reviewKeywords[keyword.value as keyof IReviewKeyword] = keyword.choice;
+      }
+    });
+
+    await writeReview(homeNo, homeContent, reviewKeywords);
+  };
 
   return (
     <div className="main-page">
       <div style={{ fontWeight: 'bold', fontSize: '20px', margin: '10px' }}>어르신과 함께한 6개월은 어떠셨나요?</div>
       <div style={{ fontSize: '16px', marginBottom: '10px' }}> 키워드를 골라주세요 </div>
       <div>
-        {keywords.map((keyword) => (
-          <ToggleButton key={keyword} text={keyword} />
+        {ReviewInfo.keywordValues.map((kw) => (
+          <button
+            key={kw.value}
+            style={{
+              backgroundColor: kw.choice ? '#F9EAE1' : 'transparent',
+              border: '1px solid black',
+              borderRadius: '20px',
+              padding: '10px 20px',
+              margin: '5px',
+              cursor: 'pointer',
+            }}
+            onClick={() => toggleKeywordChoice(kw.value)}
+          >
+            {kw.keyword}
+          </button>
         ))}
       </div>
       <div>
         <textarea
+          // value={homeContent} // value를 homeContent 상태로 설정
+          onChange={handleHomeContentChange} // 입력값 변경 시 핸들러 호출
           placeholder="리뷰를 작성해 주세요."
           style={{
             width: '280px',
@@ -75,8 +110,12 @@ const ActivityContent: React.FC = () => {
         />
       </div>
       <div>
-        <button style={{ marginRight: '10px' }}>취소</button>
-        <button>등록</button>
+        <button style={{ marginRight: '10px' }} onClick={handleCancel}>
+          취소
+        </button>
+        <Link to={{ pathname: '/home-detail', search: `?homeNo=${homeNo}` }}>
+          <button onClick={handleSubmit}>등록</button>
+        </Link>
       </div>
     </div>
   );

@@ -2,8 +2,8 @@ package com.tfeo.backend.domain.review.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +16,7 @@ import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 import com.tfeo.backend.domain.review.common.exception.ReviewNotExistException;
 import com.tfeo.backend.domain.review.model.dto.ReadReviewResponseDto;
+import com.tfeo.backend.domain.review.model.dto.ReviewKeywordDto;
 import com.tfeo.backend.domain.review.model.entity.Review;
 import com.tfeo.backend.domain.review.repository.ReviewRepository;
 
@@ -40,13 +41,30 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
 		List<Review> reviews = reviewRepository.findAllByHome(home);
 		List<ReadReviewResponseDto> result = new ArrayList<>();
 		for (Review review : reviews) {
+			ReviewKeywordDto reviewKeywordDto = ReviewKeywordDto.builder()
+				.kindElderly(review.getReviewKeyword().getKindElderly())
+				.cleanHouse(review.getReviewKeyword().getCleanHouse())
+				.spaciousRoom(review.getReviewKeyword().getSpaciousRoom())
+				.manyNearbyAmenities(review.getReviewKeyword().getManyNearbyAmenities())
+				.matchesStatedOptions(review.getReviewKeyword().getMatchesStatedOptions())
+				.affordableRent(review.getReviewKeyword().getAffordableRent())
+				.nearSchool(review.getReviewKeyword().getNearSchool())
+				.convenientTransportation(review.getReviewKeyword().getConvenientTransportation())
+				.easyAccessToHome(review.getReviewKeyword().getEasyAccessToHome())
+				.goodSecurity(review.getReviewKeyword()
+					.getGoodSecurity())
+				.respectfulElderly(review.getReviewKeyword().getRespectfulElderly())
+				.build();
+
 			ReadReviewResponseDto responseDto = ReadReviewResponseDto.builder()
 				.reviewNo(review.getReviewNo())
 				.memberName(review.getMember().getName())
+				.memberProfileUrl(review.getMember().getProfileUrl())
 				.createdAt(review.getCreatedAt())
 				.homeContent(review.getHomeContent())
-				.keywordValues((Map<String, Boolean>)review.getReviewKeyword())
+				.keywordValues(reviewKeywordDto)
 				.build();
+			result.add(responseDto);
 		}
 
 		return result;
@@ -58,13 +76,28 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Review review = reviewRepository.findById(reviewNo)
 			.orElseThrow(() -> new ReviewNotExistException(reviewNo));
+		ReviewKeywordDto reviewKeywordDto = ReviewKeywordDto.builder()
+			.kindElderly(review.getReviewKeyword().getKindElderly())
+			.cleanHouse(review.getReviewKeyword().getCleanHouse())
+			.spaciousRoom(review.getReviewKeyword().getSpaciousRoom())
+			.manyNearbyAmenities(review.getReviewKeyword().getManyNearbyAmenities())
+			.matchesStatedOptions(review.getReviewKeyword().getMatchesStatedOptions())
+			.affordableRent(review.getReviewKeyword().getAffordableRent())
+			.nearSchool(review.getReviewKeyword().getNearSchool())
+			.convenientTransportation(review.getReviewKeyword().getConvenientTransportation())
+			.easyAccessToHome(review.getReviewKeyword().getEasyAccessToHome())
+			.goodSecurity(review.getReviewKeyword()
+				.getGoodSecurity())
+			.respectfulElderly(review.getReviewKeyword().getRespectfulElderly())
+			.build();
 
 		ReadReviewResponseDto result = ReadReviewResponseDto.builder()
 			.reviewNo(review.getReviewNo())
 			.memberName(review.getMember().getName())
+			.memberProfileUrl(review.getMember().getProfileUrl())
 			.createdAt(review.getCreatedAt())
 			.homeContent(review.getHomeContent())
-			.keywordValues((Map<String, Boolean>)review.getReviewKeyword())
+			.keywordValues(reviewKeywordDto)
 			.build();
 		return result;
 	}
