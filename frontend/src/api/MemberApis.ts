@@ -2,8 +2,8 @@ import { ISuccessResponse } from '../interfaces/SuccessResponseInterface';
 import { customAxios } from './customAxios';
 import { IMember, IMemberPersonality } from '../interfaces/MemberInterface';
 import { IAddress } from '../interfaces/AddressInterface';
-import { IMemberUrlInterface } from '../interfaces/MemberUrlInterface';
 import { ISurvey } from '../interfaces/SuerveyInterface';
+import { IMemberUrl } from '../interfaces/MemberUrlInterface';
 
 // 회원 상세정보 조회
 export const getMember = async () => {
@@ -36,7 +36,7 @@ export const modifyMember = async (
   };
   try {
     const response = await customAxios.put<ISuccessResponse>(`/api/members`, request);
-    return response.data.result as IMemberUrlInterface;
+    return response.data.result as IMemberUrl;
   } catch (e) {
     console.log(e);
   }

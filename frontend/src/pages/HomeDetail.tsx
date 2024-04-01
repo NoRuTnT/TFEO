@@ -16,6 +16,9 @@ import { getKoreanDate } from '../utils/timeUtils';
 import SwipeableViews from 'react-swipeable-views';
 import { addWish, removeWish } from '../api/WishApis';
 
+import { IReview } from '../interfaces/ReviewInterface';
+import { getReviewList } from '../api/ReviewApis';
+
 const HomeDetail: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -45,16 +48,21 @@ const HomeDetail: React.FC = () => {
 
   const location = useLocation();
   const [homeDetail, setHomeDetail] = useState<IHomeDetail>();
+  const [reviewList, setReviewList] = useState<IReview[]>([]);
   const [startAt, setStartAt] = useState<string>(getKoreanDate());
   useEffect(() => {
     const homeNofromUrl = new URLSearchParams(location.search).get('homeNo');
     const homeNo = homeNofromUrl ? parseInt(homeNofromUrl, 10) : null;
     const fetchData = async () => {
       if (!homeNo) return;
-      const response = await getHomeDetail(homeNo);
-      if (response) {
-        console.log(response.homeImageList);
-        setHomeDetail(response);
+      const homeResponse = await getHomeDetail(homeNo);
+      const reviewResponse = await getReviewList(homeNo);
+      if (homeResponse) {
+        console.log(homeResponse.homeImageList);
+        setHomeDetail(homeResponse);
+      }
+      if (reviewResponse) {
+        setReviewList(reviewResponse);
       }
     };
     if (homeNo) fetchData();
@@ -183,22 +191,46 @@ const HomeDetail: React.FC = () => {
         <hr style={{ margin: '15px 0' }} />
 
         <div className="reviews-container">
-          <div className="review-box" style={{ border: '1px solid black', marginTop: '10px', padding: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <img
-                src="profileImage.jpg"
-                alt="Profile"
-                style={{ width: '50px', height: '50px', borderRadius: '50%' }}
-              />
-              <div style={{ marginLeft: '10px' }}>
-                <div>작성자</div>
-                <div>작성일자</div>
+          {reviewList.map((review, index) => (
+            <div
+              key={index}
+              className="review-box"
+              style={{ border: '1px solid black', marginTop: '10px', padding: '10px' }}
+            >
+              <div>
+                {review.keywordValues && (
+                  <div>
+                    {review.keywordValues.kindElderly && <div>친절해요</div>}
+                    {review.keywordValues.cleanHouse && <div>집이 깨끗해요</div>}
+                    {review.keywordValues.spaciousRoom && <div>방이 넓어요</div>}
+                    {review.keywordValues.manyNearbyAmenities && <div>주변에 편의시설이 많아요</div>}
+                    {review.keywordValues.matchesStatedOptions && <div>옵션이 설명과 같아요</div>}
+                    {review.keywordValues.affordableRent && <div>월세가 저렴해요</div>}
+                    {review.keywordValues.nearSchool && <div>학교와 가까워요</div>}
+                    {review.keywordValues.convenientTransportation && <div>교통이 편해요</div>}
+                    {review.keywordValues.easyAccessToHome && <div>집까지 가는 길이 편해요</div>}
+                    {review.keywordValues.goodSecurity && <div>치안이 좋아요</div>}
+                    {review.keywordValues.respectfulElderly && <div>어르신이 저를 존중해요</div>}
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <img
+                  src={review.memberProfileUrl || 'profileImage.jpg'} // 프로필 이미지 URL이 없을 경우 기본 이미지를 사용합니다.
+                  alt="Profile"
+                  style={{ width: '50px', height: '50px', borderRadius: '50%' }}
+                />
+                <div style={{ marginLeft: '10px' }}>
+                  <div>{review.memberName}</div>
+                  <div>{review.createdAt}</div>
+                </div>
+              </div>
+              <div style={{ marginTop: '10px' }}>
+                <p>{review.homeContent}</p>
               </div>
             </div>
-            <div style={{ marginTop: '10px' }}>
-              <p>리뷰 내용이 들어가는 부분</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
       {/* 집 신청 버튼과 찜 버튼 */}
