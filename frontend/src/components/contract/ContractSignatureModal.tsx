@@ -190,11 +190,11 @@ const ContractSignatureModal = ({ open, handleClose, contract, role }: Props) =>
 
   return (
     <Modal open={open} onClose={handleClose}>
-      <Box sx={boxStyle}>
+      <Box sx={boxStyle} style={{ display: 'flex', flexDirection: 'column' }}>
         <div style={{ border: '1px solid black' }}>
           <canvas
             ref={canvasRef}
-            width={200}
+            width={132}
             height={100}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
