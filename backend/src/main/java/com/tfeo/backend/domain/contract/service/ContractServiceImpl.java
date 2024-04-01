@@ -22,10 +22,11 @@ import com.tfeo.backend.domain.contract.common.exception.ContractNotExistExcepti
 import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.model.entity.Contract;
 import com.tfeo.backend.domain.contract.repository.ContractRepository;
-import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
-import com.tfeo.backend.domain.home.model.entity.Home;
+import com.tfeo.backend.domain.home.model.dto.HomeDetailsResponseDto;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
 import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
+import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
+import com.tfeo.backend.domain.member.model.dto.MemberResponseDto;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 
@@ -78,15 +79,10 @@ public class ContractServiceImpl implements ContractService {
 
 	// 계약서 폼 생성 (담당자가 집 신청한 학생 승인 시 호출하는 메서드)
 	@Override
-	public String creationContractForm(Long memberNo, Long homeNo) {
-		Member member = memberRepository.findById(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
-		Home home = homeRepository.findById(homeNo)
-			.orElseThrow(() -> new HomeNotExistException(homeNo));
-
+	public String creationContractForm(Long contractNo) {
 		// 계약서 폼을 저장할 계약 찾기
-		Contract contract = contractRepository.findByHomeAndMember(home, member)
-			.orElseThrow(() -> new ContractNotExistException("memberNo", memberNo));
+		Contract contract = contractRepository.findById(contractNo)
+			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
 
 		// 파일 이름 설정
 		String filePath = fileService.createPath("contract");
@@ -101,9 +97,13 @@ public class ContractServiceImpl implements ContractService {
 
 	// 계약 상세 조회
 	@Override
-	public ContractResponseDto getContract(Long contractNo) {
-		return new ContractResponseDto(contractRepository.findById(contractNo)
-			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo)));
+	public AppliedHomeResponseDto getContract(Long contractNo) {
+		Contract contract = contractRepository.findById(contractNo)
+			.orElseThrow(() -> new ContractNotExistException("contractNo", contractNo));
+		ContractResponseDto contractResponseDto = new ContractResponseDto(contract);
+		HomeDetailsResponseDto homeDetailsResponseDto = new HomeDetailsResponseDto(contract.getHome());
+		MemberResponseDto memberResponseDto = new MemberResponseDto(contract.getMember());
+		return new AppliedHomeResponseDto(homeDetailsResponseDto, contractResponseDto, memberResponseDto);
 	}
 
 	// 계약서 목록 조회 (학생)
@@ -134,7 +134,6 @@ public class ContractServiceImpl implements ContractService {
 
 		return fileService.createPresignedUrlToUpload(contract.getContractUrl());
 	}
-
 
 	// 계약서 삭제
 	@Override
