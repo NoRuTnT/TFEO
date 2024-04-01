@@ -60,8 +60,8 @@ export default function MapBox() {
           OR: false,
           rent_max: 100,
           rent_min: 0,
-          lat: 37.609641,
-          lng: 126.997697,
+          lat: MemberInfo.lat,
+          lng: MemberInfo.lng,
         },
         member_personality: member_personality,
       };
@@ -228,7 +228,7 @@ export default function MapBox() {
     window.kakao.maps.load(() => {
       const container = document.getElementById('map');
       const options = {
-        center: new window.kakao.maps.LatLng(37.566535, 126.977969),
+        center: new window.kakao.maps.LatLng(MemberInfo.lat, MemberInfo.lng),
         level: 7,
         minLevel: 3,
       };
