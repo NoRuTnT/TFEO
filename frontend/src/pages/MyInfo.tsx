@@ -3,12 +3,11 @@ import { Button, Avatar } from '@mui/material';
 import { useMemberStore } from '../store/MemberStore';
 import Footer from '../components/footer/Footer';
 import { getMember, modifyMember } from '../api/MemberApis';
-import axios from 'axios';
 import SearchAddress from '../components/mypage/SearchAddress';
 import { IMember } from '../interfaces/MemberInterface';
-import { getFileFromS3 } from '../api/S3Apis';
+import { getFileFromS3, uploadFileToS3 } from '../api/S3Apis';
 import { getDetail, getRoadAddress, getRoadNameAddress } from '../utils/addressUtils';
-import { IAddress } from '../interfaces/AddressInterface';
+import { convertFileToBlob } from '../utils/fileUtils';
 
 const MyInfo: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -18,17 +17,24 @@ const MyInfo: React.FC = () => {
 
   // 프로필 업로드
   const [profileImage, setProfileImage] = useState('');
-  const [isProfileImageUploaded, setIsProfileImageUploaded] = useState<boolean>(false);
+  const [profileImageBlob, setProfileImageBlob] = useState<Blob>();
   //재학증명서 업로드
-  const [ceritifcate, setCertificate] = useState('');
-  const [isCertificateUploaded, setIsCertificateUploaded] = useState<boolean>(false);
+  const [certificate, setCertificate] = useState('');
+  const [certificateBlob, setCertificateBlob] = useState<Blob>();
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setProfileImage(URL.createObjectURL(event.target.files[0]));
-      setIsProfileImageUploaded(true);
+      const profileImageBlob = await convertFileToBlob(event.target.files[0]);
+      if (profileImageBlob) setProfileImageBlob(profileImageBlob);
     }
   };
-
+  const uploadCertificate = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setCertificate(URL.createObjectURL(event.target.files[0]));
+      const certificateBlob = await convertFileToBlob(event.target.files[0]);
+      if (certificateBlob) setCertificateBlob(certificateBlob);
+    }
+  };
   useEffect(() => {
     const fetchData = async () => {
       const response = await getMember();
@@ -73,16 +79,36 @@ const MyInfo: React.FC = () => {
 
   const saveChanges = async () => {
     setIsEditing(false);
-    if (!newMemberInfo) return;
-    await modifyMember(
-      newMemberInfo.name,
-      newMemberInfo.phone,
-      newMemberInfo.email,
-      newMemberInfo.registerNo,
-      newMemberInfo.address,
-      isProfileImageUploaded,
-      isCertificateUploaded,
-    );
+    if (!newMemberInfo.name || !newMemberInfo.phone || !newMemberInfo.registerNo || !newMemberInfo.address) {
+      alert('정보를 모두 기입해주세요');
+      return;
+    }
+    try {
+      const response = await modifyMember(
+        newMemberInfo.name,
+        newMemberInfo.phone,
+        newMemberInfo.email,
+        newMemberInfo.registerNo,
+        newMemberInfo.address,
+        profileImage !== '',
+        certificate !== '',
+      );
+
+      if (response && response.certificatePreSignedUrlToUpload !== '' && certificateBlob) {
+        const res = await uploadFileToS3({
+          preSignedUrlToUpload: response.certificatePreSignedUrlToUpload,
+          uploadFile: certificateBlob,
+        });
+      }
+      if (response && response.profilePreSignedUrlToUpload !== '' && profileImageBlob) {
+        const res = await uploadFileToS3({
+          preSignedUrlToUpload: response.profilePreSignedUrlToUpload,
+          uploadFile: profileImageBlob,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const handleAddressChange = (data: any) => {
@@ -109,9 +135,6 @@ const MyInfo: React.FC = () => {
         detail: value,
       },
     });
-  };
-  const uploadCertificate = () => {
-    setIsCertificateUploaded(true);
   };
   if (!newMemberInfo) {
     return (
@@ -141,16 +164,24 @@ const MyInfo: React.FC = () => {
           <br />
           <textarea
             id="name"
-            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            style={{ width: '100%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
             value={newMemberInfo.name}
             onChange={handleMemberChange}
+            readOnly={!isEditing}
           />
           <br />
           <span>대학교</span>
           <br />
           <textarea
             id="college"
-            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            style={{
+              width: '100%',
+              height: '2em',
+              border: 'none',
+              resize: 'none',
+              whiteSpace: 'pre-line',
+              cursor: 'default',
+            }}
             value={newMemberInfo.college}
             readOnly
           />
@@ -159,7 +190,14 @@ const MyInfo: React.FC = () => {
           <br />
           <textarea
             id="email"
-            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            style={{
+              width: '100%',
+              height: '2em',
+              border: 'none',
+              resize: 'none',
+              whiteSpace: 'pre-line',
+              cursor: 'default',
+            }}
             value={MemberInfo.email}
             readOnly
           />
@@ -169,8 +207,9 @@ const MyInfo: React.FC = () => {
           <textarea
             className={isEditing ? 'textarea-editing' : ''}
             id="phone"
-            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
-            defaultValue={MemberInfo.phone}
+            style={{ width: '100%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            value={newMemberInfo.phone}
+            readOnly={!isEditing}
             onChange={handleMemberChange}
           />
           <br />
@@ -179,9 +218,10 @@ const MyInfo: React.FC = () => {
           <textarea
             className={isEditing ? 'textarea-editing' : ''}
             id="registerNo"
-            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
-            defaultValue={MemberInfo.registerNo}
+            style={{ width: '100%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            value={newMemberInfo.registerNo}
             onChange={handleMemberChange}
+            readOnly={!isEditing}
           />
           <br />
           <span>주소</span>
@@ -191,23 +231,37 @@ const MyInfo: React.FC = () => {
             handleModal={handleModal}
             newMemberInfo={newMemberInfo}
             handleAddressChange={handleAddressChange}
+            isEditing={isEditing}
           />
           <textarea
-            className={isEditing ? 'textarea-editing' : ''}
             id="address"
-            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            style={{
+              width: '100%',
+              height: '2em',
+              border: 'none',
+              resize: 'none',
+              whiteSpace: 'pre-line',
+              cursor: 'default',
+            }}
             value={getRoadAddress(newMemberInfo.address)}
+            readOnly
           />
           <br />
           <span>상세 주소</span>
           <textarea
-            style={{ width: '150%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
+            style={{ width: '100%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
             value={getDetail(newMemberInfo.address)}
             onChange={handleAddressDetailChange}
+            readOnly={!isEditing}
           />
         </div>
         <span>재학증명서</span>{' '}
-        {MemberInfo.certificate !== 'CERTIFICATED' && <input type="file" onChange={uploadCertificate} />}
+        {MemberInfo.certificate !== 'CERTIFICATED' && MemberInfo.certificate !== 'CERTIFICATE_REQUIRED' && (
+          <input type="file" onChange={uploadCertificate} style={{ display: isEditing ? '' : 'none' }} />
+        )}
+        {MemberInfo.certificate === 'CERTIFICATE_REQUIRED' && (
+          <p>관리자가 재학증명서를 확인 중입니다. 승인을 기다려주세요</p>
+        )}
         {MemberInfo.certificate === 'CERTIFICATED' && (
           <>
             <button style={{ border: '1px solid black ', borderRadius: '5px' }} onClick={() => null}>
@@ -217,15 +271,17 @@ const MyInfo: React.FC = () => {
           </>
         )}
         <br />
-        {isEditing ? (
-          <Button variant="outlined" onClick={saveChanges}>
-            저장하기
-          </Button>
-        ) : (
-          <Button variant="outlined" onClick={handleEdit}>
-            수정하기
-          </Button>
-        )}
+        <div>
+          {isEditing ? (
+            <Button variant="outlined" onClick={saveChanges}>
+              저장하기
+            </Button>
+          ) : (
+            <Button variant="outlined" onClick={handleEdit}>
+              수정하기
+            </Button>
+          )}
+        </div>
       </div>
       <Footer />
     </div>
