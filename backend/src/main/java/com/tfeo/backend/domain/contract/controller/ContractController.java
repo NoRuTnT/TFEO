@@ -18,6 +18,7 @@ import com.tfeo.backend.common.model.dto.SuccessResponse;
 import com.tfeo.backend.common.service.AuthenticationService;
 import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.service.ContractService;
+import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
 import com.tfeo.backend.domain.member.model.entity.Member;
 
 import lombok.RequiredArgsConstructor;
@@ -31,16 +32,10 @@ public class ContractController {
 	private final AuthenticationService authenticationService;
 
 	// 계약서 폼 생성
-	@GetMapping("/creation-form/{homeNo}")
+	@GetMapping("/creation-form/{contractNo}")
 	public ResponseEntity<?> contractFormCreation(
-		@PathVariable Long homeNo, HttpServletRequest request) {
-		Optional<Member> memberOptional = authenticationService.getMember(request);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
-		String contractUrl = contractService.creationContractForm(memberNo, homeNo);
+		@PathVariable Long contractNo, HttpServletRequest request) {
+		String contractUrl = contractService.creationContractForm(contractNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서 폼이 생성되었습니다.")
@@ -62,7 +57,7 @@ public class ContractController {
 	@GetMapping("/detail/{contractNo}")
 	public ResponseEntity<SuccessResponse> getContract(
 		@PathVariable Long contractNo) {
-		ContractResponseDto contract = contractService.getContract(contractNo);
+		AppliedHomeResponseDto contract = contractService.getContract(contractNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.message("성공적으로 계약서가 조회되었습니다.")
