@@ -18,6 +18,7 @@ import { addWish, removeWish } from '../api/WishApis';
 
 import { IReview } from '../interfaces/ReviewInterface';
 import { getReviewList } from '../api/ReviewApis';
+import { format } from 'date-fns';
 
 const HomeDetail: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -195,22 +196,32 @@ const HomeDetail: React.FC = () => {
             <div
               key={index}
               className="review-box"
-              style={{ border: '1px solid black', marginTop: '10px', padding: '10px' }}
+              style={{ border: '1px solid lightgray', borderRadius: '5px', marginTop: '10px', padding: '10px' }}
             >
               <div>
                 {review.keywordValues && (
-                  <div>
-                    {review.keywordValues.kindElderly && <div>친절해요</div>}
-                    {review.keywordValues.cleanHouse && <div>집이 깨끗해요</div>}
-                    {review.keywordValues.spaciousRoom && <div>방이 넓어요</div>}
-                    {review.keywordValues.manyNearbyAmenities && <div>주변에 편의시설이 많아요</div>}
-                    {review.keywordValues.matchesStatedOptions && <div>옵션이 설명과 같아요</div>}
-                    {review.keywordValues.affordableRent && <div>월세가 저렴해요</div>}
-                    {review.keywordValues.nearSchool && <div>학교와 가까워요</div>}
-                    {review.keywordValues.convenientTransportation && <div>교통이 편해요</div>}
-                    {review.keywordValues.easyAccessToHome && <div>집까지 가는 길이 편해요</div>}
-                    {review.keywordValues.goodSecurity && <div>치안이 좋아요</div>}
-                    {review.keywordValues.respectfulElderly && <div>어르신이 저를 존중해요</div>}
+                  <div className="filters-container">
+                    {review.keywordValues.kindElderly && <div className="filter-detail">😃친절해요</div>}
+                    {review.keywordValues.cleanHouse && <div className="filter-detail">🏠집이 깨끗해요</div>}
+                    {review.keywordValues.spaciousRoom && <div className="filter-detail">🛏방이 넓어요</div>}
+                    {review.keywordValues.manyNearbyAmenities && (
+                      <div className="filter-detail">🏪주변에 편의시설이 많아요</div>
+                    )}
+                    {review.keywordValues.matchesStatedOptions && (
+                      <div className="filter-detail">✔옵션이 설명과 같아요</div>
+                    )}
+                    {review.keywordValues.affordableRent && <div className="filter-detail">💵월세가 저렴해요</div>}
+                    {review.keywordValues.nearSchool && <div className="filter-detail">🏫학교와 가까워요</div>}
+                    {review.keywordValues.convenientTransportation && (
+                      <div className="filter-detail">🚎교통이 편해요</div>
+                    )}
+                    {review.keywordValues.easyAccessToHome && (
+                      <div className="filter-detail">🏃‍♀️집까지 가는 길이 편해요</div>
+                    )}
+                    {review.keywordValues.goodSecurity && <div className="filter-detail">👮‍♂️치안이 좋아요</div>}
+                    {review.keywordValues.respectfulElderly && (
+                      <div className="filter-detail">👨‍🦳👩‍🦳어르신이 저를 존중해요</div>
+                    )}
                   </div>
                 )}
               </div>
@@ -223,7 +234,7 @@ const HomeDetail: React.FC = () => {
                 />
                 <div style={{ marginLeft: '10px' }}>
                   <div>{review.memberName}</div>
-                  <div>{review.createdAt}</div>
+                  <div>{format(new Date(review.createdAt), 'yyyy-MM-dd HH:mm:ss')}</div>
                 </div>
               </div>
               <div style={{ marginTop: '10px' }}>
