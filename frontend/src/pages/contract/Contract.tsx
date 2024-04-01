@@ -18,24 +18,22 @@ const Contract = () => {
   const [contractInfo, setContractInfo] = useState<IContractInfo>();
   const [status, setStatus] = useState<string>('');
   const [memberRole, setMemberRole] = useState<string>();
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const result = await getMemberDetail();
+  //     if (!result) return;
+  //     setMemberRole(result.role);
+  //   };
+  //   fetchData();
+  // }, []);
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getMemberDetail();
+      const result = await getMemberContract();
       if (!result) return;
-      setMemberRole(result.role);
+      setContractInfo(result);
     };
     fetchData();
   }, []);
-  useEffect(() => {
-    const fetchData = async () => {
-      if (memberRole === 'USER') {
-        const result = await getMemberContract();
-        if (!result) return;
-        setContractInfo(result);
-      }
-    };
-    fetchData();
-  }, [memberRole]);
   const setApplied = () => {
     setStatus('APPLIED');
   };
