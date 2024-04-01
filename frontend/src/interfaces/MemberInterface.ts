@@ -38,10 +38,6 @@ export interface IMemberPersonality {
   outside: number;
   inside: number;
   quiet: number;
-  electronics: number;
-  strong: number;
-  housework: number;
-  errand: number;
   liveLong: number;
   liveShort: number;
   pet: number;
