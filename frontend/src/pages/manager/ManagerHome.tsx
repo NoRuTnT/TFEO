@@ -8,6 +8,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import AddHomeIcon from '@mui/icons-material/AddHome';
+import ManagerFooter from '../../components/footer/ManagerFooter';
 
 // 관리자 - 학생 정보 관리
 
@@ -175,6 +176,7 @@ const ActivityContent: React.FC = () => {
           <div style={{ fontSize: '22px' }}>건</div>
         </div>
       </div>
+      <ManagerFooter />
     </div>
   );
 };
