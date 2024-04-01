@@ -18,14 +18,17 @@ const LoginPage: React.FC = () => {
 
   return (
     <div>
-      <div style={{ position: 'fixed', top: '50px', left: '50px', fontSize: '40px' }}>
-        <div style={{ fontFamily: 'iceJaram-Rg' }}>스물다섯 여든하나</div>
-        <div style={{ fontSize: '15px', marginTop: '10px', marginRight: '60px' }}>
-          특별한 인연을 만드는 공간, 여러분을 기다리는 인생 선배분들과 함께 보내봅시다.
+      <div>
+        <img src="/landing/background.png" style={{ height: '100vh' }} />
+      </div>
+      <div style={{ position: 'fixed', top: '80px', left: '50px', fontSize: '45px' }} className="fade-in-down">
+        <div style={{ fontFamily: 'iceJaram-Rg', fontWeight: 'bold' }}>스물다섯 여든하나</div>
+        <div style={{ fontSize: '17px', marginTop: '10px', marginRight: '60px' }}>
+          특별한 인연을 만드는 공간, 인생 선배가 여러분을 기다립니다.
         </div>
       </div>
       {/*<img style={{ height: '100vh' }} src="/test/landing.png" alt="image" />*/}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} className="fade-in">
         <div
           style={{
             width: '80%',
