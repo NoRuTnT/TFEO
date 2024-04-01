@@ -28,7 +28,7 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/my-info" element={<MyInfo />} />
           <Route path="/apply-list" element={<ApplyList />} />
           <Route path="/activity-certification" element={<ActivityCertification />} />
@@ -40,7 +40,7 @@ function App() {
           <Route path="/contract" element={<Contract />} />
           <Route path="/contract-form" element={<ContractForm />} />
           <Route path="/survey" element={<Survey />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/home" element={<Home />} />
           {/* ... 여기에 더 많은 라우트를 추가할 수 있습니다 ... */}
           <Route path="/contract-test" element={<ContractApplyButton />} />
           <Route path="/wish-list" element={<WishList />} />

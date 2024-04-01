@@ -51,7 +51,7 @@ const HomeList: React.FC = () => {
   });
 
   return (
-    <div className="page-container" style={{ marginTop: containerMarginTop }} {...handlers}>
+    <div className="page-container" style={{ marginTop: containerMarginTop }}>
       {isButtonVisible && (
         <button className="mapBtn" onClick={shouldDisplay ? handleButtonClick : undefined}>
           <span className="text">지도</span>
@@ -61,15 +61,17 @@ const HomeList: React.FC = () => {
       <hr className="custom-hr" onClick={shouldDisplay ? resetStyles : undefined} />
       {shouldDisplay ? (
         <>
-          <div className="home-count" onClick={resetStyles}>
-            어르신 {visibleHomes.length} 명
+          <div className="home-count" onClick={resetStyles} {...handlers}>
+            <div style={{ fontSize: '17px' }}>
+              나의 인생선배 <b>{visibleHomes.length}</b> 명{' '}
+            </div>
           </div>
           {visibleHomes.map((home, index) => (
             <Home key={index} settings={settings} home={home} />
           ))}
         </>
       ) : (
-        <div className="home-count">너에게 줄 집은 없어</div>
+        <div className="home-count">알맞은 집이 없습니다</div>
       )}
     </div>
   );
