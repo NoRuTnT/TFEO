@@ -112,20 +112,22 @@ const ManageList: React.FC = () => {
       <div className="match-container">
         {contractList &&
           contractList.map((item, index) => (
-            <div key={index} className="match-list-container">
-              <div style={{ width: '90px', textAlign: 'center', marginLeft: '5px' }}>{item.hostName}</div>
+            <Link key={index} to={{ pathname: '/manage-contract', search: `?contractNo=${item.contractNo}` }}>
+              <div key={index} className="match-list-container">
+                <div style={{ width: '90px', textAlign: 'center', marginLeft: '5px' }}>{item.hostName}</div>
 
-              <div style={{ width: '90px', textAlign: 'center', marginLeft: '15px' }}>{item.memberName}</div>
+                <div style={{ width: '90px', textAlign: 'center', marginLeft: '15px' }}>{item.memberName}</div>
 
-              <div style={{ width: '180px', textAlign: 'center', marginLeft: '15px' }}>
-                {getRoadAddress(item.address)}
-              </div>
-              <div style={{ width: '180px', textAlign: 'center', marginLeft: '15px' }}>
-                <div>
-                  {item.startAt} ~ {item.expiredAt}
+                <div style={{ width: '180px', textAlign: 'center', marginLeft: '15px' }}>
+                  {getRoadAddress(item.address)}
+                </div>
+                <div style={{ width: '180px', textAlign: 'center', marginLeft: '15px' }}>
+                  <div>
+                    {item.startAt} ~ {item.expiredAt}
+                  </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
       </div>
       <ManagerFooter />
