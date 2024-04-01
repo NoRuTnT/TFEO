@@ -1,10 +1,13 @@
 import create from 'zustand';
-import { IMember } from '../interfaces/MemberInterface';
+import { IMember, IMemberPersonality } from '../interfaces/MemberInterface';
 import { IAddress } from '../interfaces/AddressInterface';
 
 interface MemberState {
   MemberInfo: IMember;
+  setCollege: (collegeName: string, newLat: number, newLng: number) => void;
   setMemberState: (newMemberInfo: IMember) => void;
+  setMemberPersonality: (newMemberPersonality: IMemberPersonality) => void;
+  updateMemberPersonality: (field: keyof IMemberPersonality, value: number) => void;
 }
 
 interface AddressState {
@@ -28,8 +31,8 @@ const initialMemberState: MemberState = {
     email: '',
     registerNo: '',
     college: '',
-    lat: 0,
-    lng: 0,
+    lat: 37.609641,
+    lng: 126.997697,
     address: { si: '', sgg: '', emd: '', ro: '', detail: '' },
     profileUrl: '',
     gender: '',
@@ -53,10 +56,6 @@ const initialMemberState: MemberState = {
       outside: 0,
       inside: 0,
       quiet: 0,
-      electronics: 0,
-      strong: 0,
-      housework: 0,
-      errand: 0,
       liveLong: 0,
       liveShort: 0,
       pet: 0,
@@ -65,15 +64,48 @@ const initialMemberState: MemberState = {
       hostHousePrefer: 0,
     },
   },
+  setCollege: (collegeName: string, newLat: number, newLng: number) => {},
   setMemberState: (newMember: IMember) => {},
+  setMemberPersonality: (newMemberPersonality: IMemberPersonality) => {},
+  updateMemberPersonality: (field: keyof IMemberPersonality, value: number) => {},
 };
 
 // Zustand 생성
 export const useMemberStore = create<MemberState & AddressState>((set) => ({
   ...initialMemberState,
   ...initialAddressState,
+  setCollege: (collegeName: string, newLat: number, newLng: number) =>
+    set((state) => {
+      const newMemberInfo = {
+        ...state.MemberInfo,
+        college: collegeName,
+        lat: newLat,
+        lng: newLng,
+      };
+      console.log(newMemberInfo);
+      return { ...state, MemberInfo: newMemberInfo };
+    }),
   setMemberState: (newMemberInfo: IMember) => set((state) => ({ ...state, MemberInfo: newMemberInfo })),
   setAddressState: (newAddress: IAddress) => set((state) => ({ ...state, ...newAddress })),
+  setMemberPersonality: (newMemberPersonality: IMemberPersonality) =>
+    set((state) => {
+      const newMemberInfo = {
+        ...state.MemberInfo,
+        memberPersonality: newMemberPersonality,
+      };
+      return { ...state, MemberInfo: newMemberInfo };
+    }),
+  updateMemberPersonality: (field: keyof IMemberPersonality, value: number) =>
+    set((state) => ({
+      ...state,
+      MemberInfo: {
+        ...state.MemberInfo,
+        memberPersonality: {
+          ...state.MemberInfo.memberPersonality,
+          [field]: value,
+        },
+      },
+    })),
 }));
 
 // MemberComponent
