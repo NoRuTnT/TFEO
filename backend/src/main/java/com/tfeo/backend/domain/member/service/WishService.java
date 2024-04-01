@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.tfeo.backend.domain.home.common.exception.HomeNotExistException;
 import com.tfeo.backend.domain.home.model.dto.HomeDto;
@@ -28,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class WishService {
 	private final MemberRepository memberRepository;
 	private final HomeRepository homeRepository;
@@ -44,6 +46,7 @@ public class WishService {
 		wishRepository.save(wish);
 	}
 
+	@Transactional(readOnly = true)
 	public List<FindWishListDto> findWishList(Long memberNo) {
 		Member member = memberRepository.findById(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
@@ -64,11 +67,11 @@ public class WishService {
 				home.getHostPersonality());
 			HomeOptionDto homeOptionDto = new HomeOptionDto(home.getHomeOption());
 			FindWishListDto findWishListDto = FindWishListDto.builder()
-				.homeImageDtoList(homeImageDtoList)
-				.hostImageDtoList(hostImageDtoList)
-				.homeDto(homeDto)
-				.homeOptionDto(homeOptionDto)
-				.hostPersonalityDto(hostPersonalityDto)
+				.homeImageList(homeImageDtoList)
+				.hostImageList(hostImageDtoList)
+				.home(homeDto)
+				.homeOption(homeOptionDto)
+				.hostPersonality(hostPersonalityDto)
 				.build();
 			findWishListDtoList.add(findWishListDto);
 		}

@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public class SurveyMemberRequestDto {
 	private String college;
+	private Double lat;
+	private Double lng;
 	private GenderType gender;
 	private LocalTime sleepAt;
 	private LocalTime wakeAt;
