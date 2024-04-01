@@ -243,37 +243,10 @@ class Filter_Condition(BaseModel):
     apartment: bool
     pets: bool
 
-##########################################
-
-# @app.get("/")
-# def root():
-#     return {"message": "HelloWorld"}
-#
-# @app.get("/home")
-# def home():
-#     return {"message": "home"}
-
-## 비회원 추천 getMapping API 추가로 개발해야 됨 ##
-
 # 성능 최적화를 위해 200개 까지만 추천
 SEARCH_LIMIT = 200
-
-
-
-# 사용자 맞춤형 추천이 반영된 결과를 반환
-@app.get("/recommend")
-def get_recommended_list(home_option: Home_Option, member_personality: Member_Personality):
-
-
-
-
-    weight = member_personality.host_house_prefer # 0-10사이의 값을 적당하게 mapping
-    print(weight)
-
-
-    resp = {}
-    return resp
-
+# 학교에 가까운지에 대한 거리 기준(km단위)
+SCHOOL_LIMIT = 3
 
 @app.post("/recommend")
 def filter_by_search_condition(search_condition: Search_Condition, filter_condition: Filter_Condition, member_personality: Optional[Member_Personality]=None):
@@ -376,9 +349,6 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     # 입력받은 대학의 위도,경도 좌표값을 가져옴
     univ_lat = search_condition.lat
     univ_lng = search_condition.lng
-    # univ_distance = math.sqrt(univ_lat**2+univ_lng**2)
-
-
 
     print(data)
     data_list = []
@@ -392,11 +362,10 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     # 프론트엔드 4가지 조건에 맞게 필터링하는 과정
     print("확인된 내용물의 개수는??", len(data_list))
     data_list_filtered = []
-    school_limit = 3
 
     # 아파트 조건은 db에서 query할 때 미리 거른다.
     for data in data_list:
-        if ((data['distance']<=school_limit and filter_condition.school) or not filter_condition.school) and ((data['station']==1 and filter_condition.subway) or not filter_condition.subway) and ((data['pet']==1 and filter_condition.pets) or not filter_condition.pets):
+        if ((data['distance']<=SCHOOL_LIMIT and filter_condition.school) or not filter_condition.school) and ((data['station']==1 and filter_condition.subway) or not filter_condition.subway) and ((data['pet']==1 and filter_condition.pets) or not filter_condition.pets):
             data_list_filtered.append(data)
 
     data_list = data_list_filtered
@@ -407,6 +376,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     if(member_personality is None):
         data_list = data_list[:SEARCH_LIMIT] # 최대 200개까지 출력
         for item in data_list:
+            # 추천알고리즘이 적용된 결과와 json 반환 format을 맞춰준다
             del item['host_vector']
             del item['station']
             del item['home_no']
@@ -419,7 +389,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     data_json = json.dumps(data_list, default=str, ensure_ascii=False)
     data_json = data_json.replace("\"", "")
 
-    # 벡터 추출 -> 위키독스 참고
+    # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
 
     prefer = 0
     if(member_personality.host_house_prefer>=5):
@@ -471,9 +441,6 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     print('정렬 결과 벡터 list임')
     print(priorities)
     print(data_json)
-
-
-    # indices = indices[:3]  # 3개만 추출
 
 
     output_list = [] # 최종적으로 추천된 부동산 내용들의 list, 필요시 원하는 성분들만 추출해서 사용
@@ -636,9 +603,6 @@ def get_min_length(lat1, lng1, lat2, lng2):
 
 def init():
     print("DB초기설정")
-
-# def filter_option(json):
-#     return True if json['op1'] and json['op2'] and json['op3'] and json['op4'] else False
 
 # 터미널창에
 # python -m uvicorn main:app --reload
