@@ -3,6 +3,7 @@
   padding: 3px 0px 3px 3px;
   margin: 5px 1px 3px 0px;
   border: 1px solid rgba(255, 90, 90, 1);
+  cursor: text;
 }
 
 /* 프로필 이미지와 사진 업로드 버튼을 가운데 정렬 */
