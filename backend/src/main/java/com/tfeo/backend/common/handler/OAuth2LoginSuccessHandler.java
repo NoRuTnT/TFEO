@@ -19,6 +19,7 @@ import com.tfeo.backend.common.model.entity.MemberPersonality;
 import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.domain.member.model.dto.auth.CustomOAuth2User;
 import com.tfeo.backend.domain.member.model.entity.Member;
+import com.tfeo.backend.domain.member.repository.MemberPersonalityRepository;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 import com.tfeo.backend.domain.member.service.JwtService;
 import com.tfeo.backend.domain.member.service.RedisService;
@@ -35,6 +36,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 	private final RedisService redisService;
 	private final MemberRepository memberRepository;
 	private final PathProperty pathProperty;
+	private final MemberPersonalityRepository memberPersonalityRepository;
 
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -61,6 +63,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
 		if (member.getMemberPersonality() == null) {
 			MemberPersonality newMemberPersonality = new MemberPersonality();
+			memberPersonalityRepository.save(newMemberPersonality);
 			member.setMemberPersonality(newMemberPersonality);
 		}
 
