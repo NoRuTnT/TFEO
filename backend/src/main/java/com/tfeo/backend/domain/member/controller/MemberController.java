@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
@@ -131,19 +130,24 @@ public class MemberController {
 	//회원 상세정보 조회
 	@GetMapping("")
 	//Todo: Auth 적용 이후 memberId 갱신
-	public ResponseEntity<SuccessResponse> memberDetails(HttpServletRequest request) {
-		String email = jwtService.extractEmailFromAccessToken(request)
-			.orElseThrow(() -> new NoSuchElementException("유효한 이메일을 토큰에서 찾을 수 없습니다."));
-		Member member = memberRepository.findByEmail(email)
-			.orElseThrow(() -> new NoSuchElementException("해당 이메일을 가진 사용자를 찾을 수 없습니다."));
+	public ResponseEntity<?> memberDetails(HttpServletRequest request) {
+		Optional<String> jwtdetail = jwtService.extractEmailFromAccessToken(request);
+		if (jwtdetail.isPresent()) {
+			Optional<Member> emaildetail = memberRepository.findByEmail(jwtdetail.get());
+			if (emaildetail.isPresent()) {
+				Member member = emaildetail.get();
 
-		Long memberNo = member.getMemberNo();
-		MemberResponseDto memberResponseDto = memberService.findMember(memberNo);
-		SuccessResponse successResponse = SuccessResponse.builder()
-			.status(HttpStatus.OK)
-			.result(memberResponseDto)
-			.build();
-		return ResponseEntity.ok(successResponse);
+				Long memberNo = member.getMemberNo();
+				MemberResponseDto memberResponseDto = memberService.findMember(memberNo);
+				SuccessResponse successResponse = SuccessResponse.builder()
+					.status(HttpStatus.OK)
+					.result(memberResponseDto)
+					.build();
+				return ResponseEntity.ok(successResponse);
+			}
+			return ResponseEntity.status(404).body("가입된 사용자데이터를 찾을수없습니다.");
+		}
+		return ResponseEntity.status(400).body("유효한 토큰을 찾을수없습니다");
 	}
 
 	//회원 설문조사 제출
