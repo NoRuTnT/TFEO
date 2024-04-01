@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from fastapi import FastAPI
 from pymongo import MongoClient
 from pydantic import BaseModel
@@ -49,6 +49,9 @@ bank_num_dict = {'국민': '001', '우리': '002', '신한': '003',
                  '광주': '017', '수협': '018', '제주': '020',
                  '케이': '023', '카카오': '090'}
 boolean = [False, True]
+
+fake = Faker('ko_KR')
+Faker.seed()
 
 class Home(BaseModel):
     # 집
@@ -160,8 +163,8 @@ def init_MongoDB_Naver():
     # 인코딩 열때는 반드시 UTF-8로 열어야 에러 발생 없음
     json_list = []
     host_vector_json_list = []
-    fake = Faker('ko_KR')
-    Faker.seed()
+    # fake = Faker('ko_KR')
+    # Faker.seed()
     # MySQL에 들어갈 csv파일 작성
     # (1) 집
     # df_home = pd.DataFrame(data='데이터', columns=home_columns)
@@ -268,12 +271,12 @@ def init_MongoDB_Naver():
             df_host_personality = df_host_personality._append(new_row, ignore_index=True)
             # 집
             json_data['home_no'] = idx+1
-            json_data['host_name'] = fake.name()  # 이름
             json_data['host_age'] = random.randint(65, 100)  # 나이
             # json_data['host_phone'] = fake.phone_number() # 데이터 포맷에 맞게 변경
             json_data['host_phone'] = get_random_phone_number()
             # json_data['host_gender'] = random.choice(gender)[0]  # 성별 (M/F)
             json_data['host_gender'] = get_gender(gender_list[idx%PICTURE_NUMBER])  # 성별 (M/F)
+            json_data['host_name'] = get_name(json_data['host_gender'])  # 이름
             json_data['guardian_name'] = fake.name()  # 보호자 이름
             # json_data['guardian_phone'] = fake.phone_number()  # 보호자 전화번호 # 데이터 포맷에 맞게 변경
             json_data['guardian_phone'] = get_random_phone_number()
@@ -403,6 +406,12 @@ def get_host_vector_json(host_personality):
     }
     return member_vector_json
 
+# 성별에 맞는 이름 출력
+def get_name(gender):
+    if gender=='F':
+        return fake.name_female()
+    return fake.name_male()
+
 def get_gender(char):
     if char=='U':
         return random.choices('MF')[0]
@@ -434,3 +443,4 @@ def null_empty_fill_func(obj):
 if __name__ == '__main__':
     # merge_naver_home_csv()
     init_MongoDB_Naver()
+    # print(type(datetime.today().year)) # 'int'
