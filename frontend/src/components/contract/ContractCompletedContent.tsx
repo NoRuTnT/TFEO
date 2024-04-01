@@ -1,13 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../../styles/contract/ContractCompletedContent.css';
-
-const ContractCompletedContent = () => {
-  const seeContract = () => {
-    console.log('계약서 보기 api 요청');
-  };
-  const writeReview = () => {
-    console.log('리뷰 쓰기로 라우터 걸기');
+import { getContractFormPreSignedUrl } from '../../api/ContractApis';
+import { getFileFromS3 } from '../../api/S3Apis';
+import { showFile } from '../../utils/showPdfUtils';
+interface Props {
+  contractNo: number;
+}
+const ContractCompletedContent = ({ contractNo }: Props) => {
+  const seeContract = async () => {
+    const url = await getContractFormPreSignedUrl(contractNo);
+    if (!url) {
+      alert('확인할 수 있는 계약서가 없습니다.');
+      return;
+    }
+    const response = await getFileFromS3(url);
+    if (!response) {
+      alert('파일 다운로드 에러: 다시 한번 요청해주세요');
+      return;
+    }
+    showFile(response);
   };
   return (
     <div className="contractContent">
@@ -17,7 +29,7 @@ const ContractCompletedContent = () => {
       <button className="selectBtn">
         <Link to="/activity-certification">활동 내역</Link>
       </button>
-      <button className="selectBtn" onClick={writeReview}>
+      <button className="selectBtn">
         <Link to="/activity-review">리뷰 쓰기</Link>
       </button>
     </div>
