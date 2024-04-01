@@ -1,5 +1,15 @@
 import { IAddress } from './AddressInterface';
 
+export interface IMemberDetail {
+  name: string;
+  email: string;
+  memberNo: number;
+  college: string;
+  lat: number;
+  lng: number;
+  role: string;
+}
+
 export interface IMember {
   memberNo: number;
   socialId: string;
