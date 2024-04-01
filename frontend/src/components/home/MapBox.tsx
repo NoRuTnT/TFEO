@@ -29,6 +29,7 @@ export default function MapBox() {
   const { MemberInfo } = useMemberStore();
 
   const fetchFirstData = async () => {
+    console.log(MemberInfo.gender);
     try {
       const requestData = {
         filter_condition: {

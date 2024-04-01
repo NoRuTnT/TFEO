@@ -8,6 +8,7 @@ interface MemberState {
   setMemberState: (newMemberInfo: IMember) => void;
   setMemberPersonality: (newMemberPersonality: IMemberPersonality) => void;
   updateMemberPersonality: (field: keyof IMemberPersonality, value: number) => void;
+  setGender: (newGender: string) => void;
 }
 
 interface AddressState {
@@ -68,6 +69,7 @@ const initialMemberState: MemberState = {
   setMemberState: (newMember: IMember) => {},
   setMemberPersonality: (newMemberPersonality: IMemberPersonality) => {},
   updateMemberPersonality: (field: keyof IMemberPersonality, value: number) => {},
+  setGender: (newGender: string) => {},
 };
 
 // Zustand 생성
@@ -104,6 +106,14 @@ export const useMemberStore = create<MemberState & AddressState>((set) => ({
           ...state.MemberInfo.memberPersonality,
           [field]: value,
         },
+      },
+    })),
+  setGender: (newGender: string) =>
+    set((state) => ({
+      ...state,
+      MemberInfo: {
+        ...state.MemberInfo,
+        gender: newGender, // 성별 업데이트
       },
     })),
 }));
