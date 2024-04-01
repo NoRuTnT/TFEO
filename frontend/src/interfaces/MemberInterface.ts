@@ -47,4 +47,5 @@ export interface IMemberPersonality {
   pet: number;
   cold: number;
   hot: number;
+  hostHousePrefer: number;
 }
