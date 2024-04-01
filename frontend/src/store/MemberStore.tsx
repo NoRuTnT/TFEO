@@ -62,6 +62,7 @@ const initialMemberState: MemberState = {
       pet: 0,
       cold: 0,
       hot: 0,
+      hostHousePrefer: 0,
     },
   },
   setMemberState: (newMember: IMember) => {},
