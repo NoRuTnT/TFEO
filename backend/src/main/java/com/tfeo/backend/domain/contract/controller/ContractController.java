@@ -1,6 +1,9 @@
 package com.tfeo.backend.domain.contract.controller;
 
 import java.util.List;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tfeo.backend.common.model.dto.SuccessResponse;
+import com.tfeo.backend.common.service.AuthenticationService;
 import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.service.ContractService;
+import com.tfeo.backend.domain.member.model.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,12 +28,18 @@ import lombok.RequiredArgsConstructor;
 public class ContractController {
 
 	private final ContractService contractService;
+	private final AuthenticationService authenticationService;
 
 	// 계약서 폼 생성
 	@GetMapping("/creation-form/{homeNo}")
-	public ResponseEntity<SuccessResponse> contractFormCreation(
-		@PathVariable Long homeNo) {
-		Long memberNo = 1L;
+	public ResponseEntity<?> contractFormCreation(
+		@PathVariable Long homeNo, HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
 		String contractUrl = contractService.creationContractForm(memberNo, homeNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
@@ -73,8 +84,13 @@ public class ContractController {
 
 	// 계약서 목록 조회 (학생)
 	@GetMapping
-	public ResponseEntity<SuccessResponse> getContracts() {
-		Long memberNo = 1L;
+	public ResponseEntity<?> getContracts(HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
 		List<ContractResponseDto> contracts = contractService.getContracts(memberNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
@@ -86,9 +102,13 @@ public class ContractController {
 
 	// 계약서 싸인
 	@PutMapping("/sign/{contractNo}")
-	public ResponseEntity<SuccessResponse> signContract(
-		@PathVariable Long contractNo) {
-		Long memberNo = 1L;
+	public ResponseEntity<?> signContract(@PathVariable Long contractNo, HttpServletRequest request) {
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
 		String contractPresignedUrl = contractService.signContract(memberNo, contractNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
