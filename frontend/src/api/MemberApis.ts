@@ -56,7 +56,7 @@ export const surveyMember = async (surveyData: ISurvey) => {
 // get member detail
 export const getMemberDetail = async () => {
   try {
-    const response = await customAxios.post<ISuccessResponse>('/api/members/detail');
+    const response = await customAxios.get<ISuccessResponse>('/api/members/detail');
     return response.data.result as IMemberDetail;
   } catch (e) {
     console.log(e);
