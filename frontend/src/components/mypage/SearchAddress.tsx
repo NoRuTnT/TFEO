@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
 import DaumPostcode from 'react-daum-postcode';
 import Modal from 'react-modal';
+import { useMemberStore } from '../../store/MemberStore';
+import { IAddress } from '../../interfaces/AddressInterface';
+import { IMember } from '../../interfaces/MemberInterface';
 interface Props {
   open: boolean;
   handleModal: () => void;
+  newMemberInfo: IMember;
+  handleAddressChange: (data: any) => void;
 }
-const SearchAddress = ({ open, handleModal }: Props) => {
-  const [modalState, setModalState] = useState<boolean>();
+const SearchAddress = ({ open, handleModal, newMemberInfo, handleAddressChange }: Props) => {
+  const [modalState, setModalState] = useState<boolean>(false);
   const [inputAddressValue, setInputAddressValue] = useState<string>();
   const [inputZipCodeValue, setInputZipCodeValue] = useState<string>();
-  const postCodeStyle = {
-    width: '400px',
-    height: '400px',
-    display: modalState ? 'block' : 'none',
-  }; // 스타일 정의 code
 
   const onCompletePost = (data: any) => {
-    setModalState(false);
-    setInputAddressValue(data.address);
-    setInputZipCodeValue(data.zonecode);
+    handleAddressChange(data);
     handleModal();
   };
   const customStyles = {
