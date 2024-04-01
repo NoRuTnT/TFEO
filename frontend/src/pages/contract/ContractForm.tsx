@@ -149,7 +149,7 @@ const ContractForm = () => {
               <View>
                 <Text>제 1 조 (목적)</Text>
                 <Text>
-                  위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금 {getRent(home.rent)}
+                  위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금 {home.rent}
                   만원정을 선불로 매월 1일에 지불한다.
                 </Text>
               </View>
@@ -234,14 +234,10 @@ const ContractForm = () => {
               </ContractSignStatus>
             </ContractSignBody>
             <IsContractSigned>
-              {' '}
-              {!contractInfo.contract.studentSign && signModal()}{' '}
+              {!contractInfo.contract.studentSign && signModal()}
               {contractInfo.contract.studentSign && <Box>서명이 완료되었습니다.</Box>}
             </IsContractSigned>
           </ContractSignWrapper>
-          {/*<PDFDownloadLink document={<ContractPDFCreate contractForm={contractForm} />}>*/}
-          {/*  {({ blob, url, loading, error }) => (loading ? '' : '계약서 PDF로 보기')}*/}
-          {/*</PDFDownloadLink>*/}
         </StyledEngineProvider>
       </Page>
       <Footer />

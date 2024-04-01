@@ -5,24 +5,37 @@ import ContractHomeCard from '../../components/contract/ContractHomeCard';
 import ContractCompletedContent from '../../components/contract/ContractCompletedContent';
 import ContractAppliedContent from '../../components/contract/ContractAppliedContent';
 import ContractInProgressContent from '../../components/contract/ContractInProgressContent';
+import { useLocation } from 'react-router-dom';
 import { IHome, IHomeDetail, IHomeOption, IHostPersonality } from '../../interfaces/HomeInterface';
 import '../../styles/contract/Contract.css';
 import { IContract, IContractInfo } from '../../interfaces/ContractInterface';
 import { IAddress } from '../../interfaces/AddressInterface';
 import { customAxios } from '../../api/customAxios';
 import { getMemberContract } from '../../api/ContractApis';
+import { getMemberDetail } from '../../api/MemberApis';
 
 const Contract = () => {
   const [contractInfo, setContractInfo] = useState<IContractInfo>();
   const [status, setStatus] = useState<string>('');
+  const [memberRole, setMemberRole] = useState<string>();
   useEffect(() => {
     const fetchData = async () => {
-      const result = await getMemberContract();
+      const result = await getMemberDetail();
       if (!result) return;
-      setContractInfo(result);
+      setMemberRole(result.role);
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (memberRole === 'USER') {
+        const result = await getMemberContract();
+        if (!result) return;
+        setContractInfo(result);
+      }
+    };
+    fetchData();
+  }, [memberRole]);
   const setApplied = () => {
     setStatus('APPLIED');
   };
@@ -49,7 +62,7 @@ const Contract = () => {
         );
       case 'DONE':
         console.log('completed');
-        return <ContractCompletedContent />;
+        return <ContractCompletedContent contractNo={contractInfo.contract.contractNo} />;
     }
   };
   if (!contractInfo) {
