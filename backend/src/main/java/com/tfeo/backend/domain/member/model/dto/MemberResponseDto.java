@@ -35,12 +35,17 @@ public class MemberResponseDto {
 		this.email = member.getEmail();
 		this.registerNo = member.getRegisterNo();
 		this.college = member.getCollege();
-		this.address = Address.builder().si(member.getAddress().getSi())
-			.sgg(member.getAddress().getSgg())
-			.ro(member.getAddress().getRo())
-			.emd(member.getAddress().getEmd())
-			.detail(member.getAddress().getDetail())
-			.build();
+		if (member.getAddress() != null) {
+			this.address = Address.builder()
+				.si(member.getAddress().getSi())
+				.sgg(member.getAddress().getSgg())
+				.ro(member.getAddress().getRo())
+				.emd(member.getAddress().getEmd())
+				.detail(member.getAddress().getDetail())
+				.build();
+		} else {
+			this.address = null;
+		}
 		this.profileUrl = member.getProfileUrl();
 		this.gender = member.getGender();
 		this.role = member.getRole();
@@ -48,6 +53,10 @@ public class MemberResponseDto {
 		this.certificateStatus = member.getCertificateStatus();
 		this.certificateRegisterDate = member.getCertificateRegisterDate();
 		this.certificateExpirationDate = member.getCertificateExpirationDate();
-		this.memberPersonality = new MemberPersonalityDto(member.getMemberPersonality());
+		if (member.getMemberPersonality() != null) {
+			this.memberPersonality = new MemberPersonalityDto(member.getMemberPersonality());
+		} else {
+			this.memberPersonality = null;
+		}
 	}
 }

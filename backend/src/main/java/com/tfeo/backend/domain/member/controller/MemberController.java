@@ -129,7 +129,6 @@ public class MemberController {
 
 	//회원 상세정보 조회
 	@GetMapping("")
-	//Todo: Auth 적용 이후 memberId 갱신
 	public ResponseEntity<?> memberDetails(HttpServletRequest request) {
 		Optional<String> jwtdetail = jwtService.extractEmailFromAccessToken(request);
 		if (jwtdetail.isPresent()) {
