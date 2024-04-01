@@ -1,11 +1,12 @@
 import axios from 'axios';
 import { ISuccessResponse } from '../interfaces/SuccessResponseInterface';
+import { IHomeDetail } from '../interfaces/HomeInterface';
 
 //위시리스트 조회
 export const getWishList = async () => {
   try {
     const response = await axios.get<ISuccessResponse>(`${process.env.REACT_APP_API_URL}/api/members/wish`);
-    return response.data.result;
+    return response.data.result as IHomeDetail[];
   } catch (e) {
     console.log(e);
   }

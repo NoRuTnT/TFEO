@@ -14,9 +14,9 @@ import lombok.Getter;
 @Getter
 @Builder
 public class FindWishListDto {
-	private HomeDto homeDto;
-	private HostPersonalityDto hostPersonalityDto;
-	private HomeOptionDto homeOptionDto;
-	private List<HostImageDto> hostImageDtoList;
-	private List<HomeImageDto> homeImageDtoList;
+	private HomeDto home;
+	private HostPersonalityDto hostPersonality;
+	private HomeOptionDto homeOption;
+	private List<HostImageDto> hostImageList;
+	private List<HomeImageDto> homeImageList;
 }
