@@ -68,7 +68,7 @@ interface MemberPersonality {
   drink: boolean;
   outside: boolean;
   inside: boolean;
-  quite: boolean;
+  quiet: boolean;
   live_long: boolean;
   live_short: boolean;
   pet: boolean;
@@ -100,20 +100,6 @@ interface HostVector {
 // 집 상세 정보 (리스트 조회 시 단일 집 객체 타입)
 interface Home {
   _id: any;
-  internet: number;
-  gas: number;
-  washing_machine: number;
-  air_conditioner: number;
-  refrigerator: number;
-  elevator: number;
-  microwave: number;
-  breakfast: number;
-  toilet: number;
-  heating: number;
-  parking: number;
-  station: number;
-  move_in_date: number;
-  sink: number;
   type: string;
   smoke: number;
   pet: number;
@@ -125,34 +111,15 @@ interface Home {
   cold: number;
   hot: number;
   no_touch: number;
-  home_no: number;
   host_name: string;
-  host_age: number;
-  host_phone: string;
   host_gender: string;
-  guardian_name: string;
-  guardian_phone: string;
-  relation: string;
-  host_register_no: string;
-  host_account_no: string;
-  host_bank: string;
   address: string;
   rent: number;
   lat: number;
   lng: number;
-  role: string;
-  introduce: string;
-  host_personality_no: number;
-  home_option_no: number;
-  si: string;
-  sgg: string;
-  emd: string;
-  ro: string;
-  home_image_no: number;
   home_image: HomeImage[];
   host_image_no: number;
   host_image_url: string;
-  host_vector: HostVector;
   distance: number;
 }
 
@@ -272,7 +239,7 @@ const initialHomeRequestData: HomeRequestData = {
     drink: true,
     outside: true,
     inside: true,
-    quite: true,
+    quiet: true,
     live_long: true,
     live_short: true,
     pet: true,
