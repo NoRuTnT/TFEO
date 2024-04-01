@@ -55,71 +55,79 @@ const ActivityContent: React.FC = () => {
           <div className="status-info">
             <div className="status-content">
               <div className="status-title">전체 학생</div>
-              <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
-                100
-                <p
-                  style={{
-                    fontSize: '17px',
-                    fontWeight: 'normal',
-                    color: 'black',
-                    marginLeft: '5px',
-                    marginTop: '15px',
-                  }}
-                >
-                  건
-                </p>
-              </div>
+              <Link to={{ pathname: '/manage-student' }}>
+                <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
+                  100
+                  <p
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 'normal',
+                      color: 'black',
+                      marginLeft: '5px',
+                      marginTop: '15px',
+                    }}
+                  >
+                    건
+                  </p>
+                </div>
+              </Link>
             </div>
             <div className="status-content">
               <div className="status-title">올리사랑 인증</div>
-              <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
-                100
-                <p
-                  style={{
-                    fontSize: '17px',
-                    fontWeight: 'normal',
-                    color: 'black',
-                    marginLeft: '5px',
-                    marginTop: '15px',
-                  }}
-                >
-                  건
-                </p>
-              </div>
+              <Link to={{ pathname: '/manage-activity' }}>
+                <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
+                  100
+                  <p
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 'normal',
+                      color: 'black',
+                      marginLeft: '5px',
+                      marginTop: '15px',
+                    }}
+                  >
+                    건
+                  </p>
+                </div>
+              </Link>
             </div>
             <div className="status-content">
               <div className="status-title">전체 매칭 수</div>
-              <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
-                100
-                <p
-                  style={{
-                    fontSize: '17px',
-                    fontWeight: 'normal',
-                    color: 'black',
-                    marginLeft: '5px',
-                    marginTop: '15px',
-                  }}
-                >
-                  건
-                </p>
-              </div>
+              <Link to={{ pathname: '/manage-list' }}>
+                <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
+                  100
+                  <p
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 'normal',
+                      color: 'black',
+                      marginLeft: '5px',
+                      marginTop: '15px',
+                    }}
+                  >
+                    건
+                  </p>
+                </div>
+              </Link>
             </div>
             <div className="status-content">
               <div className="status-title">전체 집</div>
-              <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
-                100
-                <p
-                  style={{
-                    fontSize: '17px',
-                    fontWeight: 'normal',
-                    color: 'black',
-                    marginLeft: '5px',
-                    marginTop: '15px',
-                  }}
-                >
-                  건
-                </p>
-              </div>
+              <Link to={{ pathname: '/' }}>
+                <div style={{ color: '#e07068', fontSize: '35px', fontWeight: 'bold', display: 'flex' }}>
+                  100
+                  <p
+                    style={{
+                      fontSize: '17px',
+                      fontWeight: 'normal',
+                      color: 'black',
+                      marginLeft: '5px',
+                      marginTop: '15px',
+                    }}
+                  >
+                    건
+                  </p>
+                </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -128,22 +136,30 @@ const ActivityContent: React.FC = () => {
       <div className="manager-list-container">
         <div className="list-component">
           <ManageAccountsIcon style={{ fontSize: '50px', color: '#b7b7b7' }} className="icon"></ManageAccountsIcon>
+
           <div className="new-list">신규 등록 학생</div>
-          <div className="new-count"> 10</div>
+
+          <Link to={{ pathname: '/manage-student' }}>
+            <div className="new-count"> 10</div>
+          </Link>
           <div style={{ fontSize: '22px' }}>건</div>
         </div>
-
         <div className="list-component">
           <Diversity1Icon style={{ fontSize: '50px', color: '#b7b7b7' }} className="icon"></Diversity1Icon>
           <div className="new-list">올리 사랑 인증</div>
-          <div className="new-count"> 10</div>
+
+          <Link to={{ pathname: '/manage-activity' }}>
+            <div className="new-count"> 10</div>
+          </Link>
           <div style={{ fontSize: '22px' }}>건</div>
         </div>
 
         <div className="list-component">
           <AddHomeIcon style={{ fontSize: '50px', color: '#b7b7b7' }} className="icon"></AddHomeIcon>
           <div className="new-list">계약 승인 대기</div>
-          <div className="new-count"> 10</div>
+          <Link to={{ pathname: '/manage-list' }}>
+            <div className="new-count"> 10</div>
+          </Link>
           <div style={{ fontSize: '22px' }}>건</div>
         </div>
 
@@ -153,7 +169,9 @@ const ActivityContent: React.FC = () => {
             className="icon"
           ></VolunteerActivismIcon>
           <div className="new-list">신규 집 등록</div>
-          <div className="new-count"> 10</div>
+          <Link to={{ pathname: '/' }}>
+            <div className="new-count"> 10</div>
+          </Link>
           <div style={{ fontSize: '22px' }}>건</div>
         </div>
       </div>

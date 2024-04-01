@@ -89,13 +89,16 @@ const ManageStudent: React.FC = () => {
       <div className="student-list">
         {students.map((student) => (
           <div key={student.id} className="student-item">
-            <div className="date">2024-04-01 22:17:34</div>
-            <div className="info">
-              {student.name}
-              <div className="info-detail">({student.gender} / 나이)</div>
-              <div className="isNew">{student.isNew && <span>new!</span>}</div>
-            </div>
-            <div style={{ color: 'gray' }}> {student.college} 재학생</div>
+            {/* home detail 보기 */}
+            <Link to={{ pathname: '/manage-student-detail', search: `?homeNo=${student.id}` }}>
+              <div className="date">2024-04-01 22:17:34</div>
+              <div className="info">
+                {student.name}
+                <div className="info-detail">({student.gender} / 나이)</div>
+                <div className="isNew">{student.isNew && <span>new!</span>}</div>
+              </div>
+              <div style={{ color: 'gray' }}> {student.college} 재학생</div>
+            </Link>
           </div>
         ))}
       </div>
