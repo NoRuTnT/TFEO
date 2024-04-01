@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import '../../styles/home/MapBox.css';
 import { theme } from '../../styles/Theme'; // 테마에서 기본 색상을 사용하기 위해 가져옵니다.
 import { useHomeStore } from '../../store/HomeStore';
+import { useMemberStore } from '../../store/MemberStore';
 import { RecommendAxios } from '../../api/RecommendAxios';
 
 declare global {
@@ -23,7 +24,9 @@ export default function MapBox() {
     member_personality, // 학생 성향
     setHeaderFilterChanged,
     setSearchFilterChanged,
+    setMemberPersonality,
   } = useHomeStore();
+  const { MemberInfo } = useMemberStore();
 
   const fetchFirstData = async () => {
     try {
@@ -35,7 +38,7 @@ export default function MapBox() {
           pets: false,
         },
         search_condition: {
-          internet: true,
+          internet: false,
           gas: false,
           washing_machine: false,
           air_conditioner: false,
@@ -49,36 +52,18 @@ export default function MapBox() {
           station: false,
           move_in_date: false,
           sink: false,
-          APT: true,
-          OPST: true,
-          VL: true,
-          JT: true,
-          DDDGG: true,
+          APT: false,
+          OPST: false,
+          VL: false,
+          JT: false,
+          DDDGG: false,
           OR: false,
           rent_max: 100,
           rent_min: 0,
           lat: 37.609641,
           lng: 126.997697,
         },
-        member_personality: {
-          member_personality_no: 1,
-          daytime: true,
-          nighttime: true,
-          fast: true,
-          late: true,
-          dinner: true,
-          smoke: true,
-          drink: true,
-          outside: true,
-          inside: true,
-          quite: true,
-          live_long: true,
-          live_short: true,
-          pet: true,
-          cold: true,
-          hot: true,
-          host_house_prefer: 1,
-        },
+        member_personality: member_personality,
       };
       const response = await RecommendAxios.post('/recommend', requestData);
       setHomes(response.data);
@@ -106,17 +91,48 @@ export default function MapBox() {
     }
   };
 
+  // 집 리스트 조회 전, 학생의 성향 정보를 request에 반영합니다.
+  const loadMemberInfo = async () => {
+    // 학생 성향 정보가 있다면,
+    if (MemberInfo.memberPersonality) {
+      setMemberPersonality({
+        member_personality_no: MemberInfo.memberPersonality.memberPersonalityNo,
+        daytime: MemberInfo.memberPersonality.daytime == 0 ? false : true,
+        nighttime: MemberInfo.memberPersonality.nighttime == 0 ? false : true,
+        fast: MemberInfo.memberPersonality.fast == 0 ? false : true,
+        late: MemberInfo.memberPersonality.late == 0 ? false : true,
+        dinner: MemberInfo.memberPersonality.dinner == 0 ? false : true,
+        smoke: MemberInfo.memberPersonality.smoke == 0 ? false : true,
+        drink: MemberInfo.memberPersonality.drink == 0 ? false : true,
+        outside: MemberInfo.memberPersonality.outside == 0 ? false : true,
+        inside: MemberInfo.memberPersonality.inside == 0 ? false : true,
+        quiet: MemberInfo.memberPersonality.quiet == 0 ? false : true,
+        live_long: MemberInfo.memberPersonality.liveLong == 0 ? false : true,
+        live_short: MemberInfo.memberPersonality.liveShort == 0 ? false : true,
+        pet: MemberInfo.memberPersonality.pet == 0 ? false : true,
+        cold: MemberInfo.memberPersonality.cold == 0 ? false : true,
+        hot: MemberInfo.memberPersonality.hot == 0 ? false : true,
+        host_house_prefer: MemberInfo.memberPersonality.hostHousePrefer,
+      });
+    }
+  };
+
   // MapBox.tsx 마운트 시 최초 1회 fetch (집 리스트)
   useEffect(() => {
-    fetchFirstData()
+    loadMemberInfo()
       .then(() => {
-        setIsMounted(true);
+        fetchFirstData().then(() => {
+          setIsMounted(true);
+        });
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+      });
   }, []);
 
   useEffect(() => {
     if (isMounted) {
+      console.log(member_personality);
       loadMap();
     }
   }, [isMounted]);
