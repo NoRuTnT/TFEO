@@ -1,4 +1,4 @@
-
+from datetime import datetime
 from fastapi import FastAPI
 from pymongo import MongoClient
 from pydantic import BaseModel
@@ -29,6 +29,7 @@ class MemberRoleType(Enum):
     UNAUTHORIZED_MEMBER = 2
     MANAGER = 3
 
+PICTURE_NUMBER = 117 # dummy 사진의 개수, 120->117
 
 member_role = ['USER', 'UNAUTHORIZED_MEMBER']
 
@@ -40,8 +41,17 @@ bank = ['국민', '우리', '신한',
         '경남', '대구', '전북',
         '광주', '수협', '제주',
         '케이', '카카오']
-
+bank_num_dict = {'국민': '001', '우리': '002', '신한': '003',
+                 '하나': '004', '농협': '005', '기업': '006',
+                 '씨티': '007', 'SC제일': '008', '우체국': '009',
+                 '산업': '011', '토스': '012', '부산': '013',
+                 '경남': '014', '대구': '015', '전북': '016',
+                 '광주': '017', '수협': '018', '제주': '020',
+                 '케이': '023', '카카오': '090'}
 boolean = [False, True]
+
+fake = Faker('ko_KR')
+Faker.seed()
 
 class Home(BaseModel):
     # 집
@@ -119,6 +129,9 @@ port = 27017
 client = MongoClient(host, port)
 db = client.test # home이라는 collection이 들어있는 DB는 test!
 
+# sample_data = 177장
+gender_str = 'MUFFFMMMMFFFUUUFUFUFMUMUMMUUFUUUUUUUUUMUUUUUUMMUMUUUUUMMUUUMUUUUMMFFFMFFFFMUFFMFMFFFUMMMMMUMUUMFMMFFUUUMMMFMMMMUUUUFU'
+gender_list = list(gender_str)
 
 def merge_naver_home_csv():
     df1 = pd.read_csv('CSV_Data/naver_home_option.csv' , encoding='CP949') # CSV 파일 읽기
@@ -150,8 +163,8 @@ def init_MongoDB_Naver():
     # 인코딩 열때는 반드시 UTF-8로 열어야 에러 발생 없음
     json_list = []
     host_vector_json_list = []
-    fake = Faker('ko_KR')
-    Faker.seed()
+    # fake = Faker('ko_KR')
+    # Faker.seed()
     # MySQL에 들어갈 csv파일 작성
     # (1) 집
     # df_home = pd.DataFrame(data='데이터', columns=home_columns)
@@ -258,18 +271,19 @@ def init_MongoDB_Naver():
             df_host_personality = df_host_personality._append(new_row, ignore_index=True)
             # 집
             json_data['home_no'] = idx+1
-            json_data['host_name'] = fake.name()  # 이름
             json_data['host_age'] = random.randint(65, 100)  # 나이
             # json_data['host_phone'] = fake.phone_number() # 데이터 포맷에 맞게 변경
             json_data['host_phone'] = get_random_phone_number()
-            json_data['host_gender'] = random.choice(gender)[0]  # 성별 (M/F)
+            # json_data['host_gender'] = random.choice(gender)[0]  # 성별 (M/F)
+            json_data['host_gender'] = get_gender(gender_list[idx%PICTURE_NUMBER])  # 성별 (M/F)
+            json_data['host_name'] = get_name(json_data['host_gender'])  # 이름
             json_data['guardian_name'] = fake.name()  # 보호자 이름
             # json_data['guardian_phone'] = fake.phone_number()  # 보호자 전화번호 # 데이터 포맷에 맞게 변경
             json_data['guardian_phone'] = get_random_phone_number()
             json_data['relation'] = '자녀'  # 보호자와 호스트와의 관계
             json_data['host_register_no'] = fake.ssn()  # 주민등록번호
-            json_data['host_account_no'] = 'xx-xxxxx-xxx' #  계좌번호 -> 추후 format에 맞게 교체
             json_data['host_bank'] = random.choice(bank) # 계좌은행
+            json_data['host_account_no'] = get_bank_account_number(json_data['host_bank']) # 계좌번호
             json_data['address'] = rows['address'].strip()  # 주소
             r = int(int(rows['rent'].strip()))
             json_data['rent'] = r  # 월세
@@ -277,8 +291,6 @@ def init_MongoDB_Naver():
             json_data['lat']  = float(rows['lat'])  # 위도
             # json_data['lng']  = rows['lng'].strip()  # 경도
             json_data['lng']  = float(rows['lng'])  # 경도
-            # json_data['noneRegisterMember'] = random.randint(0, 1) >= 0.5  # 비회원등록여부
-            # json_data['noneRegisterMember'] = random.choice(list(MemberRoleType))  # 비회원등록여부
             json_data['register_member_role'] = random.choice(list(member_role))  # 비회원등록여부
             json_data['introduce'] = rows['introduce'].strip()  # 주소
             json_data['host_personality_no'] = idx+1  # 식별키
@@ -339,8 +351,7 @@ def init_MongoDB_Naver():
 
             # 호스트 사진
             json_data['host_image_no'] = idx+1
-            json_data['host_image_url'] = '/hostImage/{}.jpg'.format(idx%120+1) # 'host_image_url'
-
+            json_data['host_image_url'] = '/hostImage/{}.jpg'.format(idx%PICTURE_NUMBER+1) # 'host_image_url'
             new_row = {
                 'host_image_no': json_data['host_image_no'],
                 'home_no': json_data['home_no'],
@@ -395,14 +406,16 @@ def get_host_vector_json(host_personality):
     }
     return member_vector_json
 
+# 성별에 맞는 이름 출력
+def get_name(gender):
+    if gender=='F':
+        return fake.name_female()
+    return fake.name_male()
 
-
-
-
-
-
-
-
+def get_gender(char):
+    if char=='U':
+        return random.choices('MF')[0]
+    return char
 
 def get_random_phone_number():
     phone_num = '010'
@@ -410,6 +423,11 @@ def get_random_phone_number():
     for i in range(8):
         phone_num += random.choice(nums)
     return phone_num
+
+def get_bank_account_number(bank_name):
+    bank_code = bank_num_dict[bank_name]
+    account_number = ''.join(random.choices('0123456789', k=12))
+    return bank_code + '-' +account_number
 
 def convert_bool_to_int(bool):
     if(bool==True):
@@ -425,3 +443,4 @@ def null_empty_fill_func(obj):
 if __name__ == '__main__':
     # merge_naver_home_csv()
     init_MongoDB_Naver()
+    # print(type(datetime.today().year)) # 'int'
