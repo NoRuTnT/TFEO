@@ -82,7 +82,7 @@ public class Member {
 
 	private String certificate;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "member_personality_no")
 	private MemberPersonality memberPersonality;
 
