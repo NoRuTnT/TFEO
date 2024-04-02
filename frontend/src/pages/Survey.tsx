@@ -137,7 +137,7 @@ const Survey: React.FC = () => {
     }
   };
 
-  const sendData = () => {
+  const sendData = async () => {
     responses.forEach((response: any, index) => {
       if (index == 0) {
       } else if (index == 1) {
@@ -234,6 +234,18 @@ const Survey: React.FC = () => {
         updateMemberPersonality('hostHousePrefer', response);
       }
     });
+
+    const requestData = {
+      member: {
+        college: MemberInfo.college,
+        lat: MemberInfo.lat,
+        lng: MemberInfo.lng,
+        gender: MemberInfo.gender,
+      },
+      memberPersonality: MemberInfo.memberPersonality,
+    };
+    const response = await customAxios.post(`api/members/survey`, requestData);
+    console.log('ok : ', response);
     window.location.href = '/home';
   };
 
