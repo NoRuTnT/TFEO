@@ -19,7 +19,6 @@ export default function MapBox() {
     homes, // 집 전체 조회 목록 (추천 반영)
     setHomes,
     setVisibleHomes,
-    visibleHomes,
     headerFilterChanged,
     searchFilterChanged,
     filter_condition,
@@ -61,10 +60,10 @@ export default function MapBox() {
         search_condition: search_condition,
         member_personality: member_personality,
       };
-      console.log(requestData);
+      console.log('해당 조건으로 검색합니다 : ', requestData);
       const response = await RecommendAxios.post('/recommend', requestData);
       setHomes(response.data);
-      console.log(response.data);
+      console.log('집 추천 리스트 : ', response.data);
       setHeaderFilterChanged(false);
       setSearchFilterChanged(false);
     } catch (error) {
@@ -76,6 +75,7 @@ export default function MapBox() {
   const loadMemberInfo = async () => {
     // 학생 성향 정보가 있다면,
     if (MemberInfo.memberPersonality) {
+      // boolean으로 재 조정
       setMemberPersonality({
         member_personality_no: MemberInfo.memberPersonality.memberPersonalityNo,
         daytime: MemberInfo.memberPersonality.daytime == 0 ? false : true,
@@ -141,35 +141,30 @@ export default function MapBox() {
 
   useEffect(() => {
     if (isMounted) {
-      console.log(member_personality);
       loadMap();
     }
   }, [isMounted]);
 
   useEffect(() => {
+    console.log('homes 배열이 변경되어 호출되었습니다 : ', homes);
     loadMap();
   }, [homes]);
 
   useEffect(() => {
     if (headerFilterChanged) {
-      fetchData()
-        .then(() => loadMap())
-        .catch((error) => console.error(error));
+      fetchData();
     }
   }, [headerFilterChanged]);
 
   useEffect(() => {
-    console.log('동작을하긴하는거지?');
     if (searchFilterChanged) {
-      console.log(filter_condition);
-      fetchData()
-        .then(() => loadMap())
-        .catch((error) => console.error(error));
+      console.log('선택한 상세 필터로 조회 : ', filter_condition);
+      fetchData();
     }
   }, [searchFilterChanged]);
 
   const makeClusterer = (map: any) => {
-    console.log('클러스터 생성');
+    console.log('클러스터를 생성합니다.');
     return new window.kakao.maps.MarkerClusterer({
       map: map,
       averageCenter: true,
@@ -268,18 +263,6 @@ export default function MapBox() {
       const clusterer = makeClusterer(newMap);
       clusterer.addMarkers(markers);
 
-      const stopZoom = (clusterer: any) => {
-        console.log('이벵이벵');
-        console.log(clusterer);
-        // const centerLatLng = cluster.getCenter();
-        // visibleHomes.map((home) => {
-        //   if (centerLatLng == window.kakao.maps.LatLng(home.lat, home.lng)) {
-        //     console.log('나다나 : ', home);
-        //     return;
-        //   }
-        // });
-      };
-
       // 지도 바운드 안에 들어오는 포지션의 집 마커를 visibleHomes에 추가하는 함수
       const updateVisibleHomes = () => {
         markers = updateMarkers();
@@ -292,7 +275,6 @@ export default function MapBox() {
         );
       };
 
-      window.kakao.maps.event.addListener(newMap, 'clusterclick', stopZoom(clusterer));
       window.kakao.maps.event.addListener(newMap, 'center_changed', updateVisibleHomes);
       window.kakao.maps.event.addListener(newMap, 'zoom_changed', updateVisibleHomes);
       updateVisibleHomes();
