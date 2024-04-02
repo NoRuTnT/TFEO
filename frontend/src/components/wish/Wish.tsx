@@ -21,19 +21,27 @@ const Wish: React.FC<HomeProps> = ({ settings, home }) => {
           {/*집주인의 사진을 보여줄 캐러셀*/}
           <div className="carousel-container-left">
             <div className="slide-left">
-              <img src={`https://j10a707.p.ssafy.io${home.hostImageList[0]}`} alt={`Owner `} />
+              <img
+                style={{ width: '225px', height: '240px' }}
+                src={`https://j10a707.p.ssafy.io${home.hostImageList[0]}`}
+                alt={`Owner `}
+              />
             </div>
             host
           </div>
           {/* 집의 사진을 보여줄 캐러셀 */}
           <div className="carousel-container">
-            <Slider {...settings}>
-              {home.homeImageList.map((img: any, index: number) => (
-                <div key={index} className="slide-right">
-                  <img src={`https://j10a707.p.ssafy.io${img.homeImageUrl}`} alt={`Home ${index}`} />
-                </div>
-              ))}
-            </Slider>
+            {/* <Slider {...settings}> */}
+            {home.homeImageList.map((img: any, index: number) => (
+              <div key={index} className="slide-right">
+                <img
+                  src={`https://j10a707.p.ssafy.io${img.homeImageUrl}`}
+                  style={{ width: '225px', height: '240px' }}
+                  alt={`Home ${index}`}
+                />
+              </div>
+            ))}
+            {/* </Slider> */}
           </div>
         </div>
         <div className="content-container">
