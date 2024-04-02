@@ -17,7 +17,13 @@ const ActivityContent: React.FC = ({ history }: any) => {
     const homeNofromUrl = new URLSearchParams(location.search).get('homeNo');
     const parsedHomeNo = homeNofromUrl ? parseInt(homeNofromUrl, 10) : 0;
     setHomeNo(parsedHomeNo);
-  });
+
+    // 컴포넌트가 마운트될 때 keywordValues의 choice를 모두 false로 초기화
+    setReview((currentState) => ({
+      ...currentState,
+      keywordValues: currentState.keywordValues.map((kw) => ({ ...kw, choice: false })),
+    }));
+  }, []);
 
   //글 입력
   const handleHomeContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
