@@ -14,6 +14,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
   const [range, setRange] = React.useState<number[]>([0, 1000000]);
   const {
     search_condition,
+    filter_condition,
+    member_personality,
     setSearchCondition,
     marks,
     options,
@@ -22,6 +24,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     toggleOption,
     toggleType,
     setSearchFilterChanged,
+    setHomes,
+    setHeaderFilterChanged,
   } = useHomeStore();
   const [newSearchCondition, setNewSearchCondition] = useState(search_condition);
   const ModalContainer = styled.div`
@@ -58,30 +62,49 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
   };
 
   const handleButtonClick = () => {
-    setSearchCondition(newSearchCondition);
+    setSearchCondition(search_condition);
+    console.log('간다 : ', search_condition);
     setModalOpen(false);
+    setSearchFilterChanged(true);
   };
 
   const handleOptionClick = (optionName: string, optionChoice: boolean) => {
     toggleOption(optionName);
-    setNewSearchCondition((prevState) => ({
-      ...prevState,
-      [optionName]: !optionChoice,
-    }));
+    // setNewSearchCondition((prevState) => ({
+    //   ...prevState,
+    //   [optionName]: !optionChoice,
+    // }));
   };
 
   const handleTypeClick = (typeName: string, typeChoice: boolean) => {
     toggleType(typeName);
-    setNewSearchCondition((prevState) => ({
-      ...prevState,
-      [typeName]: !typeChoice,
-    }));
+    // setNewSearchCondition((prevState) => ({
+    //   ...prevState,
+    //   [typeName]: !typeChoice,
+    // }));
+  };
+
+  const fetchData = async () => {
+    try {
+      const requestData = {
+        filter_condition: filter_condition,
+        search_condition: search_condition,
+        member_personality: member_personality,
+      };
+      console.log('요청 : ', requestData);
+      const response = await RecommendAxios.post('/recommend', requestData);
+      setHomes(response.data);
+      console.log('응답 : ', response.data);
+      setHeaderFilterChanged(false);
+    } catch (error) {
+      console.error('집 리스트 조회 실패 : ', error);
+    }
   };
 
   useEffect(() => {
+    setRange([search_condition.rent_min, search_condition.rent_max]);
     return () => {
-      console.log('unmount');
-      setSearchFilterChanged(true);
+      setHeaderFilterChanged(true);
     };
   }, []);
 

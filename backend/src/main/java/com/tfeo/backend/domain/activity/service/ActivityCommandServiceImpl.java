@@ -1,3 +1,4 @@
+//ActivityCommandServiceImpl
 package com.tfeo.backend.domain.activity.service;
 
 import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
@@ -73,15 +74,15 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	public AddActivityResponseDto addActivity(Long memberNo, Long activityNo,
 		AddActivityRequestDto request) {
 
-		Member member = memberRepository.findByMemberNo(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
+		// Member member = memberRepository.findByMemberNo(memberNo)
+		//     .orElseThrow(() -> new MemberNotExistException(memberNo));
 
 		Activity activity = activityRepository.findById(activityNo)
 			.orElseThrow(() -> new ActivityNotExistException(activityNo));
 
-		if (!member.equals(activity.getContract().getMember())) {
-			throw new AccessDeniedException(memberNo);
-		}
+		// if (!memberNo.equals(activity.getContract().getMember().getMemberNo())) {
+		//     throw new AccessDeniedException(memberNo);
+		// }
 
 		if (activity.getStartAt().isAfter(LocalDate.now()) || activity.getExpiredAt().isBefore(LocalDate.now())) {
 			throw new PeriodException();
@@ -99,6 +100,9 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 		String activityPresignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
 		activity.writeActivity(filePath, request.getActivityText());
 
+		//승인 처리
+		activity.setApprove(APPROVE);
+
 		AddActivityResponseDto result = AddActivityResponseDto.builder()
 			.activityNo(activity.getActivityNo())
 			.week(activity.getWeek())
@@ -108,6 +112,9 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			.activityApproveType(activity.getApprove())
 			.contractNo(activity.getContract().getContractNo())
 			.build();
+
+		// 관리자 승인 & 알림톡 전송
+		approveActivity(memberNo,activityNo);
 
 		return result;
 	}
@@ -184,8 +191,9 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 
 			Message message = new Message();
 			// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력
-			message.setFrom("01045417183");
-			message.setTo(receiver);
+			message.setFrom(member.getPhone());
+			message.setTo("01045417183");
+			// message.setTo(receiver);
 			message.setText(activity.getActivityText());
 			message.setImageId(imageId);
 

@@ -236,9 +236,9 @@ def init_MongoDB_Naver():
             json_data['pet'] = random.randint(0, 1)
             json_data['clean'] = random.randint(0, 1)
             json_data['daytime'] = random.randint(0, 1)
-            json_data['nighttime'] = random.randint(0, 1)
+            json_data['nighttime'] = json_data['daytime'] ^ 1
             json_data['extrovert'] = random.randint(0, 1)
-            json_data['introvert'] = random.randint(0, 1)
+            json_data['introvert'] = json_data['extrovert'] ^ 1
             json_data['cold'] = random.randint(0, 1)
             json_data['hot'] = random.randint(0, 1)
             json_data['no_touch'] = random.randint(0, 1)

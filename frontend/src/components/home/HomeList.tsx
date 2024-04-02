@@ -38,7 +38,8 @@ const HomeList: React.FC = () => {
     scrollToTop();
     setTimeout(() => {
       setIsButtonVisible(true);
-      setContainerMarginTop('0%');
+      setContainerMarginTop(visibleHomes.length === 1 ? '255px' : '0%');
+      // setContainerMarginTop('0%');
     }, 300);
   };
 
@@ -63,7 +64,7 @@ const HomeList: React.FC = () => {
         <>
           <div className="home-count" onClick={resetStyles} {...handlers}>
             <div style={{ fontSize: '17px' }}>
-              나의 인생선배 <b>{visibleHomes.length}</b> 명{' '}
+              나의 인생선배 <b>{visibleHomes.length}</b> 명
             </div>
           </div>
           {visibleHomes.map((home, index) => (

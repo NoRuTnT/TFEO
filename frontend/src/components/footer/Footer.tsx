@@ -22,7 +22,7 @@ const Footer: React.FC = () => {
 
   const icons = {
     Home: styled(HomeIcon)({
-      color: getIconColor('/'),
+      color: getIconColor('/home'),
       fontSize: '28px',
     }),
     Heart: styled(FavoriteIcon)({
@@ -41,9 +41,9 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="footer">
-      <Link to="/" className="icon-container">
+      <Link to="/home" className="icon-container">
         <icons.Home />
-        <span className="icon-description" style={getTextStyle('/')}>
+        <span className="icon-description" style={getTextStyle('/home')}>
           홈
         </span>
       </Link>

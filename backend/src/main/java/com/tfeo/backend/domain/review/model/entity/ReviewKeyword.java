@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.tfeo.backend.domain.review.model.dto.ReviewKeywordDto;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -53,21 +55,17 @@ public class ReviewKeyword {
 	private Boolean respectfulElderly;
 
 
-	public void setAllKeywordValues(List<Boolean> keywordValues) {
-		if (keywordValues.size() != 11) {
-			throw new IllegalArgumentException("Invalid number of keyword values");
-		}
-
-		this.kindElderly = keywordValues.get(0);
-		this.cleanHouse = keywordValues.get(1);
-		this.spaciousRoom = keywordValues.get(2);
-		this.manyNearbyAmenities = keywordValues.get(3);
-		this.matchesStatedOptions = keywordValues.get(4);
-		this.affordableRent = keywordValues.get(5);
-		this.nearSchool = keywordValues.get(6);
-		this.convenientTransportation = keywordValues.get(7);
-		this.easyAccessToHome = keywordValues.get(8);
-		this.goodSecurity = keywordValues.get(9);
-		this.respectfulElderly = keywordValues.get(10);
+	public void setAllKeywordValues(ReviewKeywordDto keywordValues) {
+		this.kindElderly = keywordValues.isKindElderly();
+		this.cleanHouse = keywordValues.isCleanHouse();
+		this.spaciousRoom = keywordValues.isSpaciousRoom();
+		this.manyNearbyAmenities = keywordValues.isManyNearbyAmenities();
+		this.matchesStatedOptions = keywordValues.isMatchesStatedOptions();
+		this.affordableRent = keywordValues.isAffordableRent();
+		this.nearSchool = keywordValues.isNearSchool();
+		this.convenientTransportation = keywordValues.isConvenientTransportation();
+		this.easyAccessToHome = keywordValues.isEasyAccessToHome();
+		this.goodSecurity = keywordValues.isGoodSecurity();
+		this.respectfulElderly = keywordValues.isRespectfulElderly();
 	}
 }

@@ -23,46 +23,46 @@ const ManagerFooter: React.FC = () => {
 
   const icons = {
     Home: styled(ManageAccountsIcon)({
-      color: getIconColor('/'),
+      color: getIconColor('/manage-home'),
       fontSize: '28px',
     }),
     Heart: styled(VolunteerActivismIcon)({
-      color: getIconColor('/wish-list'),
+      color: getIconColor('/manage-activity'),
       fontSize: '28px',
     }),
     Contract: styled(Diversity1Icon)({
-      color: getIconColor('/contract'),
+      color: getIconColor('/manage-list'),
       fontSize: '28px',
     }),
     Profile: styled(AddHomeIcon)({
-      color: getIconColor('/my-info'),
+      color: getIconColor('/manage-student'),
       fontSize: '28px',
     }),
   };
 
   return (
     <footer className="footer">
-      <Link to="/" className="icon-container">
+      <Link to="/manage-home" className="icon-container">
         <icons.Home />
-        <span className="icon-description" style={getTextStyle('/')}>
+        <span className="icon-description" style={getTextStyle('/manage-home')}>
           학생관리
         </span>
       </Link>
-      <Link to="/wish-list" className="icon-container">
+      <Link to="/manage-activity" className="icon-container">
         <icons.Heart />
-        <span className="icon-description" style={getTextStyle('/wish-list')}>
+        <span className="icon-description" style={getTextStyle('/manage-activity')}>
           올리사랑
         </span>
       </Link>
-      <Link to="/contract" className="icon-container">
+      <Link to="/manage-list" className="icon-container">
         <icons.Contract />
-        <span className="icon-description" style={getTextStyle('/contract')}>
+        <span className="icon-description" style={getTextStyle('/manage-list')}>
           매칭 관리
         </span>
       </Link>
-      <Link to="/my-info" className="icon-container">
+      <Link to="/manage-student" className="icon-container">
         <icons.Profile />
-        <span className="icon-description" style={getTextStyle('/my-info')}>
+        <span className="icon-description" style={getTextStyle('/manage-student')}>
           집등록
         </span>
       </Link>

@@ -13,8 +13,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class AddReviewRequestDto {
-	private String homeContent;
-	private Long homeNo;
-	private Map<String, Boolean> keywordValues;
+	String homeContent;
+	Long homeNo;
+	ReviewKeywordDto keywordValues;
 
 }
