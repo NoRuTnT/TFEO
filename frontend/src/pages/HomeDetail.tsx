@@ -209,26 +209,26 @@ const HomeDetail: React.FC = () => {
               <div>
                 {review.keywordValues && (
                   <div className="filters-container">
-                    {review.keywordValues.kindElderly && <div className="filter-detail">😃친절해요</div>}
-                    {review.keywordValues.cleanHouse && <div className="filter-detail">🏠집이 깨끗해요</div>}
-                    {review.keywordValues.spaciousRoom && <div className="filter-detail">🛏방이 넓어요</div>}
+                    {review.keywordValues.kindElderly && <div className="filter-detail">😃 친절해요</div>}
+                    {review.keywordValues.cleanHouse && <div className="filter-detail">🏠 집이 깨끗해요</div>}
+                    {review.keywordValues.spaciousRoom && <div className="filter-detail">🛏 방이 넓어요</div>}
                     {review.keywordValues.manyNearbyAmenities && (
-                      <div className="filter-detail">🏪주변에 편의시설이 많아요</div>
+                      <div className="filter-detail">🏪 주변에 편의시설이 많아요</div>
                     )}
                     {review.keywordValues.matchesStatedOptions && (
-                      <div className="filter-detail">✔옵션이 설명과 같아요</div>
+                      <div className="filter-detail">✔ 옵션이 설명과 같아요</div>
                     )}
-                    {review.keywordValues.affordableRent && <div className="filter-detail">💵월세가 저렴해요</div>}
-                    {review.keywordValues.nearSchool && <div className="filter-detail">🏫학교와 가까워요</div>}
+                    {review.keywordValues.affordableRent && <div className="filter-detail">💵 월세가 저렴해요</div>}
+                    {review.keywordValues.nearSchool && <div className="filter-detail">🏫 학교와 가까워요</div>}
                     {review.keywordValues.convenientTransportation && (
-                      <div className="filter-detail">🚎교통이 편해요</div>
+                      <div className="filter-detail">🚎 교통이 편해요</div>
                     )}
                     {review.keywordValues.easyAccessToHome && (
-                      <div className="filter-detail">🏃‍♀️집까지 가는 길이 편해요</div>
+                      <div className="filter-detail">🏃‍♀️ 집까지 가는 길이 편해요</div>
                     )}
-                    {review.keywordValues.goodSecurity && <div className="filter-detail">👮‍♂️치안이 좋아요</div>}
+                    {review.keywordValues.goodSecurity && <div className="filter-detail">👮‍♂️ 치안이 좋아요</div>}
                     {review.keywordValues.respectfulElderly && (
-                      <div className="filter-detail">👨‍🦳👩‍🦳어르신이 저를 존중해요</div>
+                      <div className="filter-detail">👨‍🦳👩‍🦳 어르신이 저를 존중해요</div>
                     )}
                   </div>
                 )}
@@ -236,9 +236,9 @@ const HomeDetail: React.FC = () => {
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <img
-                  src={review.memberProfileUrl || 'profileImage.jpg'} // 프로필 이미지 URL이 없을 경우 기본 이미지를 사용합니다.
+                  src={review.memberProfileUrl || '/assets/profileImage.jpg'} // 프로필 이미지 URL이 없을 경우 기본 이미지를 사용합니다.
                   alt="Profile"
-                  style={{ width: '50px', height: '50px', borderRadius: '50%' }}
+                  style={{ width: '45px', height: '45px', borderRadius: '50%' }}
                 />
                 <div style={{ marginLeft: '10px' }}>
                   <div>{review.memberName}</div>
@@ -251,6 +251,7 @@ const HomeDetail: React.FC = () => {
             </div>
           ))}
         </div>
+        <br />
       </div>
       {/* 집 신청 버튼과 찜 버튼 */}
       <div className="bottom-container">
@@ -259,7 +260,7 @@ const HomeDetail: React.FC = () => {
         </div>
         <div className="center-container">
           <div>
-            입주 일자 : <input type="date" value={startAt} onChange={onChange} />
+            입주 일자 <input type="date" value={startAt} onChange={onChange} />
           </div>
         </div>
         <div className="register-btn">
