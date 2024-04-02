@@ -74,7 +74,7 @@ const Survey: React.FC = () => {
     },
     {
       question: '주로 활동하는 시간대는\n언제인가요?',
-      answer: ['주간형', '야간형'],
+      answer: ['낮', '저녁'],
       nextButton: false,
     },
     {
@@ -89,12 +89,12 @@ const Survey: React.FC = () => {
     },
     {
       question: '나는 담배를',
-      answer: ['핀다', '안핀다'],
+      answer: ['핀다', '피지 않는다'],
       nextButton: false,
     },
     {
       question: '나는 술을',
-      answer: ['좋아한다', '안좋아한다'],
+      answer: ['좋아한다', '좋아하지 않는다'],
       nextButton: false,
     },
     {
@@ -103,7 +103,7 @@ const Survey: React.FC = () => {
       nextButton: false,
     },
     {
-      question: '집에서 조용히 지내는 걸\n선호하나요?',
+      question: '집이 조용한 것을\n선호하나요?',
       answer: ['네', '아니오'],
       nextButton: false,
     },
@@ -163,7 +163,7 @@ const Survey: React.FC = () => {
       }
     } else if (idx === 3) {
       // 활동 시간
-      if (response === '주간형') {
+      if (response === '낮') {
         updateMemberPersonality('daytime', 1);
         updateMemberPersonality('nighttime', 0);
       } else {
