@@ -16,10 +16,6 @@ public class SurveyMemberPersonalityRequestDto {
 	private Integer outside;
 	private Integer inside;
 	private Integer quiet;
-	private Integer electronics;
-	private Integer strong;
-	private Integer housework;
-	private Integer errand;
 	private Integer liveLong;
 	private Integer liveShort;
 	private Integer pet;
