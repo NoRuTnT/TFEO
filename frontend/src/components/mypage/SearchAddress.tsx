@@ -34,9 +34,9 @@ const SearchAddress = ({ open, handleModal, newMemberInfo, handleAddressChange, 
   };
   return (
     <>
-      <button onClick={handleModal} style={{ display: isEditing ? '' : 'none' }}>
-        주소 찾기
-      </button>
+      {/*<button onClick={handleModal} style={{ display: isEditing ? '' : 'none' }}>*/}
+      {/*  주소 찾기*/}
+      {/*</button>*/}
       <Modal isOpen={open} ariaHideApp={true} style={customStyles}>
         <DaumPostcode onComplete={onCompletePost} />
       </Modal>
