@@ -25,5 +25,6 @@ export const getFileFromS3 = async (preSignedUrlToDownload: string) => {
     return response.data as Blob;
   } catch (e) {
     console.error('S3 다운로드 중 오류 발생', e);
+    alert('S3 다운로드 오류 발생');
   }
 };

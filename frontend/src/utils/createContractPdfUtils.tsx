@@ -5,7 +5,7 @@ import NotoSansKRBold from '../assets/fonts/NotoSansKR-Bold.ttf';
 import { IAddress } from '../interfaces/AddressInterface';
 import { IContractForm } from '../interfaces/ContractFormInterface';
 import { getYear, getMonth, getDay } from './timeUtils';
-import { getRoadNameAddress } from './addressUtils';
+import { getRoadAddress, getRoadNameAddress } from './addressUtils';
 import { getRent } from './moneyUtils';
 import { IContractInfo } from '../interfaces/ContractInterface';
 
@@ -97,7 +97,7 @@ const getContractJSX = ({ person, name, registerNo, phone, address }: ContractPd
             <Text style={styles.cell}>주소</Text>
           </View>
           <View style={styles.secondRowInfoCol}>
-            <Text style={styles.cell}>{getRoadNameAddress(address)}</Text>
+            <Text style={styles.cell}>{getRoadAddress(address)}</Text>
           </View>
         </View>
       </View>
@@ -143,7 +143,7 @@ export const createContractPdf = ({ home, contract, member }: IContractForm) => 
           <View style={styles.contractContentWrapper}>
             <Text style={styles.contractContentTitle}>제 1 조 (목적)</Text>
             <Text>
-              위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금 {getRent(home.rent)}
+              위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금 {home.rent}
               만원정을 선불로 매월 1일에 지불한다.
             </Text>
           </View>

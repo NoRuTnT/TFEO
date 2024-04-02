@@ -25,7 +25,7 @@ const ContractCompletedContent = ({ contractNo, role }: Props) => {
   return (
     <div className="contractContent">
       <button className="selectBtn" onClick={seeContract}>
-        계약서 보기
+        계약서 다운로드
       </button>
       {role === 'USER' && (
         <>
