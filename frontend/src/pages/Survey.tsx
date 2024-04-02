@@ -12,6 +12,7 @@ import { IMember } from '../interfaces/MemberInterface';
 const Survey: React.FC = () => {
   const [slider, setSlider] = useState<Slider | null>(null);
   const [sliderValue, setSliderValue] = useState(5);
+  const [selectedCollege, setSelectedCollege] = useState('대학교');
   const changeSliderValue = (event: Event, newValue: number | number[]) => {
     setSliderValue(newValue as number);
     setMemberInfo(13, newValue);
@@ -136,32 +137,31 @@ const Survey: React.FC = () => {
   };
 
   const handleResponse = (selectedAnswer: string) => {
+    setSelectedCollege(selectedAnswer);
     const newResponses = [...responses];
     newResponses[index] = selectedAnswer;
     setMemberInfo(index, selectedAnswer);
     setResponses(newResponses);
-    console.log(responses);
     if (!data[index - 1].nextButton) {
       slider?.slickNext();
     }
   };
   const setMemberInfo = (idx: number, response: any) => {
-    if (idx == 1) {
+    if (idx === 1) {
       // 대학교
       colleges.forEach((college) => {
         if (college.name === response) {
           setCollege(college.name, college.lat, college.lng);
         }
       });
-    } else if (idx == 2) {
+    } else if (idx === 2) {
       // 성별
       if (response === '남성') {
         setGender('M');
-        console.log('set gender');
       } else {
         setGender('F');
       }
-    } else if (idx == 3) {
+    } else if (idx === 3) {
       // 활동 시간
       if (response === '주간형') {
         updateMemberPersonality('daytime', 1);
@@ -170,7 +170,7 @@ const Survey: React.FC = () => {
         updateMemberPersonality('daytime', 0);
         updateMemberPersonality('nighttime', 1);
       }
-    } else if (idx == 4) {
+    } else if (idx === 4) {
       if (response === '일찍 들어오는 편이에요.') {
         updateMemberPersonality('fast', 1);
         updateMemberPersonality('late', 0);
@@ -178,25 +178,25 @@ const Survey: React.FC = () => {
         updateMemberPersonality('fast', 0);
         updateMemberPersonality('late', 1);
       }
-    } else if (idx == 5) {
+    } else if (idx === 5) {
       if (response === '집에서') {
         updateMemberPersonality('dinner', 1);
       } else {
         updateMemberPersonality('dinner', 0);
       }
-    } else if (idx == 6) {
+    } else if (idx === 6) {
       if (response === '핀다') {
         updateMemberPersonality('smoke', 1);
       } else {
         updateMemberPersonality('smoke', 0);
       }
-    } else if (idx == 7) {
+    } else if (idx === 7) {
       if (response === '좋아한다') {
         updateMemberPersonality('drink', 1);
       } else {
         updateMemberPersonality('drink', 0);
       }
-    } else if (idx == 8) {
+    } else if (idx === 8) {
       if (response === '주로 집에 있어요') {
         updateMemberPersonality('inside', 1);
         updateMemberPersonality('outside', 0);
@@ -204,13 +204,13 @@ const Survey: React.FC = () => {
         updateMemberPersonality('inside', 0);
         updateMemberPersonality('outside', 1);
       }
-    } else if (idx == 9) {
+    } else if (idx === 9) {
       if (response === '네') {
         updateMemberPersonality('quiet', 1);
       } else {
         updateMemberPersonality('quiet', 0);
       }
-    } else if (idx == 10) {
+    } else if (idx === 10) {
       if (response === '네') {
         updateMemberPersonality('liveLong', 1);
         updateMemberPersonality('liveShort', 0);
@@ -218,7 +218,7 @@ const Survey: React.FC = () => {
         updateMemberPersonality('liveLong', 0);
         updateMemberPersonality('liveShort', 1);
       }
-    } else if (idx == 11) {
+    } else if (idx === 11) {
       if (response === '네') {
         updateMemberPersonality('fast', 1);
         updateMemberPersonality('late', 0);
@@ -226,7 +226,7 @@ const Survey: React.FC = () => {
         updateMemberPersonality('fast', 1);
         updateMemberPersonality('late', 0);
       }
-    } else if (idx == 12) {
+    } else if (idx === 12) {
       if (response === '무지 더운 여름') {
         updateMemberPersonality('hot', 1);
         updateMemberPersonality('cold', 0);
@@ -243,8 +243,6 @@ const Survey: React.FC = () => {
   };
 
   const sendData = async () => {
-    console.log(MemberInfo.memberPersonality);
-
     const requestData = {
       member: {
         college: MemberInfo.college,
@@ -271,13 +269,16 @@ const Survey: React.FC = () => {
         hostHousePrefer: MemberInfo.memberPersonality.hostHousePrefer,
       },
     };
-    console.log('내가간다 : ', requestData);
-    try {
-      const response = await customAxios.post(`api/members/survey`, requestData);
-      console.log('ok : ', response);
-    } catch (e) {
-      console.log(e);
-    }
+
+    // 학생 성향 정보 DB 저장
+    await customAxios
+      .post(`api/members/survey`, requestData)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -310,8 +311,7 @@ const Survey: React.FC = () => {
                     id="combo-box-demo"
                     options={colleges.map((college) => college.name)}
                     sx={{ width: 295, margin: '70px auto' }}
-                    renderInput={(params) => <TextField {...params} label="대학교" />}
-                    // 선택힌 깂 => value
+                    renderInput={(params) => <TextField {...params} label={selectedCollege} />}
                     onChange={(event, value) => handleResponse(value as string)}
                   />
                 </div>
@@ -368,7 +368,7 @@ const Survey: React.FC = () => {
               <Typography variant="h6">
                 🥳 설문을 완료했어요! <br />
                 마이페이지에서 내 정보를 <br />
-                추가적으로 입력할 수 있어요 <br /> <br />
+                추가로 입력할 수 있어요 <br /> <br />
                 <Button onClick={sendData} component={Link} to="/home">
                   집보러가기
                 </Button>
