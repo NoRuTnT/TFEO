@@ -6,6 +6,7 @@ interface HomeFilter {
   filters: { option: string; value: string; choice: boolean }[];
   options: { option: string; value: string; choice: boolean }[];
   types: { type: string; value: string; choice: boolean }[];
+  setMarks: (newMarks: any) => void;
   toggleRentRange: (newRange: number[]) => void;
   toggleFilter: (value: string) => void;
   toggleOption: (value: string) => void;
@@ -100,6 +101,7 @@ interface HostVector {
 // 집 상세 정보 (리스트 조회 시 단일 집 객체 타입)
 interface Home {
   _id: any;
+  home_no: string;
   type: string;
   smoke: number;
   pet: number;
@@ -179,6 +181,7 @@ const initialFilter: HomeFilter = {
     { type: '원룸', value: 'OR', choice: false },
     { type: '단독/다가구', value: 'DDDGG', choice: false },
   ],
+  setMarks: (newMarks: any) => {},
   toggleRentRange: (newRange: number[]) => {},
   toggleFilter: (value: string) => {},
   toggleOption: (value: string) => {},
@@ -300,6 +303,7 @@ export const useHomeStore = create<HomeFilter & HomeRequestData & HomeListState 
       };
       return { ...state, types: newTypes, search_condition: newSearchCondition };
     }),
+  setMarks: (newMarks: any) => set((state) => ({ ...state, marks: newMarks })),
   setIsMapLoaded: (isLoaded: boolean) => set({ isMapLoaded: isLoaded }), // 지도 로드 상태 업데이트 함수 추가
   setHeaderFilterChanged: (isChanged: boolean) => set({ headerFilterChanged: isChanged }),
   setHomes: (newHomes: Home[]) => set((state) => ({ ...state, homes: newHomes })),

@@ -6,6 +6,7 @@ import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
 import { useMemberStore } from '../store/MemberStore';
 import colleges from '../api/surveyData';
+import { customAxios } from '../api/customAxios';
 
 const Survey: React.FC = () => {
   const [slider, setSlider] = useState<Slider | null>(null);
@@ -136,7 +137,7 @@ const Survey: React.FC = () => {
     }
   };
 
-  const sendData = () => {
+  const sendData = async () => {
     responses.forEach((response: any, index) => {
       if (index == 0) {
       } else if (index == 1) {
@@ -233,6 +234,18 @@ const Survey: React.FC = () => {
         updateMemberPersonality('hostHousePrefer', response);
       }
     });
+
+    const requestData = {
+      member: {
+        college: MemberInfo.college,
+        lat: MemberInfo.lat,
+        lng: MemberInfo.lng,
+        gender: MemberInfo.gender,
+      },
+      memberPersonality: MemberInfo.memberPersonality,
+    };
+    const response = await customAxios.post(`api/members/survey`, requestData);
+    console.log('ok : ', response);
     window.location.href = '/home';
   };
 
@@ -272,7 +285,7 @@ const Survey: React.FC = () => {
                   />
                 </div>
               )}
-              {idx >= 1 && idx < 13 && !item.nextButton && (
+              {idx >= 1 && idx < 12 && !item.nextButton && (
                 <Grid container spacing={2} justifyContent="center">
                   {item.answer.map((answerItem, answerIdx) => (
                     <Grid item xs={8} md={6} key={answerIdx}>
@@ -283,7 +296,7 @@ const Survey: React.FC = () => {
                   ))}
                 </Grid>
               )}
-              {idx == 13 && (
+              {idx == 12 && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
                   <Box sx={{ width: 300 }}>
                     <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
@@ -292,10 +305,10 @@ const Survey: React.FC = () => {
                       </div>
                       <MSlider
                         aria-label="importance"
-                        defaultValue={50}
+                        defaultValue={5}
                         valueLabelDisplay="auto"
-                        shiftStep={30}
-                        step={10}
+                        shiftStep={3}
+                        step={1}
                         min={0}
                         max={10}
                       />
