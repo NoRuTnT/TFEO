@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { Slider, Box, Typography, Button, Grid } from '@mui/material';
 import { RecommendAxios } from '../../api/RecommendAxios';
 import { useHomeStore } from '../../store/HomeStore';
+import { debounce } from 'lodash';
 
 interface FilterModalProps {
   modalOpen: boolean;
@@ -28,6 +29,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     setHeaderFilterChanged,
   } = useHomeStore();
   const [newSearchCondition, setNewSearchCondition] = useState(search_condition);
+  const [buttonClicked, setButtonClicked] = useState(false); // State to track button click
+
   const ModalContainer = styled.div`
     position: fixed;
     top: 0;
@@ -56,9 +59,16 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     boxShadow: 24,
     p: 4,
   };
+  const debouncedSetRange = React.useCallback(
+    debounce((newRange: number[]) => {
+      setRange(newRange);
+      toggleRentRange(newRange);
+    }, 300),
+    [],
+  ); // 300ms 디바운싱
+
   const handleChange = (event: Event, newRange: number | number[]) => {
-    setRange(newRange as number[]);
-    toggleRentRange(newRange as number[]);
+    debouncedSetRange(newRange as number[]);
   };
 
   const handleButtonClick = () => {
@@ -110,45 +120,78 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     <ModalContainer>
       <ModalContent>
         <Box sx={style}>
-          <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            sx={{ textAlign: 'left', marginBottom: '35px' }}
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
             가격 범위
           </Typography>
-          <Slider
-            getAriaLabel={() => 'Price range'}
-            value={range}
-            onChange={handleChange}
-            marks={marks}
-            min={marks[0].value}
-            max={marks[1].value}
-            valueLabelDisplay="on"
-            // getAriaValueText={valuetext}
-          />
-          <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
+          <div style={{ position: 'relative', margin: 'auto', width: '90%' }}>
+            <Slider
+              aria-label="Price range"
+              defaultValue={[0, 100]} // 초기 최소 및 최대 범위 설정
+              valueLabelDisplay="on"
+              step={1}
+              min={0}
+              max={100}
+              // onChange={handleChange} // 범위 변경 시 호출될 함수
+            />
+          </div>
+          <div style={{ position: 'absolute', right: '40px', top: '135px' }}>만원</div>
+          <Typography
+            sx={{ textAlign: 'left', marginTop: '10px', marginBottom: '10px' }}
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
             집 옵션
           </Typography>
           <Grid container spacing={1}>
             {options.map((option) => (
-              <Grid item xs={6} key={option.option}>
+              <Grid item xs={4} key={option.option}>
                 <Button
-                  onClick={() => handleOptionClick(option.value, option.choice)}
-                  style={{ width: '120px', height: '40px' }}
-                  variant={option.choice ? 'contained' : 'outlined'}
+                  onClick={() => {
+                    handleOptionClick(option.value, option.choice);
+                    setButtonClicked(true); // Set button clicked state to true
+                  }}
+                  style={{
+                    width: '105px',
+                    height: '50px',
+                    border: buttonClicked && option.choice ? '1px solid #E07068' : '1px solid black',
+                    backgroundColor: buttonClicked && option.choice ? '#E07068' : 'white',
+                    color: buttonClicked && option.choice ? 'white' : 'black',
+                  }}
                 >
                   {option.option}
                 </Button>
               </Grid>
             ))}
           </Grid>
-          <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            sx={{ textAlign: 'left', marginTop: '15px', marginBottom: '10px' }}
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
             집 타입
           </Typography>
           <Grid container spacing={1}>
             {types.map((type) => (
-              <Grid item xs={6} key={type.type}>
+              <Grid item xs={4} key={type.type}>
                 <Button
-                  onClick={() => handleTypeClick(type.value, type.choice)}
-                  style={{ width: '120px', height: '40px' }}
-                  variant={type.choice ? 'contained' : 'outlined'}
+                  onClick={() => {
+                    handleTypeClick(type.value, type.choice);
+                    setButtonClicked(true); // Set button clicked state to true
+                  }}
+                  style={{
+                    width: '105px',
+                    height: '50px',
+                    border: buttonClicked && type.choice ? '1px solid #E07068' : '1px solid black',
+                    backgroundColor: buttonClicked && type.choice ? '#E07068' : 'white',
+                    color: buttonClicked && type.choice ? 'white' : 'black',
+                  }}
                 >
                   {type.type}
                 </Button>

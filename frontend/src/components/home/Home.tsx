@@ -22,10 +22,10 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
     setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? home.home_image.length - 1 : prevIndex - 1));
   };
 
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrent] = useState(0);
 
   const handleSwipe = (index: number) => {
-    setCurrentSlide(index);
+    setCurrentImageIndex(index);
   };
 
   return (
@@ -36,7 +36,13 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
           <div className="carousel-container-left">
             <div style={{ height: '100%' }}>
               <img
-                style={{ width: '160px', height: '240px', objectFit: 'cover' }}
+                style={{
+                  width: '160px',
+                  height: '240px',
+                  objectFit: 'cover',
+                  borderTopLeftRadius: '10px',
+                  borderBottomLeftRadius: '10px',
+                }}
                 src={`https://j10a707.p.ssafy.io${home.host_image_url}`}
                 alt={`Owner `}
               />
@@ -50,7 +56,13 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
               {home.home_image.map((img: any, index: number) => (
                 <div key={index} className="slide-right" style={{ width: '100%', height: '100%' }}>
                   <img
-                    style={{ width: '225px', height: '240px', objectFit: 'cover' }}
+                    style={{
+                      width: '225px',
+                      height: '240px',
+                      objectFit: 'cover',
+                      borderTopRightRadius: '10px',
+                      borderBottomRightRadius: '10px',
+                    }}
                     src={`https://j10a707.p.ssafy.io${img.home_image_url}`}
                     alt={`Home ${index}`}
                   />
