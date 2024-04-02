@@ -75,6 +75,7 @@ const ActivityContent: React.FC = ({ history }: any) => {
     });
 
     await writeReview(homeNo, homeContent, reviewKeywords);
+    window.location.href = '/activity-certification';
   };
 
   return (
