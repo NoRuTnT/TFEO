@@ -8,6 +8,7 @@ import { IMember } from '../interfaces/MemberInterface';
 import { getFileFromS3, uploadFileToS3 } from '../api/S3Apis';
 import { getDetail, getRoadAddress, getRoadNameAddress } from '../utils/addressUtils';
 import { convertFileToBlob } from '../utils/fileUtils';
+import '../styles/MyInfo.css';
 
 const MyInfo: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -52,6 +53,16 @@ const MyInfo: React.FC = () => {
           const response = await getFileFromS3(MemberInfo.certificate);
           if (response) {
             setCertificate(URL.createObjectURL(response));
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+      if (MemberInfo.profileUrl && MemberInfo.profileUrl !== '') {
+        try {
+          const response = await getFileFromS3(MemberInfo.profileUrl);
+          if (response) {
+            setProfileImage(URL.createObjectURL(response));
           }
         } catch (e) {
           console.log(e);
@@ -164,6 +175,7 @@ const MyInfo: React.FC = () => {
           <br />
           <textarea
             id="name"
+            className={isEditing ? 'textarea-editing' : ''}
             style={{ width: '100%', height: '2em', border: 'none', resize: 'none', whiteSpace: 'pre-line' }}
             value={newMemberInfo.name}
             onChange={handleMemberChange}
@@ -224,8 +236,12 @@ const MyInfo: React.FC = () => {
             readOnly={!isEditing}
           />
           <br />
-          <span>주소</span>
-          <br />
+          <div style={{ display: 'flex', justifyContent: isEditing ? 'space-between' : '' }}>
+            <span>주소</span>
+            <button onClick={handleModal} style={{ display: isEditing ? '' : 'none', fontSize: '12px' }}>
+              주소 찾기
+            </button>
+          </div>
           <SearchAddress
             open={open}
             handleModal={handleModal}
@@ -245,6 +261,7 @@ const MyInfo: React.FC = () => {
             }}
             value={getRoadAddress(newMemberInfo.address)}
             readOnly
+            className={isEditing ? 'textarea-editing' : ''}
           />
           <br />
           <span>상세 주소</span>
@@ -253,25 +270,27 @@ const MyInfo: React.FC = () => {
             value={getDetail(newMemberInfo.address)}
             onChange={handleAddressDetailChange}
             readOnly={!isEditing}
+            className={isEditing ? 'textarea-editing' : ''}
           />
         </div>
-        <span>재학증명서</span>{' '}
-        {MemberInfo.certificate !== 'CERTIFICATED' && MemberInfo.certificate !== 'CERTIFICATE_REQUIRED' && (
-          <input type="file" onChange={uploadCertificate} style={{ display: isEditing ? '' : 'none' }} />
-        )}
-        {MemberInfo.certificate === 'CERTIFICATE_REQUIRED' && (
-          <p>관리자가 재학증명서를 확인 중입니다. 승인을 기다려주세요</p>
-        )}
-        {MemberInfo.certificate === 'CERTIFICATED' && (
-          <>
-            <button style={{ border: '1px solid black ', borderRadius: '5px' }} onClick={() => null}>
-              다운로드
-            </button>{' '}
-            <span>{MemberInfo.certificateExpirationDate} 만료</span>
-          </>
-        )}
-        <br />
-        <div>
+        {/*<span>재학증명서</span>{' '}*/}
+        {/*{MemberInfo.certificate !== 'CERTIFICATED' && MemberInfo.certificate !== 'CERTIFICATE_REQUIRED' && (*/}
+        {/*  <div>*/}
+        {/*    <input type="file" onChange={uploadCertificate} style={{ display: isEditing ? '' : 'none' }} />*/}
+        {/*  </div>*/}
+        {/*)}*/}
+        {/*{MemberInfo.certificate === 'CERTIFICATE_REQUIRED' && (*/}
+        {/*  <p>관리자가 재학증명서를 확인 중입니다. 승인을 기다려주세요</p>*/}
+        {/*)}*/}
+        {/*{MemberInfo.certificate === 'CERTIFICATED' && (*/}
+        {/*  <>*/}
+        {/*    <button style={{ border: '1px solid black ', borderRadius: '5px' }} onClick={() => null}>*/}
+        {/*      다운로드*/}
+        {/*    </button>{' '}*/}
+        {/*    <span>{MemberInfo.certificateExpirationDate} 만료</span>*/}
+        {/*  </>*/}
+        {/*)}*/}
+        <div style={{ textAlign: 'center', padding: '2em' }}>
           {isEditing ? (
             <Button variant="outlined" onClick={saveChanges}>
               저장하기
