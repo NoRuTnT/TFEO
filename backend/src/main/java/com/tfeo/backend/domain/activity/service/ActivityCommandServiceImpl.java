@@ -79,7 +79,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 		Activity activity = activityRepository.findById(activityNo)
 			.orElseThrow(() -> new ActivityNotExistException(activityNo));
 
-		if (!member.equals(activity.getContract().getMember())) {
+		if (!memberNo.equals(activity.getContract().getMember().getMemberNo())) {
 			throw new AccessDeniedException(memberNo);
 		}
 
