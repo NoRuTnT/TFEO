@@ -75,7 +75,7 @@ const ActivityContent: React.FC = ({ history }: any) => {
     });
 
     await writeReview(homeNo, homeContent, reviewKeywords);
-    window.location.href = '/activity-certification';
+    window.location.href = `/home-detail?homeNo=${homeNo}`;
   };
 
   return (
@@ -124,9 +124,7 @@ const ActivityContent: React.FC = ({ history }: any) => {
         <Link to={{ pathname: '/contract' }}>
           <button style={{ marginRight: '10px' }}>취소</button>
         </Link>
-        <Link to={{ pathname: '/home-detail', search: `?homeNo=${homeNo}` }}>
-          <button onClick={handleSubmit}>등록</button>
-        </Link>
+        <button onClick={handleSubmit}>등록</button>
       </div>
     </div>
   );
