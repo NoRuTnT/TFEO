@@ -15,6 +15,8 @@ const Home: React.FC = () => {
       <Header />
       <MapBox />
       <HomeList />
+      <br />
+      <br />
       <Footer />
       {/*<ManagerFooter />*/}
     </div>

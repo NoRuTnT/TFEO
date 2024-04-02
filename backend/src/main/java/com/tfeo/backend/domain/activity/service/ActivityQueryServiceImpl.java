@@ -76,7 +76,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 			Member student = memberRepository.findByMemberNo(studentNo)
 				.orElseThrow(() -> new ActivityException("해당 회원이 존재하지 않습니다. id=" + studentNo));
 
-			Contract contract = contractRepository.findByMember(IN_PROGRESS, studentNo)
+			Contract contract = contractRepository.findByMember(DONE, studentNo)
 				.orElseThrow(() -> new ActivityException("해당 회원은 현재 진행중인 계약이 없습니다. id=" + studentNo));
 
 			List<Activity> activities = activityRepository.findByContractNo(contract.getContractNo());

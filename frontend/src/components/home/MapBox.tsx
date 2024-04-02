@@ -17,6 +17,7 @@ export default function MapBox() {
     homes, // 집 전체 조회 목록 (추천 반영)
     setHomes,
     setVisibleHomes,
+    visibleHomes,
     headerFilterChanged,
     searchFilterChanged,
     filter_condition,
@@ -144,7 +145,6 @@ export default function MapBox() {
 
   useEffect(() => {
     if (headerFilterChanged) {
-      // console.log(filter_condition);
       fetchData()
         .then(() => loadMap())
         .catch((error) => console.error(error));
@@ -168,10 +168,10 @@ export default function MapBox() {
       averageCenter: true,
       minLevel: 3,
       minClusterSize: 1,
-      calculator: [3, 5, 10],
+      calculator: [5, 15, 30, 100],
       styles: [
         {
-          // 1 - 3 마커
+          // 1 - 5 마커
           width: '35px',
           height: '35px',
           background: theme.palette.primary.main, // 테마의 기본 색상을 사용합니다.
@@ -184,9 +184,9 @@ export default function MapBox() {
           opacity: '85%',
         },
         {
-          // 4 - 5 마커
-          width: '50px',
-          height: '50px',
+          // 6개 이상 마커
+          width: '45px',
+          height: '45px',
           background: theme.palette.primary.main,
           borderRadius: '50%',
           color: '#fff',
@@ -197,9 +197,9 @@ export default function MapBox() {
           opacity: '85%',
         },
         {
-          // 6 - 10 마커
-          width: '70px',
-          height: '70px',
+          // 16개 이상 마커
+          width: '55px',
+          height: '55px',
           background: theme.palette.primary.main,
           borderRadius: '50%',
           color: '#fff',
@@ -210,9 +210,21 @@ export default function MapBox() {
           opacity: '85%',
         },
         {
-          // 11개 이상 마커
-          width: '80px',
-          height: '80px',
+          // 31개 이상 마커
+          width: '65px',
+          height: '65px',
+          background: theme.palette.primary.main,
+          borderRadius: '50%',
+          color: '#fff',
+          textAlign: 'center',
+          fontWeight: 'bold',
+          lineHeight: '60px',
+          opacity: '85%',
+        },
+        {
+          // 101개 이상 마커
+          width: '75px',
+          height: '75px',
           background: theme.palette.primary.main,
           borderRadius: '50%',
           color: '#fff',
@@ -249,6 +261,18 @@ export default function MapBox() {
       const clusterer = makeClusterer(newMap);
       clusterer.addMarkers(markers);
 
+      const stopZoom = (clusterer: any) => {
+        console.log('이벵이벵');
+        console.log(clusterer);
+        // const centerLatLng = cluster.getCenter();
+        // visibleHomes.map((home) => {
+        //   if (centerLatLng == window.kakao.maps.LatLng(home.lat, home.lng)) {
+        //     console.log('나다나 : ', home);
+        //     return;
+        //   }
+        // });
+      };
+
       // 지도 바운드 안에 들어오는 포지션의 집 마커를 visibleHomes에 추가하는 함수
       const updateVisibleHomes = () => {
         markers = updateMarkers();
@@ -261,6 +285,7 @@ export default function MapBox() {
         );
       };
 
+      window.kakao.maps.event.addListener(newMap, 'clusterclick', stopZoom(clusterer));
       window.kakao.maps.event.addListener(newMap, 'center_changed', updateVisibleHomes);
       window.kakao.maps.event.addListener(newMap, 'zoom_changed', updateVisibleHomes);
       updateVisibleHomes();

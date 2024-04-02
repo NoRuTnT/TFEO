@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../styles/MainPage.css';
 import Footer from '../components/footer/Footer';
 import '../styles/Footer.css';
-import '../styles/ActivityContent.css'; // 이 페이지 전용 스타일을 위한 새 CSS 파일 경로
+import '../styles/ActivityContent.css';
 import { writeReview } from '../api/ReviewApis';
 import { useReviewStore } from '../store/ReviewStore';
 import { IReviewKeyword } from '../interfaces/ReviewKeywordInterface';
@@ -28,7 +28,7 @@ const ActivityContent: React.FC = ({ history }: any) => {
   const toggleKeywordChoice = (value: string) => {
     setReview((currentState) => ({
       ...currentState,
-      reviewKeyword: currentState.keywordValues.map((kw) => (kw.value === value ? { ...kw, choice: !kw.choice } : kw)),
+      keywordValues: currentState.keywordValues.map((kw) => (kw.value === value ? { ...kw, choice: !kw.choice } : kw)),
     }));
   };
 
@@ -75,17 +75,20 @@ const ActivityContent: React.FC = ({ history }: any) => {
     <div className="main-page">
       <div style={{ fontWeight: 'bold', fontSize: '20px', margin: '10px' }}>어르신과 함께한 6개월은 어떠셨나요?</div>
       <div style={{ fontSize: '16px', marginBottom: '10px' }}> 키워드를 골라주세요 </div>
-      <div>
-        {ReviewInfo.keywordValues.map((kw) => (
+      <div style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '400px' }}>
+        {ReviewInfo.keywordValues.map((kw, index) => (
           <button
-            key={kw.value}
+            key={index}
             style={{
               backgroundColor: kw.choice ? '#F9EAE1' : 'transparent',
               border: '1px solid black',
               borderRadius: '20px',
-              padding: '10px 20px',
-              margin: '5px',
+              padding: '5px 10px',
+              margin: '3px',
               cursor: 'pointer',
+              fontSize: '10px',
+              flex: '0 0 calc(50% - 6px)', // 2열로 표시되도록 설정
+              boxSizing: 'border-box',
             }}
             onClick={() => toggleKeywordChoice(kw.value)}
           >
@@ -93,6 +96,7 @@ const ActivityContent: React.FC = ({ history }: any) => {
           </button>
         ))}
       </div>
+
       <div>
         <textarea
           // value={homeContent} // value를 homeContent 상태로 설정
