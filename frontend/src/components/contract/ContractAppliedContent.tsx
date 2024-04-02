@@ -24,6 +24,10 @@ const ContractAppliedContent = ({ homeNo, memberNo, role }: Props) => {
     if (!contractFormData) return;
     console.log(contractFormData);
     const blobPdf = await pdf(createContractPdf(contractFormData)).toBlob();
+    if (!blobPdf) {
+      alert('계약서가 생성되지 않았습니다.');
+      return;
+    }
     const preSignedUrlToUpload = await createForm(contractFormData.contract.contractNo);
     console.log(preSignedUrlToUpload);
     if (typeof preSignedUrlToUpload !== 'string') return;
