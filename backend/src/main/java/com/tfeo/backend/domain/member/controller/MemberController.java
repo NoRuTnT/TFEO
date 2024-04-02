@@ -129,12 +129,13 @@ public class MemberController {
 	//회원 상세정보 조회
 	@GetMapping("")
 	public ResponseEntity<?> memberDetails(HttpServletRequest request) {
-		Optional<Member> memberOptional = authenticationService.getMember(request);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(request);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L;
 		MemberResponseDto memberResponseDto = memberService.findMember(memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
@@ -148,12 +149,13 @@ public class MemberController {
 	@PostMapping("/survey")
 	public ResponseEntity<?> memberSurvey(@RequestBody SurveyRequestDto memberSurveyRequestDto,
 		HttpServletRequest request) {
-		Optional<Member> memberOptional = authenticationService.getMember(request);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(request);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L;
 		memberService.submitSurvey(memberSurveyRequestDto, memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
@@ -166,11 +168,12 @@ public class MemberController {
 	@PutMapping("")
 	public ResponseEntity<?> memberModify(@RequestBody MemberRequestDto memberRequestDto, HttpServletRequest request) {
 		Optional<Member> memberOptional = authenticationService.getMember(request);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L;
 		return ResponseEntity.ok(SuccessResponse.builder()
 			.status(HttpStatus.OK)
 			.result(memberService.modifyMember(memberNo, memberRequestDto))
@@ -196,12 +199,13 @@ public class MemberController {
 	// 회원이 신청한 집(계약) 조회
 	@GetMapping("/home")
 	public ResponseEntity<?> AppliedHomeList(HttpServletRequest request) {
-		Optional<Member> memberOptional = authenticationService.getMember(request);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(request);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L; //Todo: contract 개발 완료 이후 제거
 		AppliedHomeResponseDto appliedHomeResponseDto = memberService.findAppliedHome(memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
@@ -214,12 +218,13 @@ public class MemberController {
 	@PostMapping("/home/{homeNo}")
 	public ResponseEntity<?> homeApplicationAdd(@PathVariable Long homeNo,
 		@RequestBody MemberHomeApplicationRequestDto memberHomeApplicationRequestDto, HttpServletRequest request) {
-		Optional<Member> memberOptional = authenticationService.getMember(request);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(request);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L; // Todo: 프런트 개발 이후 제거
 		memberService.addHomeApplication(homeNo, memberNo, memberHomeApplicationRequestDto);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
@@ -231,12 +236,13 @@ public class MemberController {
 	//집 신청 취소
 	@DeleteMapping("/home/{homeNo}")
 	public ResponseEntity<?> memberRequestedHomeRemove(@PathVariable Long homeNo, HttpServletRequest request) {
-		Optional<Member> memberOptional = authenticationService.getMember(request);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(request);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L; // Todo: 프런트 개발 이후 제거
 		memberService.deleteApplication(homeNo, memberNo);
 		SuccessResponse successResponse = SuccessResponse.builder()
 			.status(HttpStatus.OK)
