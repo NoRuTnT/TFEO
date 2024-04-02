@@ -114,10 +114,9 @@ public class Member {
 
 	public void updateMemberSurvey(SurveyMemberRequestDto surveyMemberRequestDto) {
 		this.college = surveyMemberRequestDto.getCollege();
-		//Todo: college lat, lng 반영 필요
-		this.wakeAt = surveyMemberRequestDto.getWakeAt();
-		this.sleepAt = surveyMemberRequestDto.getSleepAt();
-		this.returnAt = surveyMemberRequestDto.getReturnAt();
+		this.college = surveyMemberRequestDto.getCollege();
+		this.lat = surveyMemberRequestDto.getLat();
+		this.lng = surveyMemberRequestDto.getLng();
 		this.gender = surveyMemberRequestDto.getGender();
 	}
 
