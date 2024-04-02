@@ -14,6 +14,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
   const [range, setRange] = React.useState<number[]>([0, 1000000]);
   const {
     search_condition,
+    filter_condition,
+    member_personality,
     setSearchCondition,
     marks,
     options,
@@ -22,6 +24,8 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     toggleOption,
     toggleType,
     setSearchFilterChanged,
+    setHomes,
+    setHeaderFilterChanged,
   } = useHomeStore();
   const [newSearchCondition, setNewSearchCondition] = useState(search_condition);
   const ModalContainer = styled.div`
@@ -78,10 +82,27 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     }));
   };
 
+  const fetchData = async () => {
+    try {
+      const requestData = {
+        filter_condition: filter_condition,
+        search_condition: search_condition,
+        member_personality: member_personality,
+      };
+      console.log('요청 : ', requestData);
+      const response = await RecommendAxios.post('/recommend', requestData);
+      setHomes(response.data);
+      console.log('응답 : ', response.data);
+      setHeaderFilterChanged(false);
+    } catch (error) {
+      console.error('집 리스트 조회 실패 : ', error);
+    }
+  };
+
   useEffect(() => {
+    setRange([search_condition.rent_min, search_condition.rent_max]);
     return () => {
-      console.log('unmount');
-      setSearchFilterChanged(true);
+      setHeaderFilterChanged(true);
     };
   }, []);
 
