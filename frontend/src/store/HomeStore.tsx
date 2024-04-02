@@ -101,7 +101,6 @@ interface HostVector {
 // 집 상세 정보 (리스트 조회 시 단일 집 객체 타입)
 interface Home {
   _id: any;
-  home_no: string;
   type: string;
   smoke: number;
   pet: number;
