@@ -33,6 +33,7 @@ export default function MapBox() {
 
   const fetchFirstData = async () => {
     console.log(MemberInfo.gender);
+    console.log(MemberInfo.memberPersonality);
     try {
       const requestData = {
         filter_condition: {
@@ -41,37 +42,13 @@ export default function MapBox() {
           apartment: false,
           pets: false,
         },
-        search_condition: {
-          internet: false,
-          gas: false,
-          washing_machine: false,
-          air_conditioner: false,
-          refrigerator: false,
-          elevator: false,
-          microwave: false,
-          toilet: false,
-          breakfast: false,
-          heating: false,
-          parking: false,
-          station: false,
-          move_in_date: false,
-          sink: false,
-          APT: false,
-          OPST: false,
-          VL: false,
-          JT: false,
-          DDDGG: false,
-          OR: false,
-          rent_max: 100,
-          rent_min: 0,
-          lat: MemberInfo.lat,
-          lng: MemberInfo.lng,
-        },
+        search_condition: search_condition,
         member_personality: member_personality,
       };
       const response = await RecommendAxios.post('/recommend', requestData);
       setHomes(response.data);
       setHeaderFilterChanged(false);
+      setSearchFilterChanged(false);
     } catch (error) {
       console.error('집 리스트 조회 실패 : ', error);
     }
@@ -184,7 +161,7 @@ export default function MapBox() {
   useEffect(() => {
     console.log('동작을하긴하는거지?');
     if (searchFilterChanged) {
-      // console.log(filter_condition);
+      console.log(filter_condition);
       fetchData()
         .then(() => loadMap())
         .catch((error) => console.error(error));
