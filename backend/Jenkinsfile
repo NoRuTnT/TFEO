@@ -185,26 +185,6 @@ pipeline {
             }
         }
 
-        stage('Before Service Stop') {
-            when {
-                expression { env.gitlabMergeRequestState != 'opened' }
-            }
-            steps {
-                sshagent(credentials: ['ubuntu']) {
-                    sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@j10a707.p.ssafy.io "
-                    docker stop back || true
-                    docker stop front || true
-                    docker stop data || true
-                    docker rm -f back || true
-                    docker rm -f front || true
-                    docker rm -f data || true
-                    "
-                    '''
-                }
-            }
-        }
-
         stage('DockerHub Pull') {
             when {
                 expression { env.gitlabMergeRequestState != 'opened' }
@@ -218,6 +198,39 @@ pipeline {
             }
         }
 
+        stage('blue-green deploy') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh '/home/ubuntu/deploy.sh'
+                }
+            }
+        }
+
+
+        stage('Before Service Stop') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ubuntu@j10a707.p.ssafy.io "
+                    docker stop front || true
+                    docker stop data || true
+
+                    docker rm -f front || true
+                    docker rm -f data || true
+                    "
+                    '''
+                }
+            }
+        }
+
+
+
         stage('Service Start') {
             when {
                 expression { env.gitlabMergeRequestState != 'opened' }
@@ -225,7 +238,6 @@ pipeline {
             steps {
                 sshagent(credentials: ['ubuntu']) {
                     sh """
-                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul -e \\"SPRING_PROFILES_ACTIVE=set1\\" --env-file=/home/ubuntu/env/db.env --env-file=/home/ubuntu/env/test-db.env --env-file=/home/ubuntu/env/security.env --name back --network tfeo-network -p $releasePort:$releasePort -d $imageName:latest"
                         ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul --env-file=/home/ubuntu/env/.env --name front --network tfeo-network -p $frontreleasePort:$frontreleasePort -d $frontimageName:latest"
                         ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul --name data --network tfeo-network -p $datareleasePort:$datareleasePort -d $dataimageName:latest"
                     """
