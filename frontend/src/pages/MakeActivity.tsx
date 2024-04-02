@@ -47,6 +47,7 @@ const MakeActivity: React.FC = () => {
 
     await writeActivity(activityNo, image, content);
     alert('글이 등록되었습니다');
+    window.location.href = '/activity-certification';
   };
 
   return (
@@ -97,20 +98,18 @@ const MakeActivity: React.FC = () => {
         placeholder="내용 입력하기"
       ></textarea>
       <div style={{ position: 'absolute', bottom: '120px' }}>
-        <Link to="/activity-certification">
-          <button
-            style={{
-              border: '1px solid black',
-              borderRadius: '5px',
-              width: '70px',
-              height: '40px',
-              marginRight: '15px',
-            }}
-            onClick={handleContentSubmit}
-          >
-            등록
-          </button>
-        </Link>
+        <button
+          style={{
+            border: '1px solid black',
+            borderRadius: '5px',
+            width: '70px',
+            height: '40px',
+            marginRight: '15px',
+          }}
+          onClick={handleContentSubmit}
+        >
+          등록
+        </button>
         <Link to="/activity-certification">
           <button
             style={{
