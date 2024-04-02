@@ -379,7 +379,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
             # 추천알고리즘이 적용된 결과와 json 반환 format을 맞춰준다
             del item['host_vector']
             del item['station']
-            del item['home_no']
+        print('client에 반환되는 요소의 개수 ', len(data_list))
         return data_list
 
 
@@ -391,9 +391,9 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
 
     # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
 
-    prefer = 0
-    if(member_personality.host_house_prefer>=5):
-        prefer=1
+    # prefer = 0
+    # if(member_personality.host_house_prefer>=5):
+    #     prefer=1
     # 임시 json 객체
     member_personality_json_info = {
         'member_personality_no': member_personality.member_personality_no,
@@ -412,7 +412,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         'pet': member_personality.pet,
         'cold': member_personality.cold,
         'hot': member_personality.hot,
-        'host_house_prefer': prefer, # int
+        'host_house_prefer': member_personality.host_house_prefer, # int
     }
     member_vector = get_member_vector(member_personality_json_info)
     print('vector-format')
@@ -440,7 +440,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
 
     print('정렬 결과 벡터 list임')
     print(priorities)
-    print(data_json)
+    # print(data_json) # json 정보 본문
 
 
     output_list = [] # 최종적으로 추천된 부동산 내용들의 list, 필요시 원하는 성분들만 추출해서 사용
@@ -458,6 +458,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
                              'cold': 1,
                              'hot': 1,
                              'no_touch': 1,
+                             'home_no': 1,
                              'host_name': 1,
                              'host_age': 1,
                              'host_gender': 1,
@@ -477,6 +478,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     # print(output_list)
     # if len(output_list)!=0:
     #     print(output_list[0]) # debug
+    print('client에 반환되는 요소의 개수 ', len(output_list))
     return output_list
 
 
