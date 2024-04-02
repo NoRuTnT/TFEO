@@ -28,15 +28,12 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @Slf4j
 public class ReviewQueryServiceImpl implements ReviewQueryService {
-	private final MemberRepository memberRepository;
 	private final ReviewRepository reviewRepository;
 	private final HomeRepository homeRepository;
 
 	@Override
-	public List<ReadReviewResponseDto> readReviewList(Long memberNo, Role role,
+	public List<ReadReviewResponseDto> readReviewList(
 		Long homeNo) {
-		Member member = memberRepository.findByMemberNo(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		Home home = homeRepository.findById(homeNo).orElseThrow(() -> new HomeNotExistException(homeNo));
 		List<Review> reviews = reviewRepository.findAllByHome(home);
 		List<ReadReviewResponseDto> result = new ArrayList<>();
@@ -71,9 +68,7 @@ public class ReviewQueryServiceImpl implements ReviewQueryService {
 	}
 
 	@Override
-	public ReadReviewResponseDto readReview(Long memberNo, Role role, Long reviewNo) {
-		Member member = memberRepository.findByMemberNo(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
+	public ReadReviewResponseDto readReview(Long reviewNo) {
 		Review review = reviewRepository.findById(reviewNo)
 			.orElseThrow(() -> new ReviewNotExistException(reviewNo));
 		ReviewKeywordDto reviewKeywordDto = ReviewKeywordDto.builder()
