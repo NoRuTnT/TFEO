@@ -8,7 +8,7 @@ import { writeReview } from '../api/ReviewApis';
 import { useReviewStore } from '../store/ReviewStore';
 import { IReviewKeyword } from '../interfaces/ReviewKeywordInterface';
 
-const ActivityContent: React.FC = ({ history }: any) => {
+const ActivityReview: React.FC = ({ history }: any) => {
   const [homeNo, setHomeNo] = useState<number>(0);
   const { ReviewInfo, setReview } = useReviewStore();
   const [homeContent, setHomeContent] = useState<string>('');
@@ -73,38 +73,53 @@ const ActivityContent: React.FC = ({ history }: any) => {
 
   return (
     <div className="main-page">
-      <div style={{ fontWeight: 'bold', fontSize: '20px', margin: '10px' }}>어르신과 함께한 6개월은 어떠셨나요?</div>
-      <div style={{ fontSize: '16px', marginBottom: '10px' }}> 키워드를 골라주세요 </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', maxWidth: '400px' }}>
-        {ReviewInfo.keywordValues.map((kw, index) => (
-          <button
-            key={index}
-            style={{
-              backgroundColor: kw.choice ? '#F9EAE1' : 'transparent',
-              border: '1px solid black',
-              borderRadius: '20px',
-              padding: '5px 10px',
-              margin: '3px',
-              cursor: 'pointer',
-              fontSize: '10px',
-              flex: '0 0 calc(50% - 6px)', // 2열로 표시되도록 설정
-              boxSizing: 'border-box',
-            }}
-            onClick={() => toggleKeywordChoice(kw.value)}
-          >
-            {kw.keyword}
-          </button>
-        ))}
+      <div style={{ fontWeight: 'bold', fontSize: '20px', margin: '10px' }}>
+        어르신과 함께한 6개월은
+        <br /> 어떠셨나요?
+      </div>
+      <div style={{ fontSize: '16px', marginBottom: '10px' }}> 키워드를 골라주세요</div>
+      <div style={{ width: '81%', height: '300px', overflowX: 'auto', marginTop: '10px' }}>
+        <div
+          style={{
+            width: '120%',
+            height: '100%',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            overflowX: 'auto',
+          }}
+        >
+          {ReviewInfo.keywordValues.map((kw, index) => (
+            <button
+              key={index}
+              style={{
+                backgroundColor: kw.choice ? '#F9EAE1' : 'transparent',
+                border: '1px solid black',
+                borderRadius: '20px',
+                padding: '5px 10px',
+                margin: '3px',
+                marginRight: '15px',
+                cursor: 'pointer',
+                fontSize: '16px',
+                boxSizing: 'border-box',
+                marginBottom: '5px', // 버튼 사이의 세로 간격 조정
+              }}
+              onClick={() => toggleKeywordChoice(kw.value)}
+            >
+              {kw.keyword}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div>
+      <div style={{ marginTop: '10px', marginBottom: '10px' }}>
         <textarea
           // value={homeContent} // value를 homeContent 상태로 설정
           onChange={handleHomeContentChange} // 입력값 변경 시 핸들러 호출
           placeholder="리뷰를 작성해 주세요."
           style={{
-            width: '280px',
-            height: '230px',
+            width: '300px',
+            height: '200px',
             margin: '10px 0',
             padding: '10px',
             border: '1px solid black',
@@ -114,15 +129,31 @@ const ActivityContent: React.FC = ({ history }: any) => {
         />
       </div>
       <div>
-        <button style={{ marginRight: '10px' }} onClick={handleCancel}>
+        <button
+          style={{
+            width: '90px',
+            height: '50px',
+            marginRight: '20px',
+            border: '1px solid #e07068',
+            borderRadius: '5px',
+            backgroundColor: '#e07068',
+            color: 'white',
+          }}
+          onClick={handleCancel}
+        >
           취소
         </button>
         <Link to={{ pathname: '/home-detail', search: `?homeNo=${homeNo}` }}>
-          <button onClick={handleSubmit}>등록</button>
+          <button
+            style={{ width: '90px', height: '50px', border: '1px solid black', borderRadius: '5px' }}
+            onClick={handleSubmit}
+          >
+            등록
+          </button>
         </Link>
       </div>
     </div>
   );
 };
 
-export default ActivityContent;
+export default ActivityReview;

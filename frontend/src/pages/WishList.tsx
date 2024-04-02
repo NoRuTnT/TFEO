@@ -6,7 +6,7 @@ import { IHome, IHomeDetail } from '../interfaces/HomeInterface';
 import Home from '../components/home/Home';
 import { getWishList } from '../api/WishApis';
 import Wish from '../components/wish/Wish';
-
+import FavoriteIcon from '@mui/icons-material/Favorite';
 const WishList: React.FC = () => {
   const [homeList, setHomeList] = useState<IHomeDetail[]>();
   const settings = {
@@ -26,7 +26,25 @@ const WishList: React.FC = () => {
   if (!homeList || homeList.length < 1)
     return (
       <>
-        <div>신청한 집이 없습니다.</div>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '80vh',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <div style={{ width: '120px', height: '120px' }}>
+            <FavoriteIcon style={{ color: 'darkgrey', width: '100%', height: '100%' }} />
+          </div>
+          <div style={{ fontWeight: 'bold', marginTop: '5px', fontSize: '22px', color: 'darkgrey' }}>
+            아직 찜한 집이 없어요.
+          </div>
+          <div style={{ marginTop: '10px', fontSize: '18px', color: 'darkgrey' }}>함께 하고 싶은</div>
+          <div style={{ fontSize: '18px', color: 'darkgrey' }}>인생 선배를 찾아보세요.</div>
+        </div>
+        <Footer />
       </>
     );
   return (
