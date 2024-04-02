@@ -46,8 +46,8 @@ const MakeActivity: React.FC = () => {
     }
 
     await writeActivity(activityNo, image, content);
-    alert('글이 등록되었습니다');
-    window.location.href = '/activity-certification';
+    // alert('글이 등록되었습니다');
+    // window.location.href = '/activity-certification';
   };
 
   return (
