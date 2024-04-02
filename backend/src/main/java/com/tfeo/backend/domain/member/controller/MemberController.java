@@ -81,6 +81,7 @@ public class MemberController {
 				memberInfo.put("college", member.getCollege());
 				memberInfo.put("lat", member.getLat());
 				memberInfo.put("lng", member.getLng());
+				memberInfo.put("role", member.getRole());
 
 				return ResponseEntity.ok(memberInfo);
 			} else {
