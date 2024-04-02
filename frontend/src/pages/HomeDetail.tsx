@@ -191,6 +191,7 @@ const HomeDetail: React.FC = () => {
 
         <hr style={{ margin: '15px 0' }} />
 
+        <div style={{ fontWeight: 'bold', marginBottom: '17px' }}>후기 {reviewList.length}개</div>
         <div className="reviews-container">
           {reviewList.map((review, index) => (
             <div
@@ -255,7 +256,7 @@ const HomeDetail: React.FC = () => {
           </div>
         </div>
         <div className="register-btn">
-          <button onClick={applyHome}>집 신청하기</button>
+          <button onClick={applyHome}>집 신청</button>
         </div>
       </div>
     </div>

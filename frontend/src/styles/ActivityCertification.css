@@ -11,11 +11,11 @@
 }
 
 .circle-row:nth-child(odd) {
-    background-color: #FA9790;
+    background-color: #fff4f0;
 }
 
 .circle-row:nth-child(even) {
-    background-color: #F9EAE1;
+    background-color: #ffe5d5;
 }
 
 .circle {
