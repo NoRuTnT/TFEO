@@ -144,7 +144,6 @@ export default function MapBox() {
 
   useEffect(() => {
     if (headerFilterChanged) {
-      // console.log(filter_condition);
       fetchData()
         .then(() => loadMap())
         .catch((error) => console.error(error));
