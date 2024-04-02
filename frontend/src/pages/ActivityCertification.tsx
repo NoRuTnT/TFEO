@@ -20,8 +20,7 @@ const ActivityCertification: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // const roadmapResponse = await getRoadmap(MemberInfo.memberNo);
-      const roadmapResponse = await getRoadmap(1);
+      const roadmapResponse = await getRoadmap(MemberInfo.memberNo);
       if (roadmapResponse) {
         setRoadmap(roadmapResponse);
         console.log('######로드맵 조회######');
