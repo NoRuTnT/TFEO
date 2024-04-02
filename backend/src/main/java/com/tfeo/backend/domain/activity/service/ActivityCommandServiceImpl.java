@@ -1,3 +1,4 @@
+//ActivityCommandServiceImpl
 package com.tfeo.backend.domain.activity.service;
 
 import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
@@ -74,13 +75,13 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 		AddActivityRequestDto request) {
 
 		// Member member = memberRepository.findByMemberNo(memberNo)
-		// 	.orElseThrow(() -> new MemberNotExistException(memberNo));
+		//     .orElseThrow(() -> new MemberNotExistException(memberNo));
 
 		Activity activity = activityRepository.findById(activityNo)
 			.orElseThrow(() -> new ActivityNotExistException(activityNo));
 
 		// if (!memberNo.equals(activity.getContract().getMember().getMemberNo())) {
-		// 	throw new AccessDeniedException(memberNo);
+		//     throw new AccessDeniedException(memberNo);
 		// }
 
 		if (activity.getStartAt().isAfter(LocalDate.now()) || activity.getExpiredAt().isBefore(LocalDate.now())) {
@@ -113,7 +114,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			.build();
 
 		// 관리자 승인 & 알림톡 전송
-		// approveActivity(memberNo,activityNo);
+		approveActivity(memberNo,activityNo);
 
 		return result;
 	}
