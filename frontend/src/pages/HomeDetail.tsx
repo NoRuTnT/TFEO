@@ -86,7 +86,7 @@ const HomeDetail: React.FC = () => {
   return (
     <div className="page-wrapper">
       <div className="top-button-container"></div>
-      <Link to="/">
+      <Link to="/home">
         <div
           style={{
             position: 'fixed',
