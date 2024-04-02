@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../styles/home/HomeSmallDetail.css';
 import SwipeableViews from 'react-swipeable-views';
 
-const ActivityContent: React.FC = () => {
+const HomeSmallDetail: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   const nextImage = () => {
@@ -59,4 +59,4 @@ const ActivityContent: React.FC = () => {
   );
 };
 
-export default ActivityContent;
+export default HomeSmallDetail;
