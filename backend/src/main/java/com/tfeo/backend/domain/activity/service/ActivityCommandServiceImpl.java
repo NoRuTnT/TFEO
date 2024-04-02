@@ -79,9 +79,9 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 		Activity activity = activityRepository.findById(activityNo)
 			.orElseThrow(() -> new ActivityNotExistException(activityNo));
 
-		if (!memberNo.equals(activity.getContract().getMember().getMemberNo())) {
-			throw new AccessDeniedException(memberNo);
-		}
+		// if (!memberNo.equals(activity.getContract().getMember().getMemberNo())) {
+		// 	throw new AccessDeniedException(memberNo);
+		// }
 
 		if (activity.getStartAt().isAfter(LocalDate.now()) || activity.getExpiredAt().isBefore(LocalDate.now())) {
 			throw new PeriodException();
@@ -99,6 +99,9 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 		String activityPresignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
 		activity.writeActivity(filePath, request.getActivityText());
 
+		//승인 처리
+		activity.setApprove(APPROVE);
+
 		AddActivityResponseDto result = AddActivityResponseDto.builder()
 			.activityNo(activity.getActivityNo())
 			.week(activity.getWeek())
@@ -110,7 +113,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			.build();
 
 		// 관리자 승인 & 알림톡 전송
-		approveActivity(memberNo,activityNo);
+		// approveActivity(memberNo,activityNo);
 
 		return result;
 	}

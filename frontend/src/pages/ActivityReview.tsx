@@ -75,6 +75,7 @@ const ActivityReview: React.FC = ({ history }: any) => {
     });
 
     await writeReview(homeNo, homeContent, reviewKeywords);
+    window.location.href = `/home-detail?homeNo=${homeNo}`;
   };
 
   return (
@@ -136,25 +137,9 @@ const ActivityReview: React.FC = ({ history }: any) => {
       </div>
       <div>
         <Link to={{ pathname: '/contract' }}>
-        <button style={{
-          width: '90px',
-          height: '50px',
-          marginRight: '20px',
-          border: '1px solid #e07068',
-          borderRadius: '5px',
-          backgroundColor: '#e07068',
-          color: 'white',
-        }}>
-          취소
-        </button></Link>
-        <Link to={{ pathname: '/home-detail', search: `?homeNo=${homeNo}` }}>
-          <button
-            style={{ width: '90px', height: '50px', border: '1px solid black', borderRadius: '5px' }}
-            onClick={handleSubmit}
-          >
-            등록
-          </button>
+          <button style={{ marginRight: '10px' }}>취소</button>
         </Link>
+        <button onClick={handleSubmit}>등록</button>
       </div>
     </div>
   );
