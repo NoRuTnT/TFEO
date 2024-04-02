@@ -243,7 +243,7 @@ const Survey: React.FC = () => {
   };
 
   const sendData = async () => {
-    console.log(MemberInfo);
+    console.log(MemberInfo.memberPersonality);
 
     const requestData = {
       member: {
@@ -277,8 +277,6 @@ const Survey: React.FC = () => {
       console.log('ok : ', response);
     } catch (e) {
       console.log(e);
-    } finally {
-      window.location.href = '/home';
     }
   };
 
