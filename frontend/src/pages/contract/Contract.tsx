@@ -48,7 +48,13 @@ const Contract = () => {
         );
       case 'DONE':
         console.log('completed');
-        return <ContractCompletedContent contractNo={contractInfo.contract.contractNo} role="USER" />;
+        return (
+          <ContractCompletedContent
+            contractNo={contractInfo.contract.contractNo}
+            role="USER"
+            homeNo={contractInfo.home.home.homeNo}
+          />
+        );
     }
   };
   if (!contractInfo) {
