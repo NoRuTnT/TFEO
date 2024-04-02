@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { IHomeDetail, IHomeImage } from '../interfaces/HomeInterface';
 import { applyHomeApi, getHomeDetail } from '../api/HomeApis';
-import { getEMDNameAddress } from '../utils/addressUtils';
+import { getEMDNameAddress, getRoadAddress } from '../utils/addressUtils';
 import { getHomeOptionTags } from '../utils/homeOptionTagUtils';
 import { Button } from '@mui/material';
 import { getRent } from '../utils/moneyUtils';
@@ -148,7 +148,9 @@ const HomeDetail: React.FC = () => {
       </div>
       <div className="content-wrapper">
         <div className="detail-description">
-          <p style={{ fontWeight: 'bold', fontSize: '17px' }}>{getEMDNameAddress(homeDetail.home.address)}</p>
+          <p style={{ marginTop: '15px', fontWeight: 'bold', fontSize: '17px' }}>
+            {getRoadAddress(homeDetail.home.address)}
+          </p>
         </div>
 
         <div className="owner-description" style={{ fontSize: '20px' }}>
@@ -173,7 +175,7 @@ const HomeDetail: React.FC = () => {
 
         <div className="option-wrapper" style={{ textAlign: 'center', display: 'inline-block' }}></div>
 
-        <div style={{ fontWeight: 'bold', marginBottom: '15px' }}>함께 사용해요!</div>
+        <div style={{ fontWeight: 'bold', marginBottom: '15px' }}>우리 집에는</div>
         {getHomeOptionTags(homeDetail.homeOption) &&
           getHomeOptionTags(homeDetail.homeOption).reduce((acc: ReactNode[], option: string, index: number) => {
             if (index % 2 === 0) {
@@ -188,6 +190,11 @@ const HomeDetail: React.FC = () => {
             }
             return acc;
           }, [])}
+
+        <hr style={{ margin: '15px 0' }} />
+
+        <div style={{ fontWeight: 'bold', marginBottom: '17px' }}>위치</div>
+        <MapDetailBox lat={homeDetail.home.lat} lng={homeDetail.home.lng}></MapDetailBox>
 
         <hr style={{ margin: '15px 0' }} />
 
@@ -248,7 +255,7 @@ const HomeDetail: React.FC = () => {
       {/* 집 신청 버튼과 찜 버튼 */}
       <div className="bottom-container">
         <div className="left-container">
-          <div className="register-div">월세 : {homeDetail.home.rent}만원</div>
+          <div className="register-div">월세 {homeDetail.home.rent}만원</div>
         </div>
         <div className="center-container">
           <div>
