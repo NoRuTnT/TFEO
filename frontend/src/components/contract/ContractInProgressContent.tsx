@@ -45,12 +45,11 @@ const ContractInProgressContent = ({ homeDetail, contract, member, role }: Props
           <button className="statusBtn">{contract.hostSign ? '완료' : '미완'}</button>
         </div>
       </div>
-      {(role === 'USER' && !contract.studentSign) ||
-        (role === 'MANAGER' && !contract.hostSign && (
-          <Link to={'/contract-form'} state={{ home: homeDetail.home, contract: contract, member: member, role: role }}>
-            <div className="contractDiv">계약서 서명하기</div>
-          </Link>
-        ))}
+      {((role === 'USER' && !contract.studentSign) || (role === 'MANAGER' && !contract.hostSign)) && (
+        <Link to={'/contract-form'} state={{ home: homeDetail.home, contract: contract, member: member, role: role }}>
+          <div className="contractDiv">계약서 서명하기</div>
+        </Link>
+      )}
       {role === 'USER' && contract.studentSign && <div className="contractDiv">계약 완료 대기중</div>}
       {role === 'MANAGER' && contract.studentSign && contract.hostSign && (
         <div className="contractDiv" onClick={contractCompletion}>
