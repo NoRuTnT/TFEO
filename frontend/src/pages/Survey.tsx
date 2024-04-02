@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import Slider from 'react-slick';
 import { Autocomplete, TextField, Button, Box, Paper, Typography, Grid, Slider as MSlider, Stack } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -7,9 +7,15 @@ import { Link } from 'react-router-dom';
 import { useMemberStore } from '../store/MemberStore';
 import colleges from '../api/surveyData';
 import { customAxios } from '../api/customAxios';
+import { IMember } from '../interfaces/MemberInterface';
 
 const Survey: React.FC = () => {
   const [slider, setSlider] = useState<Slider | null>(null);
+  const [sliderValue, setSliderValue] = useState(5);
+  const changeSliderValue = (event: Event, newValue: number | number[]) => {
+    setSliderValue(newValue as number);
+    setMemberInfo(13, newValue);
+  };
   const settings = {
     dots: false,
     infinite: false,
@@ -20,6 +26,8 @@ const Survey: React.FC = () => {
     ref: (slider: Slider) => setSlider(slider), // Connect the slider ref
   };
   const { MemberInfo, setCollege, setMemberPersonality, setGender, updateMemberPersonality } = useMemberStore();
+
+  const [requestData, setRequestData] = useState<IMember>();
 
   const QuestionContainer = styled(Paper)({
     boxShadow: 'none',
@@ -130,112 +138,112 @@ const Survey: React.FC = () => {
   const handleResponse = (selectedAnswer: string) => {
     const newResponses = [...responses];
     newResponses[index] = selectedAnswer;
+    setMemberInfo(index, selectedAnswer);
     setResponses(newResponses);
     console.log(responses);
     if (!data[index - 1].nextButton) {
       slider?.slickNext();
     }
   };
+  const setMemberInfo = (idx: number, response: any) => {
+    if (idx == 1) {
+      // 대학교
+      colleges.forEach((college) => {
+        if (college.name === response) {
+          setCollege(college.name, college.lat, college.lng);
+        }
+      });
+    } else if (idx == 2) {
+      // 성별
+      if (response === '남성') {
+        setGender('M');
+        console.log('set gender');
+      } else {
+        setGender('F');
+      }
+    } else if (idx == 3) {
+      // 활동 시간
+      if (response === '주간형') {
+        updateMemberPersonality('daytime', 1);
+        updateMemberPersonality('nighttime', 0);
+      } else {
+        updateMemberPersonality('daytime', 0);
+        updateMemberPersonality('nighttime', 1);
+      }
+    } else if (idx == 4) {
+      if (response === '일찍 들어오는 편이에요.') {
+        updateMemberPersonality('fast', 1);
+        updateMemberPersonality('late', 0);
+      } else {
+        updateMemberPersonality('fast', 0);
+        updateMemberPersonality('late', 1);
+      }
+    } else if (idx == 5) {
+      if (response === '집에서') {
+        updateMemberPersonality('dinner', 1);
+      } else {
+        updateMemberPersonality('dinner', 0);
+      }
+    } else if (idx == 6) {
+      if (response === '핀다') {
+        updateMemberPersonality('smoke', 1);
+      } else {
+        updateMemberPersonality('smoke', 0);
+      }
+    } else if (idx == 7) {
+      if (response === '좋아한다') {
+        updateMemberPersonality('drink', 1);
+      } else {
+        updateMemberPersonality('drink', 0);
+      }
+    } else if (idx == 8) {
+      if (response === '주로 집에 있어요') {
+        updateMemberPersonality('inside', 1);
+        updateMemberPersonality('outside', 0);
+      } else {
+        updateMemberPersonality('inside', 0);
+        updateMemberPersonality('outside', 1);
+      }
+    } else if (idx == 9) {
+      if (response === '네') {
+        updateMemberPersonality('quiet', 1);
+      } else {
+        updateMemberPersonality('quiet', 0);
+      }
+    } else if (idx == 10) {
+      if (response === '네') {
+        updateMemberPersonality('liveLong', 1);
+        updateMemberPersonality('liveShort', 0);
+      } else {
+        updateMemberPersonality('liveLong', 0);
+        updateMemberPersonality('liveShort', 1);
+      }
+    } else if (idx == 11) {
+      if (response === '네') {
+        updateMemberPersonality('fast', 1);
+        updateMemberPersonality('late', 0);
+      } else {
+        updateMemberPersonality('fast', 1);
+        updateMemberPersonality('late', 0);
+      }
+    } else if (idx == 12) {
+      if (response === '무지 더운 여름') {
+        updateMemberPersonality('hot', 1);
+        updateMemberPersonality('cold', 0);
+      } else if (response == '무지 추운 겨울') {
+        updateMemberPersonality('hot', 0);
+        updateMemberPersonality('cold', 1);
+      } else {
+        updateMemberPersonality('hot', 1);
+        updateMemberPersonality('cold', 1);
+      }
+    } else if (idx == 13) {
+      updateMemberPersonality('hostHousePrefer', response);
+    }
+  };
 
   const sendData = async () => {
-    responses.forEach((response: any, index) => {
-      console.log('index: ', index);
-      if (index == 0) {
-      } else if (index == 1) {
-        // 대학교
-        colleges.forEach((college) => {
-          if (college.name === response) {
-            setCollege(college.name, college.lat, college.lng);
-          }
-        });
-      } else if (index == 2) {
-        // 성별
-        if (response === '남성') {
-          setGender('M');
-          console.log('set gender');
-        } else {
-          setGender('F');
-        }
-      } else if (index == 3) {
-        // 활동 시간
-        if (response === '주간형') {
-          updateMemberPersonality('daytime', 1);
-          updateMemberPersonality('nighttime', 0);
-        } else {
-          updateMemberPersonality('daytime', 0);
-          updateMemberPersonality('nighttime', 1);
-        }
-      } else if (index == 4) {
-        if (response === '일찍 들어오는 편이에요.') {
-          updateMemberPersonality('fast', 1);
-          updateMemberPersonality('late', 0);
-        } else {
-          updateMemberPersonality('fast', 0);
-          updateMemberPersonality('late', 1);
-        }
-      } else if (index == 5) {
-        if (response === '집에서') {
-          updateMemberPersonality('dinner', 1);
-        } else {
-          updateMemberPersonality('dinner', 0);
-        }
-      } else if (index == 6) {
-        if (response === '핀다') {
-          updateMemberPersonality('smoke', 1);
-        } else {
-          updateMemberPersonality('smoke', 0);
-        }
-      } else if (index == 7) {
-        if (response === '좋아한다') {
-          updateMemberPersonality('drink', 1);
-        } else {
-          updateMemberPersonality('drink', 0);
-        }
-      } else if (index == 8) {
-        if (response === '주로 집에 있어요') {
-          updateMemberPersonality('inside', 1);
-          updateMemberPersonality('outside', 0);
-        } else {
-          updateMemberPersonality('inside', 0);
-          updateMemberPersonality('outside', 1);
-        }
-      } else if (index == 9) {
-        if (response === '네') {
-          updateMemberPersonality('quiet', 1);
-        } else {
-          updateMemberPersonality('quiet', 0);
-        }
-      } else if (index == 10) {
-        if (response === '네') {
-          updateMemberPersonality('liveLong', 1);
-          updateMemberPersonality('liveShort', 0);
-        } else {
-          updateMemberPersonality('liveLong', 0);
-          updateMemberPersonality('liveShort', 1);
-        }
-      } else if (index == 11) {
-        if (response === '네') {
-          updateMemberPersonality('fast', 1);
-          updateMemberPersonality('late', 0);
-        } else {
-          updateMemberPersonality('fast', 1);
-          updateMemberPersonality('late', 0);
-        }
-      } else if (index == 12) {
-        if (response === '무지 더운 여름') {
-          updateMemberPersonality('hot', 1);
-          updateMemberPersonality('cold', 0);
-        } else if (response == '무지 추운 겨울') {
-          updateMemberPersonality('hot', 0);
-          updateMemberPersonality('cold', 1);
-        } else {
-          updateMemberPersonality('hot', 1);
-          updateMemberPersonality('cold', 1);
-        }
-      } else if (index == 13) {
-        updateMemberPersonality('hostHousePrefer', response);
-      }
-    });
+    console.log(MemberInfo);
 
     const requestData = {
       member: {
@@ -264,9 +272,14 @@ const Survey: React.FC = () => {
       },
     };
     console.log('내가간다 : ', requestData);
-    const response = await customAxios.post(`api/members/survey`, requestData);
-    console.log('ok : ', response);
-    window.location.href = '/home';
+    try {
+      const response = await customAxios.post(`api/members/survey`, requestData);
+      console.log('ok : ', response);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      window.location.href = '/home';
+    }
   };
 
   return (
@@ -325,12 +338,13 @@ const Survey: React.FC = () => {
                       </div>
                       <MSlider
                         aria-label="importance"
-                        defaultValue={5}
+                        value={sliderValue}
                         valueLabelDisplay="auto"
                         shiftStep={3}
                         step={1}
                         min={0}
                         max={10}
+                        onChange={changeSliderValue}
                       />
                       <Typography variant="body1">집</Typography>
                     </Stack>
