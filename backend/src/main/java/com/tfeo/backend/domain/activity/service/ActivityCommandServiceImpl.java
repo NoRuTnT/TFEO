@@ -73,8 +73,8 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	public AddActivityResponseDto addActivity(Long memberNo, Long activityNo,
 		AddActivityRequestDto request) {
 
-		Member member = memberRepository.findByMemberNo(memberNo)
-			.orElseThrow(() -> new MemberNotExistException(memberNo));
+		// Member member = memberRepository.findByMemberNo(memberNo)
+		// 	.orElseThrow(() -> new MemberNotExistException(memberNo));
 
 		Activity activity = activityRepository.findById(activityNo)
 			.orElseThrow(() -> new ActivityNotExistException(activityNo));
@@ -113,7 +113,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			.build();
 
 		// 관리자 승인 & 알림톡 전송
-		approveActivity(memberNo,activityNo);
+		// approveActivity(memberNo,activityNo);
 
 		return result;
 	}
