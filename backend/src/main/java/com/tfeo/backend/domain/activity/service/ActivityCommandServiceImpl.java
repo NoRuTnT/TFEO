@@ -109,6 +109,9 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			.contractNo(activity.getContract().getContractNo())
 			.build();
 
+		// 관리자 승인 & 알림톡 전송
+		approveActivity(memberNo,activityNo);
+
 		return result;
 	}
 
@@ -185,7 +188,8 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			Message message = new Message();
 			// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력
 			message.setFrom("01045417183");
-			message.setTo(receiver);
+			message.setTo("01045417183");
+			// message.setTo(receiver);
 			message.setText(activity.getActivityText());
 			message.setImageId(imageId);
 
