@@ -56,9 +56,11 @@ const ContractInProgressContent = ({ homeDetail, contract, member, role }: Props
           계약 완료
         </div>
       )}
-      <div className="contractDiv background" onClick={contractCancel}>
-        계약 취소
-      </div>
+      {((role === 'USER' && !contract.studentSign) || (role === 'MANAGER' && !contract.hostSign)) && (
+        <div className="contractDiv background" onClick={contractCancel}>
+          계약 취소
+        </div>
+      )}
     </>
   );
 };

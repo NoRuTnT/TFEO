@@ -6,9 +6,10 @@ import { getFileFromS3 } from '../../api/S3Apis';
 import { showFile } from '../../utils/showPdfUtils';
 interface Props {
   contractNo: number;
+  homeNo: number;
   role: string;
 }
-const ContractCompletedContent = ({ contractNo, role }: Props) => {
+const ContractCompletedContent = ({ contractNo, homeNo, role }: Props) => {
   const seeContract = async () => {
     const url = await getContractFormPreSignedUrl(contractNo);
     if (!url) {
@@ -33,7 +34,7 @@ const ContractCompletedContent = ({ contractNo, role }: Props) => {
             <Link to="/activity-certification">활동 내역</Link>
           </button>
           <button className="selectBtn">
-            <Link to="/activity-review">리뷰 쓰기</Link>
+            <Link to={{ pathname: '/activity-review', search: `?homeNo=${homeNo}` }}>리뷰 쓰기</Link>
           </button>
         </>
       )}
