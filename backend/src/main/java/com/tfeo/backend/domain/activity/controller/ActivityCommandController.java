@@ -1,7 +1,5 @@
 package com.tfeo.backend.domain.activity.controller;
 
-import java.util.Optional;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -20,7 +18,6 @@ import com.tfeo.backend.domain.activity.model.dto.AddActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityResponseDto;
 import com.tfeo.backend.domain.activity.model.dto.ModifyActivityRequestDto;
 import com.tfeo.backend.domain.activity.service.ActivityCommandService;
-import com.tfeo.backend.domain.member.model.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,12 +33,13 @@ public class ActivityCommandController {
 	@PutMapping(value = "/{activityNo}")
 	public ResponseEntity<?> activityAdd(@PathVariable("activityNo") Long activityNo,
 		@RequestBody AddActivityRequestDto request, HttpServletRequest httprequest) {
-		Optional<Member> memberOptional = authenticationService.getMember(httprequest);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(httprequest);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L;
 		// Role role = USER;
 		AddActivityResponseDto result = activityCommandService.addActivity(memberNo, activityNo, request);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 작성 성공", result));
@@ -51,12 +49,13 @@ public class ActivityCommandController {
 	@PutMapping("/{activityNo}/edit")
 	public ResponseEntity<?> activityModify(@PathVariable("activityNo") Long activityNo,
 		@RequestBody ModifyActivityRequestDto request, HttpServletRequest httprequest) {
-		Optional<Member> memberOptional = authenticationService.getMember(httprequest);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(httprequest);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L;
 		String result = activityCommandService.modifyActivity(memberNo, activityNo, request);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 수정 성공", result));
 	}
@@ -65,12 +64,13 @@ public class ActivityCommandController {
 	@PutMapping("/{activityNo}/delete")
 	public ResponseEntity<?> activityRemove(@PathVariable("activityNo") Long activityNo,
 		HttpServletRequest httprequest) {
-		Optional<Member> memberOptional = authenticationService.getMember(httprequest);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(httprequest);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L;
 		activityCommandService.removeActivity(memberNo, activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 삭제 성공", null));
 	}
@@ -79,12 +79,13 @@ public class ActivityCommandController {
 	@PutMapping("/{activityNo}/approve")
 	public ResponseEntity<?> activityApprove(@PathVariable("activityNo") Long activityNo,
 		HttpServletRequest httprequest) {
-		Optional<Member> memberOptional = authenticationService.getMember(httprequest);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(httprequest);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L;
 		SingleMessageSentResponse result = activityCommandService.approveActivity(memberNo, activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 승인 성공", result));
 	}
@@ -93,12 +94,13 @@ public class ActivityCommandController {
 	@PutMapping("/{activityNo}/reject")
 	public ResponseEntity<?> activityReject(@PathVariable("activityNo") Long activityNo,
 		HttpServletRequest httprequest) {
-		Optional<Member> memberOptional = authenticationService.getMember(httprequest);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
+		// Optional<Member> memberOptional = authenticationService.getMember(httprequest);
+		// if (!memberOptional.isPresent()) {
+		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		// }
+		// Member member = memberOptional.get();
+		// Long memberNo = member.getMemberNo();
+		Long memberNo = 1L;
 		Long result = activityCommandService.rejectActivity(memberNo, activityNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 반려 성공", result));
 	}

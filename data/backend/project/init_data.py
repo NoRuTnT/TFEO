@@ -21,26 +21,15 @@ port = 27017
 
 client = MongoClient(host, port)
 
-# db = client.example # 과일이름 crud 예시
 db = client.test # 집 정보가 담겨있는 DB
 
-"""
-public enum BuildingType {
-	APT,				// 아파트
-	OPST,				// 오피스텔
-	VL,					// 빌라
-	JT,					// 주택
-	DDDGG,				// 단독, 다가구
-	OR,				// 원룸
-}
-"""
 class BuildingType(Enum):
-    APT = 1
-    OPST = 2
-    VL = 3
-    JT = 4
-    DDDGG = 5
-    OR = 6
+    APT = 1        # 아파트
+    OPST = 2       # 오피스텔
+    VL = 3         # 빌라
+    JT = 4         # 주택
+    DDDGG = 5      # 단독, 다가구
+    OR = 6         # 원룸
 """
 ex)
 class BuildingType(str, Enum):
@@ -115,36 +104,14 @@ def get_all_list():
     # print(list(data))
     return list(data)
 
-# for test
-@app.get("/select/one")
-def get_one_home():
-    data = db.home.find({'home_no':12}, {'_id': False})
-    print(data)
-    # print(list(data))
-    json_format = {
-        'id': 2300,
-        'pw': 'qwerty'
-    }
-    return json_format
-
-
 # 등록된 집 추가
 # @app.post("/insert/")
 # def insert_house(item: Item):
 #     db.items.insert_one(item.dict())
 #     return "complete"
 
-
-# 터미널창에
+# terminal
 # python -m uvicorn main:app --reload
-
-def get_host_vector(host):
-    host_vector = []
-    day=host.day
-    pass
-
-def get_member_vector(member):
-    pass
 
 if __name__ == '__main__':
     print('FastAPI server')

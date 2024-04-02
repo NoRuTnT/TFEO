@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Footer from '../../components/footer/ManagerFooter';
 import '../../styles/ManageStudent.css';
 import HomeIcon from '@mui/icons-material/Home';
+import ManagerFooter from '../../components/footer/ManagerFooter';
 
 interface Student {
   id: number;
@@ -102,7 +103,7 @@ const ManageStudent: React.FC = () => {
           </div>
         ))}
       </div>
-      <Footer />
+      <ManagerFooter />
     </div>
   );
 };

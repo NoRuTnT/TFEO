@@ -8,13 +8,17 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { IHomeDetail, IHomeImage } from '../interfaces/HomeInterface';
 import { applyHomeApi, getHomeDetail } from '../api/HomeApis';
-import { getEMDNameAddress } from '../utils/addressUtils';
+import { getEMDNameAddress, getRoadAddress } from '../utils/addressUtils';
 import { getHomeOptionTags } from '../utils/homeOptionTagUtils';
 import { Button } from '@mui/material';
 import { getRent } from '../utils/moneyUtils';
 import { getKoreanDate } from '../utils/timeUtils';
 import SwipeableViews from 'react-swipeable-views';
 import { addWish, removeWish } from '../api/WishApis';
+
+import { IReview } from '../interfaces/ReviewInterface';
+import { getReviewList } from '../api/ReviewApis';
+import { format } from 'date-fns';
 
 const HomeDetail: React.FC = () => {
   const [isFavorite, setIsFavorite] = useState(false);
@@ -45,16 +49,21 @@ const HomeDetail: React.FC = () => {
 
   const location = useLocation();
   const [homeDetail, setHomeDetail] = useState<IHomeDetail>();
+  const [reviewList, setReviewList] = useState<IReview[]>([]);
   const [startAt, setStartAt] = useState<string>(getKoreanDate());
   useEffect(() => {
     const homeNofromUrl = new URLSearchParams(location.search).get('homeNo');
     const homeNo = homeNofromUrl ? parseInt(homeNofromUrl, 10) : null;
     const fetchData = async () => {
       if (!homeNo) return;
-      const response = await getHomeDetail(homeNo);
-      if (response) {
-        console.log(response.homeImageList);
-        setHomeDetail(response);
+      const homeResponse = await getHomeDetail(homeNo);
+      const reviewResponse = await getReviewList(homeNo);
+      if (homeResponse) {
+        console.log(homeResponse.homeImageList);
+        setHomeDetail(homeResponse);
+      }
+      if (reviewResponse) {
+        setReviewList(reviewResponse);
       }
     };
     if (homeNo) fetchData();
@@ -139,7 +148,9 @@ const HomeDetail: React.FC = () => {
       </div>
       <div className="content-wrapper">
         <div className="detail-description">
-          <p style={{ fontWeight: 'bold', fontSize: '17px' }}>{getEMDNameAddress(homeDetail.home.address)}</p>
+          <p style={{ marginTop: '15px', fontWeight: 'bold', fontSize: '17px' }}>
+            {getRoadAddress(homeDetail.home.address)}
+          </p>
         </div>
 
         <div className="owner-description" style={{ fontSize: '20px' }}>
@@ -164,7 +175,7 @@ const HomeDetail: React.FC = () => {
 
         <div className="option-wrapper" style={{ textAlign: 'center', display: 'inline-block' }}></div>
 
-        <div style={{ fontWeight: 'bold', marginBottom: '15px' }}>함께 사용해요!</div>
+        <div style={{ fontWeight: 'bold', marginBottom: '15px' }}>우리 집에는</div>
         {getHomeOptionTags(homeDetail.homeOption) &&
           getHomeOptionTags(homeDetail.homeOption).reduce((acc: ReactNode[], option: string, index: number) => {
             if (index % 2 === 0) {
@@ -182,37 +193,78 @@ const HomeDetail: React.FC = () => {
 
         <hr style={{ margin: '15px 0' }} />
 
+        <div style={{ fontWeight: 'bold', marginBottom: '17px' }}>위치</div>
+        <MapDetailBox lat={homeDetail.home.lat} lng={homeDetail.home.lng}></MapDetailBox>
+
+        <hr style={{ margin: '15px 0' }} />
+
+        <div style={{ fontWeight: 'bold', marginBottom: '17px' }}>후기 {reviewList.length}개</div>
         <div className="reviews-container">
-          <div className="review-box" style={{ border: '1px solid black', marginTop: '10px', padding: '10px' }}>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <img
-                src="profileImage.jpg"
-                alt="Profile"
-                style={{ width: '50px', height: '50px', borderRadius: '50%' }}
-              />
-              <div style={{ marginLeft: '10px' }}>
-                <div>작성자</div>
-                <div>작성일자</div>
+          {reviewList.map((review, index) => (
+            <div
+              key={index}
+              className="review-box"
+              style={{ border: '1px solid lightgray', borderRadius: '5px', marginTop: '10px', padding: '10px' }}
+            >
+              <div>
+                {review.keywordValues && (
+                  <div className="filters-container">
+                    {review.keywordValues.kindElderly && <div className="filter-detail">😃 친절해요</div>}
+                    {review.keywordValues.cleanHouse && <div className="filter-detail">🏠 집이 깨끗해요</div>}
+                    {review.keywordValues.spaciousRoom && <div className="filter-detail">🛏 방이 넓어요</div>}
+                    {review.keywordValues.manyNearbyAmenities && (
+                      <div className="filter-detail">🏪 주변에 편의시설이 많아요</div>
+                    )}
+                    {review.keywordValues.matchesStatedOptions && (
+                      <div className="filter-detail">✔ 옵션이 설명과 같아요</div>
+                    )}
+                    {review.keywordValues.affordableRent && <div className="filter-detail">💵 월세가 저렴해요</div>}
+                    {review.keywordValues.nearSchool && <div className="filter-detail">🏫 학교와 가까워요</div>}
+                    {review.keywordValues.convenientTransportation && (
+                      <div className="filter-detail">🚎 교통이 편해요</div>
+                    )}
+                    {review.keywordValues.easyAccessToHome && (
+                      <div className="filter-detail">🏃‍♀️ 집까지 가는 길이 편해요</div>
+                    )}
+                    {review.keywordValues.goodSecurity && <div className="filter-detail">👮‍♂️ 치안이 좋아요</div>}
+                    {review.keywordValues.respectfulElderly && (
+                      <div className="filter-detail">👨‍🦳👩‍🦳 어르신이 저를 존중해요</div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <img
+                  src={review.memberProfileUrl || '/assets/profileImage.jpg'} // 프로필 이미지 URL이 없을 경우 기본 이미지를 사용합니다.
+                  alt="Profile"
+                  style={{ width: '45px', height: '45px', borderRadius: '50%' }}
+                />
+                <div style={{ marginLeft: '10px' }}>
+                  <div>{review.memberName}</div>
+                  <div>{format(new Date(review.createdAt), 'yyyy-MM-dd HH:mm:ss')}</div>
+                </div>
+              </div>
+              <div style={{ marginTop: '10px' }}>
+                <p>{review.homeContent}</p>
               </div>
             </div>
-            <div style={{ marginTop: '10px' }}>
-              <p>리뷰 내용이 들어가는 부분</p>
-            </div>
-          </div>
+          ))}
         </div>
+        <br />
       </div>
       {/* 집 신청 버튼과 찜 버튼 */}
       <div className="bottom-container">
         <div className="left-container">
-          <div className="register-div">월세 : {homeDetail.home.rent}만원</div>
+          <div className="register-div">월세 {homeDetail.home.rent}만원</div>
         </div>
         <div className="center-container">
           <div>
-            입주 일자 : <input type="date" value={startAt} onChange={onChange} />
+            입주 일자 <input type="date" value={startAt} onChange={onChange} />
           </div>
         </div>
         <div className="register-btn">
-          <button onClick={applyHome}>집 신청하기</button>
+          <button onClick={applyHome}>집 신청</button>
         </div>
       </div>
     </div>

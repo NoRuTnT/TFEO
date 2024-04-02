@@ -34,14 +34,8 @@ public class ReviewQueryController {
 	//리뷰 목록 조회
 	@GetMapping(value = "/{homeNo}")
 	public ResponseEntity<?> reviewListRead(@PathVariable("homeNo") Long homeNo, HttpServletRequest httprequest) {
-		Optional<Member> memberOptional = authenticationService.getMember(httprequest);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
 		Role role = USER;
-		List<ReadReviewResponseDto> result = reviewQueryService.readReviewList(memberNo, role, homeNo);
+		List<ReadReviewResponseDto> result = reviewQueryService.readReviewList(homeNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "리뷰 목록 조회 성공", result));
 
 	}
@@ -49,14 +43,7 @@ public class ReviewQueryController {
 	//리뷰 상세 조회
 	@GetMapping(value = "/detail/{reviewNo}")
 	public ResponseEntity<?> reviewRead(@PathVariable("reviewNo") Long reviewNo, HttpServletRequest httprequest) {
-		Optional<Member> memberOptional = authenticationService.getMember(httprequest);
-		if (!memberOptional.isPresent()) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		}
-		Member member = memberOptional.get();
-		Long memberNo = member.getMemberNo();
-		Role role = USER;
-		ReadReviewResponseDto result = reviewQueryService.readReview(memberNo, role, reviewNo);
+		ReadReviewResponseDto result = reviewQueryService.readReview(reviewNo);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "리뷰 상세 조회 성공", result));
 
 	}

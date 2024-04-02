@@ -11,7 +11,8 @@ import lombok.Data;
 public class ReadReviewResponseDto {
 	 Long reviewNo;
 	 String memberName;
+	 String memberProfileUrl;
 	 LocalDateTime createdAt;
 	 String homeContent;
-	 Map<String, Boolean> keywordValues;
+	 ReviewKeywordDto keywordValues;
 }

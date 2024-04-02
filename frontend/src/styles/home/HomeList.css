@@ -1,7 +1,7 @@
 /* HomeList.css */
 .page-container {
     transition: margin-top 0.5s ease-in-out;
-    border: 1px solid #F9EAE1;
+    /*border: 1px solid #F9EAE1;*/
     border-top-left-radius: 30px;
     border-top-right-radius: 30px;
     padding-top: 15px;
@@ -48,7 +48,7 @@ hr.custom-hr {
     border-radius: 40px;
     font-size: 33px;
     font-weight: bold;
-    z-index: 10;
+    z-index: 9999;
 }
 
 .home-count {
@@ -66,6 +66,7 @@ hr.custom-hr {
 
 .img-container {
     /*padding-top: 25px;*/
+    position: relative;
     display: flex;
     width: 100%;
     height: 240px; /* 이미지와 도트를 포함할 수 있는 높이로 설정 */
@@ -140,6 +141,10 @@ hr.custom-hr {
     position: relative; /* 도트를 위한 상대 위치 설정 */
 }
 
+.slide-right {
+    position: relative;
+}
+
 .carousel-container {
     width: 60%;
     height: 100%;
@@ -161,7 +166,28 @@ hr.custom-hr {
     object-fit: fill; /* 이미지가 컨테이너를 가득 채우도록 설정 */
 }
 
+.home-small-indicators {
+    position: absolute;
+    text-align: center;
+    margin-top: -25px; /* Adjust this value to position the dots over the image */
+    z-index: 9997;
+    width: 100%;
+}
 
+.home-small-dot {
+    height: 10px;
+    width: 10px;
+    margin: 0 5px;
+    background-color: #F9EAE1;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    z-index: 9998;
+}
+
+.home-small-dot.active {
+    background-color: #E07068; /* Active dot color */
+}
 /* 도트 스타일 */
 .slick-dots {
     position: absolute;

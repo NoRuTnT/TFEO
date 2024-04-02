@@ -31,7 +31,7 @@
     height: 10px;
     width: 10px;
     margin: 0 5px;
-    background-color: #bbb;
+    background-color: #F9EAE1;
     border-radius: 50%;
     display: inline-block;
     cursor: pointer;
@@ -119,4 +119,26 @@
     font-size: 15px;
     color: white;
     font-weight: bold;
+}
+
+.filter-detail {
+    position: relative;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+    padding: 5px;
+    padding-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 4px;
+    font-size: 12px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+}
+
+.filter-detail::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
 }

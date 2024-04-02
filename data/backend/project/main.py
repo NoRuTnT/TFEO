@@ -45,7 +45,7 @@ app.add_middleware(
 
 ###########
 client = MongoClient(host, port)
-# db = client.example # 과일이름 crud 예시
+# db = client.example
 db = client.test # 집 정보가 담겨있는 DB
 
 
@@ -81,7 +81,6 @@ class BuildingType(str, Enum):
     house = "단독주택"
     office = "사무실"
 """
-
 
 class Item(BaseModel):
     name: str
@@ -146,9 +145,6 @@ class Home(BaseModel):
     # 호스트 사진
     host_image_no: int
     host_image_url: str
-
-
-
 
 
 ###############################
@@ -237,17 +233,19 @@ class Host_Personality(BaseModel):
     hot: bool # 더위잘타는
     no_touch: bool # 간섭안하는
 
+# 클라이언트 필터링 조건
 class Filter_Condition(BaseModel):
-    school: bool
-    subway: bool
-    apartment: bool
-    pets: bool
+    school: bool # 학교 근처
+    subway: bool # 역세권
+    apartment: bool # 아파트
+    pets: bool # 반려동물
 
 # 성능 최적화를 위해 200개 까지만 추천
 SEARCH_LIMIT = 200
 # 학교에 가까운지에 대한 거리 기준(km단위)
 SCHOOL_LIMIT = 3
 
+# 추천 알고리즘에 따라 추천 결과를 반환
 @app.post("/recommend")
 def filter_by_search_condition(search_condition: Search_Condition, filter_condition: Filter_Condition, member_personality: Optional[Member_Personality]=None):
     ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
@@ -356,6 +354,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         doc = dumps(doc)
         doc_json = json.loads(doc)
         # print(doc_json) # 추출된 전체 결과를 확인할 때 사용
+        # 사용자의 대학 위치 정보와 건물 위치 정보를 기준으로 거리 계산
         distance = get_min_length(univ_lat, univ_lng, doc_json['lat'], doc_json['lng'])
         doc_json['distance'] = distance
         data_list.append(doc_json)
@@ -377,9 +376,10 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         data_list = data_list[:SEARCH_LIMIT] # 최대 200개까지 출력
         for item in data_list:
             # 추천알고리즘이 적용된 결과와 json 반환 format을 맞춰준다
+            # 불필요한 값 제거
             del item['host_vector']
             del item['station']
-            del item['home_no']
+        print('client에 반환되는 요소의 개수 ', len(data_list))
         return data_list
 
 
@@ -391,9 +391,9 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
 
     # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
 
-    prefer = 0
-    if(member_personality.host_house_prefer>=5):
-        prefer=1
+    # prefer = 0
+    # if(member_personality.host_house_prefer>=5):
+    #     prefer=1
     # 임시 json 객체
     member_personality_json_info = {
         'member_personality_no': member_personality.member_personality_no,
@@ -412,7 +412,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         'pet': member_personality.pet,
         'cold': member_personality.cold,
         'hot': member_personality.hot,
-        'host_house_prefer': prefer, # int
+        'host_house_prefer': member_personality.host_house_prefer, # int
     }
     member_vector = get_member_vector(member_personality_json_info)
     print('vector-format')
@@ -420,6 +420,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
 
     cosine_values = []
 
+    # 코사인 유사도와 home 인덱스 정보를 담고 있는 배열
     priorities = []
     # 이제 data를 for문으로 돌면서 하나씩 vector로 변환하고 코사인 유사도를 계산함
     for item in data_list:
@@ -436,12 +437,12 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     print('구한 결과 벡터 list임')
     print(priorities)
 
+    #  유사도를 기준으로 내림차순 정렬
     priorities.sort(key=lambda x:x[0], reverse=True)
 
     print('정렬 결과 벡터 list임')
     print(priorities)
-    print(data_json)
-
+    # print(data_json) # json 정보 본문
 
     output_list = [] # 최종적으로 추천된 부동산 내용들의 list, 필요시 원하는 성분들만 추출해서 사용
     for lim, index in enumerate(priorities):
@@ -458,6 +459,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
                              'cold': 1,
                              'hot': 1,
                              'no_touch': 1,
+                             'home_no': 1,
                              'host_name': 1,
                              'host_age': 1,
                              'host_gender': 1,
@@ -475,29 +477,19 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
             output_list.append(item_json)
     # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
     # print(output_list)
-    # if len(output_list)!=0:
-    #     print(output_list[0]) # debug
+    print('client에 반환되는 요소의 개수 ', len(output_list))
     return output_list
-
-
-# 등록된 아이템 추가
-@app.post("/insert-item/")
-def insert_item(item: Item):
-    db.home.insert_one(item.dict())
-    return "complete"
 
 # 등록된 집 추가
 @app.post("/insert/")
 def insert_item(item: Home):
-    # db.items.insert_one(item.dict())
+    # db.home.insert_one(item.dict())
 
     # vector json을 생성해서 덧붙인 뒤
-    # MongoDB에 추가하는 게 필요함
-
+    # MongoDB에 추가
     """
     MAX(home_id)+1
     """
-
     vector = get_host_vector(item)
     db.home.insert_one(item.dict())
 
@@ -512,9 +504,10 @@ def delete_house(home_no):
     db.home.delete_one({'home_no': home_no})
     return "complete"
     # return JSONResponse(status_code="HTTP_204_NO_CONTENT")
+
 # find().limit(7) # 7개로 출력할 횟수 제한
 
-"""이미지 URL 테스트 용"""
+"""이미지 URL debug 용"""
 @app.get("/select/get-url-list/{home_no}")
 def get_one_home(home_no: int):
     data = db.home.find({'home_no': home_no},{
@@ -538,9 +531,6 @@ def get_one_home(home_no: int):
     data_json = data_json.replace("\"", "")
     # return 'OK'
     return data_json
-
-# 호스트+집 정보를 벡터화 시키는 과정이 필요하고
-# insert가 들어올 때마다 이를 갱신하는 과정이 필요함
 
 """np.array형태로 반환함"""
 def get_member_vector(member_personality):
@@ -574,6 +564,7 @@ def get_permit_list(b):
         return [0, 1]
     return [1]
 
+# Host_Personality 정보에서 벡터 추출
 def get_host_vector(host_personality: Host_Personality):
     """
     <노인>
@@ -594,12 +585,13 @@ def get_host_vector(host_personality: Host_Personality):
     return member_vector
     # return np.array(member_vector)
 
+# 0,1 입력을 False,True 형태로 반환
 def convert_bool_to_int(bool):
     if(bool==True):
         return 1
     return 0
 
-# 하버사인 공식으로 계산한 결과 반환
+# 하버사인 공식으로 계산한 위도경도 좌표 사이의 거리 결과 반환(km)
 def get_min_length(lat1, lng1, lat2, lng2):
     return 6371 * math.acos(
         math.cos(math.radians(lat2)) * math.cos(math.radians(lat1)) * math.cos(math.radians(lng1) - math.radians(lng2))

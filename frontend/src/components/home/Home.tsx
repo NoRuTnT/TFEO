@@ -11,13 +11,21 @@ interface HomeProps {
   home: any;
 }
 
-const dummys = ['/test/home1.png', '/test/home2.png', '/test/home3.png'];
-
 const Home: React.FC<HomeProps> = ({ settings, home }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex === home.home_image.length - 1 ? 0 : prevIndex + 1));
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => (prevIndex === 0 ? home.home_image.length - 1 : prevIndex - 1));
+  };
+
+  const [currentSlide, setCurrent] = useState(0);
 
   const handleSwipe = (index: number) => {
-    setCurrentSlide(index);
+    setCurrentImageIndex(index);
   };
 
   return (
@@ -28,7 +36,13 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
           <div className="carousel-container-left">
             <div style={{ height: '100%' }}>
               <img
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{
+                  width: '160px',
+                  height: '240px',
+                  objectFit: 'cover',
+                  borderTopLeftRadius: '10px',
+                  borderBottomLeftRadius: '10px',
+                }}
                 src={`https://j10a707.p.ssafy.io${home.host_image_url}`}
                 alt={`Owner `}
               />
@@ -40,9 +54,15 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
             <SwipeableViews index={currentSlide} onChangeIndex={handleSwipe}>
               {/*각 슬라이드를 매핑하여 표시*/}
               {home.home_image.map((img: any, index: number) => (
-                <div key={index} className="slide-right" style={{ width: '150%', height: '100%', objectFit: 'cover' }}>
+                <div key={index} className="slide-right" style={{ width: '100%', height: '100%' }}>
                   <img
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{
+                      width: '225px',
+                      height: '240px',
+                      objectFit: 'cover',
+                      borderTopRightRadius: '10px',
+                      borderBottomRightRadius: '10px',
+                    }}
                     src={`https://j10a707.p.ssafy.io${img.home_image_url}`}
                     alt={`Home ${index}`}
                   />
@@ -58,6 +78,16 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
               {/*  </div>*/}
               {/*))}*/}
             </SwipeableViews>
+
+            <div className="home-small-indicators">
+              {home.home_image.map((_: string, index: number) => (
+                <span
+                  key={index}
+                  className={`home-small-dot ${index === currentImageIndex ? 'active' : ''}`}
+                  onClick={() => setCurrentImageIndex(index)}
+                ></span>
+              ))}
+            </div>
           </div>
         </div>
         <div className="home-content-container">

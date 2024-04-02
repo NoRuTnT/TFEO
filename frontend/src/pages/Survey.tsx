@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { MouseEventHandler, useState } from 'react';
 import Slider from 'react-slick';
 import { Autocomplete, TextField, Button, Box, Paper, Typography, Grid, Slider as MSlider, Stack } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { styled } from '@mui/system';
-import colleges from '../api/surveyData';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { Link } from 'react-router-dom';
+import { useMemberStore } from '../store/MemberStore';
+import colleges from '../api/surveyData';
+import { customAxios } from '../api/customAxios';
+import { IMember } from '../interfaces/MemberInterface';
 
 const Survey: React.FC = () => {
   const [slider, setSlider] = useState<Slider | null>(null);
+  const [sliderValue, setSliderValue] = useState(5);
+  const changeSliderValue = (event: Event, newValue: number | number[]) => {
+    setSliderValue(newValue as number);
+    setMemberInfo(13, newValue);
+  };
   const settings = {
     dots: false,
     infinite: false,
@@ -21,6 +25,9 @@ const Survey: React.FC = () => {
     afterChange: (current: number) => setIndex(current), // Update the current index after slide change
     ref: (slider: Slider) => setSlider(slider), // Connect the slider ref
   };
+  const { MemberInfo, setCollege, setMemberPersonality, setGender, updateMemberPersonality } = useMemberStore();
+
+  const [requestData, setRequestData] = useState<IMember>();
 
   const QuestionContainer = styled(Paper)({
     boxShadow: 'none',
@@ -48,21 +55,31 @@ const Survey: React.FC = () => {
     borderRadius: 5,
   }));
 
+  const marks = [
+    { value: 0, label: '0' },
+    { value: 10, label: '10' },
+  ];
+
   const data = [
     {
       question: '다니고 있는 학교를\n알려주세요',
+      answer: [],
+      nextButton: true,
+    },
+    {
+      question: '성별은\n무엇인가요?',
       answer: ['남성', '여성'],
-      nextButton: true,
+      nextButton: false,
     },
     {
-      question: '수면 시간과 기상시간을\n표시해주세요',
-      answer: ['아침형', '저녁형'],
-      nextButton: true,
+      question: '주로 활동하는 시간대는\n언제인가요?',
+      answer: ['주간형', '야간형'],
+      nextButton: false,
     },
     {
-      question: '평균적으로 몇시에\n집에 들어오나요?',
-      answer: ['일찍 들어오는 편이에요', '늦게 들어올 때가 많아요'],
-      nextButton: true,
+      question: '집에 귀가하는 시간대는\n주로 언제인가요?',
+      answer: ['일찍 들어오는 편이에요.', '늦게 들어오는 편이에요.'],
+      nextButton: false,
     },
     {
       question: '저녁은 보통\n어디서 먹나요?',
@@ -81,7 +98,7 @@ const Survey: React.FC = () => {
     },
     {
       question: '집에 얼마나 머무르나요?',
-      answer: ['집돌이/집순이에요', '약속이 많아요'],
+      answer: ['주로 집에 있어요', '약속이 많아요'],
       nextButton: false,
     },
     {
@@ -121,9 +138,145 @@ const Survey: React.FC = () => {
   const handleResponse = (selectedAnswer: string) => {
     const newResponses = [...responses];
     newResponses[index] = selectedAnswer;
+    setMemberInfo(index, selectedAnswer);
     setResponses(newResponses);
+    console.log(responses);
     if (!data[index - 1].nextButton) {
       slider?.slickNext();
+    }
+  };
+  const setMemberInfo = (idx: number, response: any) => {
+    if (idx == 1) {
+      // 대학교
+      colleges.forEach((college) => {
+        if (college.name === response) {
+          setCollege(college.name, college.lat, college.lng);
+        }
+      });
+    } else if (idx == 2) {
+      // 성별
+      if (response === '남성') {
+        setGender('M');
+        console.log('set gender');
+      } else {
+        setGender('F');
+      }
+    } else if (idx == 3) {
+      // 활동 시간
+      if (response === '주간형') {
+        updateMemberPersonality('daytime', 1);
+        updateMemberPersonality('nighttime', 0);
+      } else {
+        updateMemberPersonality('daytime', 0);
+        updateMemberPersonality('nighttime', 1);
+      }
+    } else if (idx == 4) {
+      if (response === '일찍 들어오는 편이에요.') {
+        updateMemberPersonality('fast', 1);
+        updateMemberPersonality('late', 0);
+      } else {
+        updateMemberPersonality('fast', 0);
+        updateMemberPersonality('late', 1);
+      }
+    } else if (idx == 5) {
+      if (response === '집에서') {
+        updateMemberPersonality('dinner', 1);
+      } else {
+        updateMemberPersonality('dinner', 0);
+      }
+    } else if (idx == 6) {
+      if (response === '핀다') {
+        updateMemberPersonality('smoke', 1);
+      } else {
+        updateMemberPersonality('smoke', 0);
+      }
+    } else if (idx == 7) {
+      if (response === '좋아한다') {
+        updateMemberPersonality('drink', 1);
+      } else {
+        updateMemberPersonality('drink', 0);
+      }
+    } else if (idx == 8) {
+      if (response === '주로 집에 있어요') {
+        updateMemberPersonality('inside', 1);
+        updateMemberPersonality('outside', 0);
+      } else {
+        updateMemberPersonality('inside', 0);
+        updateMemberPersonality('outside', 1);
+      }
+    } else if (idx == 9) {
+      if (response === '네') {
+        updateMemberPersonality('quiet', 1);
+      } else {
+        updateMemberPersonality('quiet', 0);
+      }
+    } else if (idx == 10) {
+      if (response === '네') {
+        updateMemberPersonality('liveLong', 1);
+        updateMemberPersonality('liveShort', 0);
+      } else {
+        updateMemberPersonality('liveLong', 0);
+        updateMemberPersonality('liveShort', 1);
+      }
+    } else if (idx == 11) {
+      if (response === '네') {
+        updateMemberPersonality('fast', 1);
+        updateMemberPersonality('late', 0);
+      } else {
+        updateMemberPersonality('fast', 1);
+        updateMemberPersonality('late', 0);
+      }
+    } else if (idx == 12) {
+      if (response === '무지 더운 여름') {
+        updateMemberPersonality('hot', 1);
+        updateMemberPersonality('cold', 0);
+      } else if (response == '무지 추운 겨울') {
+        updateMemberPersonality('hot', 0);
+        updateMemberPersonality('cold', 1);
+      } else {
+        updateMemberPersonality('hot', 1);
+        updateMemberPersonality('cold', 1);
+      }
+    } else if (idx == 13) {
+      updateMemberPersonality('hostHousePrefer', response);
+    }
+  };
+
+  const sendData = async () => {
+    console.log(MemberInfo.memberPersonality);
+
+    const requestData = {
+      member: {
+        college: MemberInfo.college,
+        lat: MemberInfo.lat,
+        lng: MemberInfo.lng,
+        gender: MemberInfo.gender,
+      },
+      memberPersonality: {
+        daytime: MemberInfo.memberPersonality.daytime,
+        nighttime: MemberInfo.memberPersonality.nighttime,
+        fast: MemberInfo.memberPersonality.fast,
+        late: MemberInfo.memberPersonality.late,
+        dinner: MemberInfo.memberPersonality.dinner,
+        smoke: MemberInfo.memberPersonality.smoke,
+        drink: MemberInfo.memberPersonality.drink,
+        outside: MemberInfo.memberPersonality.outside,
+        inside: MemberInfo.memberPersonality.inside,
+        quiet: MemberInfo.memberPersonality.quiet,
+        liveLong: MemberInfo.memberPersonality.liveLong,
+        liveShort: MemberInfo.memberPersonality.liveShort,
+        pet: MemberInfo.memberPersonality.pet,
+        cold: MemberInfo.memberPersonality.cold,
+        hot: MemberInfo.memberPersonality.hot,
+        hostHousePrefer: MemberInfo.memberPersonality.hostHousePrefer,
+      },
+    };
+    console.log('내가간다 : ', requestData);
+    try {
+      const response = await customAxios.post(`api/members/survey`, requestData);
+      console.log('ok : ', response);
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -158,120 +311,12 @@ const Survey: React.FC = () => {
                     options={colleges.map((college) => college.name)}
                     sx={{ width: 295, margin: '70px auto' }}
                     renderInput={(params) => <TextField {...params} label="대학교" />}
+                    // 선택힌 깂 => value
+                    onChange={(event, value) => handleResponse(value as string)}
                   />
                 </div>
               )}
-              {idx == 1 && (
-                <div>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['MobileTimePicker', 'MobileTimePicker', 'MobileTimePicker']}>
-                      <div style={{ display: 'flex', marginTop: '-30px' }}>
-                        <DemoItem>
-                          <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
-                            <div
-                              style={{
-                                textAlign: 'left',
-                                marginLeft: '80px',
-                                marginTop: '30px',
-                                marginRight: '10px',
-                                fontWeight: 'bold',
-                              }}
-                            >
-                              취침
-                            </div>
-                            <TimePicker
-                              sx={{ width: '120px', marginTop: '10px', marginLeft: '80px' }}
-                              views={['hours']}
-                              label="시간"
-                            />
-                          </div>
-                        </DemoItem>
-                        <DemoItem>
-                          <div style={{ display: 'flex', flexDirection: 'column', marginTop: '20px' }}>
-                            <div
-                              style={{
-                                textAlign: 'left',
-                                marginLeft: '30px',
-                                marginTop: '30px',
-                                marginRight: '10px',
-                                fontWeight: 'bold',
-                              }}
-                            >
-                              기상
-                            </div>
-                            <TimePicker
-                              sx={{ width: '120px', marginTop: '10px', marginLeft: '30px' }}
-                              views={['hours']}
-                              label="시간"
-                            />
-                          </div>
-                        </DemoItem>
-                      </div>
-                    </DemoContainer>
-                  </LocalizationProvider>
-                  <Typography gutterBottom style={{ fontSize: '20px', marginTop: '40px' }}>
-                    주로 생활하는 시간대가
-                    <br />
-                    언제인가요
-                  </Typography>
-                  <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={4} md={6}>
-                      <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[0]`)}>
-                        {item.answer[0]}
-                      </AnswerButton>
-                    </Grid>
-                    <Grid item xs={4} md={6}>
-                      <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[1]`)}>
-                        {item.answer[1]}
-                      </AnswerButton>
-                    </Grid>
-                  </Grid>
-                </div>
-              )}
-              {idx == 2 && (
-                <div>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={['MobileTimePicker', 'MobileTimePicker', 'MobileTimePicker']}>
-                      <div
-                        style={{
-                          width: '150px',
-                          marginLeft: 'auto',
-                          marginRight: 'auto',
-                          marginTop: '10px',
-                          marginBottom: '30px',
-                        }}
-                      >
-                        <DemoItem>
-                          <TimePicker views={['hours']} label="시간" />
-                        </DemoItem>
-                      </div>
-                    </DemoContainer>
-                  </LocalizationProvider>
-                  <Typography style={{ fontSize: '20px' }} variant="h5" component="h2" gutterBottom margin={2}>
-                    저는 집에
-                  </Typography>
-                  <Grid container spacing={2} justifyContent="center">
-                    <Grid item xs={8} md={6}>
-                      <AnswerButton variant="outlined" color="primary" onClick={() => handleResponse(`item.answer[0]`)}>
-                        {item.answer[0]}
-                      </AnswerButton>
-                    </Grid>
-                    <Grid item xs={8} md={6}>
-                      <div style={{ marginTop: '-20px' }}>
-                        <AnswerButton
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => handleResponse(`item.answer[1]`)}
-                        >
-                          {item.answer[1]}
-                        </AnswerButton>
-                      </div>
-                    </Grid>
-                  </Grid>
-                </div>
-              )}
-              {idx > 2 && idx < 11 && <div></div>}
-              {!item.nextButton && (
+              {idx >= 1 && idx < 12 && !item.nextButton && (
                 <Grid container spacing={2} justifyContent="center">
                   {item.answer.map((answerItem, answerIdx) => (
                     <Grid item xs={8} md={6} key={answerIdx}>
@@ -282,7 +327,7 @@ const Survey: React.FC = () => {
                   ))}
                 </Grid>
               )}
-              {idx == 11 && (
+              {idx == 12 && (
                 <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
                   <Box sx={{ width: 300 }}>
                     <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
@@ -291,13 +336,13 @@ const Survey: React.FC = () => {
                       </div>
                       <MSlider
                         aria-label="importance"
-                        defaultValue={50}
+                        value={sliderValue}
                         valueLabelDisplay="auto"
-                        shiftStep={30}
-                        step={10}
-                        marks
+                        shiftStep={3}
+                        step={1}
                         min={0}
-                        max={100}
+                        max={10}
+                        onChange={changeSliderValue}
                       />
                       <Typography variant="body1">집</Typography>
                     </Stack>
@@ -324,7 +369,7 @@ const Survey: React.FC = () => {
                 🥳 설문을 완료했어요! <br />
                 마이페이지에서 내 정보를 <br />
                 추가적으로 입력할 수 있어요 <br /> <br />
-                <Button component={Link} to="/">
+                <Button onClick={sendData} component={Link} to="/home">
                   집보러가기
                 </Button>
               </Typography>
