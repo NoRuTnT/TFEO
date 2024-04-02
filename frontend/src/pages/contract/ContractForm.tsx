@@ -242,8 +242,10 @@ const ContractForm = () => {
               </ContractSignStatus>
             </ContractSignBody>
             <IsContractSigned>
-              {!contractInfo.contract.studentSign && signModal()}
-              {contractInfo.contract.studentSign && <Box>서명이 완료되었습니다.</Box>}
+              {role === 'USER' && !contractInfo.contract.studentSign && signModal()}
+              {role === 'USER' && contractInfo.contract.studentSign && <Box>서명이 완료되었습니다.</Box>}
+              {role === 'MANAGER' && !contractInfo.contract.hostSign && signModal()}
+              {role === 'MANAGER' && contractInfo.contract.hostSign && <Box>서명이 완료되었습니다.</Box>}
             </IsContractSigned>
           </ContractSignWrapper>
         </StyledEngineProvider>

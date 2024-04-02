@@ -17,7 +17,13 @@ const ActivityReview: React.FC = ({ history }: any) => {
     const homeNofromUrl = new URLSearchParams(location.search).get('homeNo');
     const parsedHomeNo = homeNofromUrl ? parseInt(homeNofromUrl, 10) : 0;
     setHomeNo(parsedHomeNo);
-  });
+
+    // 컴포넌트가 마운트될 때 keywordValues의 choice를 모두 false로 초기화
+    setReview((currentState) => ({
+      ...currentState,
+      keywordValues: currentState.keywordValues.map((kw) => ({ ...kw, choice: false })),
+    }));
+  }, []);
 
   //글 입력
   const handleHomeContentChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -33,13 +39,13 @@ const ActivityReview: React.FC = ({ history }: any) => {
   };
 
   //작성 취소
-  const handleCancel = () => {
-    if (history) {
-      history.goBack(); // 이전 페이지로 이동
-    } else {
-      console.error('History object is undefined.');
-    }
-  };
+  // const handleCancel = () => {
+  //   if (history) {
+  //     history.goBack(); // 이전 페이지로 이동
+  //   } else {
+  //     console.error('History object is undefined.');
+  //   }
+  // };
 
   //리뷰 제출
   const handleSubmit = async () => {
@@ -129,20 +135,18 @@ const ActivityReview: React.FC = ({ history }: any) => {
         />
       </div>
       <div>
-        <button
-          style={{
-            width: '90px',
-            height: '50px',
-            marginRight: '20px',
-            border: '1px solid #e07068',
-            borderRadius: '5px',
-            backgroundColor: '#e07068',
-            color: 'white',
-          }}
-          onClick={handleCancel}
-        >
+        <Link to={{ pathname: '/contract' }}>
+        <button style={{
+          width: '90px',
+          height: '50px',
+          marginRight: '20px',
+          border: '1px solid #e07068',
+          borderRadius: '5px',
+          backgroundColor: '#e07068',
+          color: 'white',
+        }}>
           취소
-        </button>
+        </button></Link>
         <Link to={{ pathname: '/home-detail', search: `?homeNo=${homeNo}` }}>
           <button
             style={{ width: '90px', height: '50px', border: '1px solid black', borderRadius: '5px' }}
