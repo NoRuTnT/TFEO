@@ -117,6 +117,7 @@ interface Home {
   rent: number;
   lat: number;
   lng: number;
+  home_no: number;
   home_image: HomeImage[];
   host_image_no: number;
   host_image_url: string;
