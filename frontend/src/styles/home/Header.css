@@ -21,7 +21,7 @@
 }
 
 .element-container:first-child {
-    margin-left: 40px;
+    margin-left: 30px;
 }
 
 .criteria-description {
@@ -39,5 +39,6 @@
     align-items: center;
     justify-content: center;
     padding: 5px;
+    margin-left: 5px;
     /*margin-top: 3px;*/
 }

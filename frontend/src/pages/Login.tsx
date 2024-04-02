@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
   return (
     <div>
       <div>
-        <img src="/landing/background.png" style={{ height: '100vh' }} />
+        <img src="/landing/background.png" style={{ height: '100vh', width: '100%' }} />
       </div>
       <div style={{ position: 'fixed', top: '80px', left: '50px', fontSize: '45px' }} className="fade-in-down">
         <div style={{ fontFamily: 'iceJaram-Rg', fontWeight: 'bold' }}>스물다섯 여든하나</div>
