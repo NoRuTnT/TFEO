@@ -139,6 +139,7 @@ const Survey: React.FC = () => {
 
   const sendData = async () => {
     responses.forEach((response: any, index) => {
+      console.log('index: ', index);
       if (index == 0) {
       } else if (index == 1) {
         // 대학교
@@ -149,8 +150,9 @@ const Survey: React.FC = () => {
         });
       } else if (index == 2) {
         // 성별
-        if (response == '남성') {
+        if (response === '남성') {
           setGender('M');
+          console.log('set gender');
         } else {
           setGender('F');
         }
@@ -261,6 +263,7 @@ const Survey: React.FC = () => {
         hostHousePrefer: MemberInfo.memberPersonality.hostHousePrefer,
       },
     };
+    console.log('내가간다 : ', requestData);
     const response = await customAxios.post(`api/members/survey`, requestData);
     console.log('ok : ', response);
     window.location.href = '/home';
