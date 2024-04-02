@@ -391,9 +391,9 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
 
     # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
 
-    prefer = 0
-    if(member_personality.host_house_prefer>=5):
-        prefer=1
+    # prefer = 0
+    # if(member_personality.host_house_prefer>=5):
+    #     prefer=1
     # 임시 json 객체
     member_personality_json_info = {
         'member_personality_no': member_personality.member_personality_no,
@@ -412,7 +412,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         'pet': member_personality.pet,
         'cold': member_personality.cold,
         'hot': member_personality.hot,
-        'host_house_prefer': prefer, # int
+        'host_house_prefer': member_personality.host_house_prefer, # int
     }
     member_vector = get_member_vector(member_personality_json_info)
     print('vector-format')
