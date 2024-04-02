@@ -1,3 +1,4 @@
+//ActivityQueryServiceImpl
 package com.tfeo.backend.domain.activity.service;
 
 import static com.tfeo.backend.common.model.type.ContractProgressType.*;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.tfeo.backend.common.model.type.Role;
+import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.common.ActivityException;
 import com.tfeo.backend.domain.activity.common.ActivitySpecification;
 import com.tfeo.backend.domain.activity.model.dto.ReadActivityRequestDto;
@@ -36,6 +38,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 	private final MemberRepository memberRepository;
 	private final ActivityRepository activityRepository;
 	private final ContractRepository contractRepository;
+	private final FileService fileService;
 
 	@Override
 	public Page<ReadActivityResponseDto> readActivityList(Long memberNo,
@@ -84,6 +87,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 			List<ReadActivityResponseDto> result = new ArrayList<>();
 			for (Activity activity : activities) {
 				ReadActivityResponseDto responseDto = ReadActivityResponseDto.builder()
+					.memberNo(memberNo)
 					.activityNo(activity.getActivityNo())
 					.week(activity.getWeek())
 					.createdAt(activity.getCreatedAt())
@@ -104,13 +108,15 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 		try {
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
+
+			String imageUrl = fileService.createPresignedUrlToDownload(activity.getActivityImageUrl());
 			ReadActivityResponseDto result = ReadActivityResponseDto.builder()
 				.memberNo(activity.getContract().getMember().getMemberNo())
 				.memberName(activity.getContract().getMember().getName())
 				.activityNo(activity.getActivityNo())
 				.week(activity.getWeek())
 				.createdAt(activity.getCreatedAt())
-				.activityImageUrl(activity.getActivityImageUrl())
+				.activityImageUrl(imageUrl)
 				.activityText(activity.getActivityText())
 				.activityApproveType(activity.getApprove())
 				.build();
