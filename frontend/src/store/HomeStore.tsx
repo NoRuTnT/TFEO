@@ -206,7 +206,7 @@ const initialHomeRequestData: HomeRequestData = {
     pets: false,
   },
   search_condition: {
-    internet: true,
+    internet: false,
     gas: false,
     washing_machine: false,
     air_conditioner: false,
