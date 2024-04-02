@@ -242,7 +242,24 @@ const Survey: React.FC = () => {
         lng: MemberInfo.lng,
         gender: MemberInfo.gender,
       },
-      memberPersonality: MemberInfo.memberPersonality,
+      memberPersonality: {
+        daytime: MemberInfo.memberPersonality.daytime,
+        nighttime: MemberInfo.memberPersonality.nighttime,
+        fast: MemberInfo.memberPersonality.fast,
+        late: MemberInfo.memberPersonality.late,
+        dinner: MemberInfo.memberPersonality.dinner,
+        smoke: MemberInfo.memberPersonality.smoke,
+        drink: MemberInfo.memberPersonality.drink,
+        outside: MemberInfo.memberPersonality.outside,
+        inside: MemberInfo.memberPersonality.inside,
+        quiet: MemberInfo.memberPersonality.quiet,
+        liveLong: MemberInfo.memberPersonality.liveLong,
+        liveShort: MemberInfo.memberPersonality.liveShort,
+        pet: MemberInfo.memberPersonality.pet,
+        cold: MemberInfo.memberPersonality.cold,
+        hot: MemberInfo.memberPersonality.hot,
+        hostHousePrefer: MemberInfo.memberPersonality.hostHousePrefer,
+      },
     };
     const response = await customAxios.post(`api/members/survey`, requestData);
     console.log('ok : ', response);
