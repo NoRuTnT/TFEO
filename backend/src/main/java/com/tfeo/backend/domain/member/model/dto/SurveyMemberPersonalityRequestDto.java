@@ -1,8 +1,10 @@
 package com.tfeo.backend.domain.member.model.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class SurveyMemberPersonalityRequestDto {
 	private Integer daytime;
 	private Integer nighttime;

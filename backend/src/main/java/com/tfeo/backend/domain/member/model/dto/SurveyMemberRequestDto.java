@@ -4,9 +4,11 @@ import java.time.LocalTime;
 
 import com.tfeo.backend.common.model.type.GenderType;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public class SurveyMemberRequestDto {
 	private String college;
 	private Double lat;
