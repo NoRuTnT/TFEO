@@ -23,7 +23,7 @@ const Wish: React.FC<HomeProps> = ({ settings, home }) => {
             <div className="slide-left">
               <img
                 style={{ width: '225px', height: '240px' }}
-                src={`https://j10a707.p.ssafy.io${home.hostImageList[0]}`}
+                src={`https://j10a707.p.ssafy.io${home.hostImageList[0].hostImageUrl}`}
                 alt={`Owner `}
               />
             </div>
