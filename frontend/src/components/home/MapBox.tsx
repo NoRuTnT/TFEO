@@ -4,6 +4,8 @@ import { theme } from '../../styles/Theme'; // 테마에서 기본 색상을 사
 import { useHomeStore } from '../../store/HomeStore';
 import { useMemberStore } from '../../store/MemberStore';
 import { RecommendAxios } from '../../api/RecommendAxios';
+import { getMember } from '../../api/MemberApis';
+import { MemberInfoUtils } from '../../utils/memberUtils';
 
 declare global {
   interface Window {
@@ -116,6 +118,34 @@ export default function MapBox() {
         hot: MemberInfo.memberPersonality.hot == 0 ? false : true,
         host_house_prefer: MemberInfo.memberPersonality.hostHousePrefer,
       });
+    } else {
+      try {
+        const response = await getMember();
+        if (response) {
+          MemberInfoUtils(response);
+          setMemberPersonality({
+            member_personality_no: response.memberPersonality.memberPersonalityNo,
+            daytime: response.memberPersonality.daytime == 0 ? false : true,
+            nighttime: response.memberPersonality.nighttime == 0 ? false : true,
+            fast: response.memberPersonality.fast == 0 ? false : true,
+            late: response.memberPersonality.late == 0 ? false : true,
+            dinner: response.memberPersonality.dinner == 0 ? false : true,
+            smoke: response.memberPersonality.smoke == 0 ? false : true,
+            drink: response.memberPersonality.drink == 0 ? false : true,
+            outside: response.memberPersonality.outside == 0 ? false : true,
+            inside: response.memberPersonality.inside == 0 ? false : true,
+            quiet: response.memberPersonality.quiet == 0 ? false : true,
+            live_long: response.memberPersonality.liveLong == 0 ? false : true,
+            live_short: response.memberPersonality.liveShort == 0 ? false : true,
+            pet: response.memberPersonality.pet == 0 ? false : true,
+            cold: response.memberPersonality.cold == 0 ? false : true,
+            hot: response.memberPersonality.hot == 0 ? false : true,
+            host_house_prefer: response.memberPersonality.hostHousePrefer,
+          });
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 

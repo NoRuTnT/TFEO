@@ -39,13 +39,13 @@ const ActivityContent: React.FC = ({ history }: any) => {
   };
 
   //작성 취소
-  const handleCancel = () => {
-    if (history) {
-      history.goBack(); // 이전 페이지로 이동
-    } else {
-      console.error('History object is undefined.');
-    }
-  };
+  // const handleCancel = () => {
+  //   if (history) {
+  //     history.goBack(); // 이전 페이지로 이동
+  //   } else {
+  //     console.error('History object is undefined.');
+  //   }
+  // };
 
   //리뷰 제출
   const handleSubmit = async () => {
@@ -120,9 +120,9 @@ const ActivityContent: React.FC = ({ history }: any) => {
         />
       </div>
       <div>
-        <button style={{ marginRight: '10px' }} onClick={handleCancel}>
-          취소
-        </button>
+        <Link to={{ pathname: '/contract' }}>
+          <button style={{ marginRight: '10px' }}>취소</button>
+        </Link>
         <Link to={{ pathname: '/home-detail', search: `?homeNo=${homeNo}` }}>
           <button onClick={handleSubmit}>등록</button>
         </Link>
