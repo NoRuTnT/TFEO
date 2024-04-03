@@ -80,7 +80,7 @@ const ActivityReview: React.FC = ({ history }: any) => {
 
   return (
     <div className="main-page">
-      <div style={{ fontWeight: 'bold', fontSize: '20px', margin: '10px' }}>
+      <div style={{ fontWeight: 'bold', fontSize: '20px', marginTop: '25px', marginBottom: '15px' }}>
         어르신과 함께한 6개월은
         <br /> 어떠셨나요?
       </div>
@@ -137,9 +137,26 @@ const ActivityReview: React.FC = ({ history }: any) => {
       </div>
       <div>
         <Link to={{ pathname: '/contract' }}>
-          <button style={{ marginRight: '10px' }}>취소</button>
+          <button
+            style={{
+              width: '100px',
+              height: '60px',
+              borderRadius: '5px',
+              fontSize: '20px',
+              color: 'white',
+              backgroundColor: '#e07068',
+              marginRight: '3                 0px',
+            }}
+          >
+            취소
+          </button>
         </Link>
-        <button onClick={handleSubmit}>등록</button>
+        <button
+          style={{ width: '100px', height: '60px', border: '1px solid black', borderRadius: '5px', fontSize: '20px' }}
+          onClick={handleSubmit}
+        >
+          등록
+        </button>
       </div>
     </div>
   );

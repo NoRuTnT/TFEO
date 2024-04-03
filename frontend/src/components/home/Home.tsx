@@ -92,7 +92,7 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
         </div>
         <div className="home-content-container">
           <div className="filters-container">
-            {home.smoke === 1 && <div className="filter">비흡연</div>}
+            {home.smoke === 0 && <div className="filter">비흡연</div>}
             {home.extrovert === 1 && <div className="filter">집을 자주 비우는</div>}
             {home.noTouch === 0 && <div className="filter">적극적인</div>}
             {home.introvert === 1 && <div className="filter">집돌이 / 집순이</div>}

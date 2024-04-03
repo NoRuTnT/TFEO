@@ -61,6 +61,8 @@ const ContractInProgressContent = ({ homeDetail, contract, member, role }: Props
           계약 취소
         </div>
       )}
+      <br />
+      <br />
     </>
   );
 };
