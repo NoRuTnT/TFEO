@@ -176,7 +176,7 @@ export default function MapBox() {
       calculator: [5, 15, 30, 100],
       styles: [
         {
-          // 1 - 5 마커
+          // 1 - 4 마커
           width: '35px',
           height: '35px',
           background: theme.palette.primary.main, // 테마의 기본 색상을 사용합니다.
@@ -189,7 +189,7 @@ export default function MapBox() {
           opacity: '85%',
         },
         {
-          // 6개 이상 마커
+          // 5개 이상 마커
           width: '45px',
           height: '45px',
           background: theme.palette.primary.main,
@@ -211,7 +211,7 @@ export default function MapBox() {
           textAlign: 'center',
           fontSize: '30px',
           fontWeight: 'bold',
-          lineHeight: '70px',
+          lineHeight: '55px',
           opacity: '85%',
         },
         {
@@ -225,6 +225,7 @@ export default function MapBox() {
           fontWeight: 'bold',
           lineHeight: '60px',
           opacity: '85%',
+          paddingTop: '5px',
         },
         {
           // 101개 이상 마커
@@ -235,7 +236,7 @@ export default function MapBox() {
           color: '#fff',
           textAlign: 'center',
           fontWeight: 'bold',
-          lineHeight: '60px',
+          lineHeight: '65px',
           opacity: '85%',
         },
       ],
