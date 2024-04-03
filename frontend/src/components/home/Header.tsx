@@ -4,6 +4,7 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import DirectionsSubwayIcon from '@mui/icons-material/DirectionsSubway';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import PetsIcon from '@mui/icons-material/Pets';
+import BlockIcon from '@mui/icons-material/Block';
 import TuneIcon from '@mui/icons-material/Tune';
 import '../../styles/home/Header.css';
 import { useHomeStore } from '../../store/HomeStore';
@@ -56,8 +57,22 @@ const Header: React.FC = () => {
             {filters[2].option}
           </span>
         </div>
-        <div className="element-container" onClick={() => headerFilterClick(filters[3].value)}>
-          <PetsIcon style={getIconStyle(filters[3].choice)} />
+        <div
+          className="element-container"
+          style={{ position: 'relative' }}
+          onClick={() => headerFilterClick(filters[3].value)}
+        >
+          <BlockIcon style={getIconStyle(filters[3].choice)} />
+          <PetsIcon
+            style={{
+              ...getIconStyle(filters[3].choice),
+              position: 'absolute',
+              width: '40%',
+              height: '40%',
+              left: 14, // 위치 조정이 필요할 수 있습니다.
+              top: 5, // 위치 조정이 필요할 수 있습니다.
+            }}
+          />
           <span className="criteria-description" style={getDescriptionStyle(filters[3].choice)}>
             {filters[3].option}
           </span>
