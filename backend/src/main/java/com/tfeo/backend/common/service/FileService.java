@@ -8,4 +8,6 @@ public interface FileService {
 	String createPresignedUrlToDownload(String filePath);
 	String createPath(String prefix) ;
 
+	Object getObject(String filePath);
+
 }

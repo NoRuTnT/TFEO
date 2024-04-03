@@ -18,6 +18,7 @@ const MakeActivity: React.FC = () => {
   const [image, setImage] = useState<File>();
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageBlob, setImageBlob] = useState<Blob>();
+  const [imageUploadPreSignedUrl, setImageUploadPreSignedUrl] = useState<string>('');
   useEffect(() => {
     const activityNofromUrl = new URLSearchParams(location.search).get('activityNo');
     const activityNo = activityNofromUrl ? parseInt(activityNofromUrl, 10) : 0;
@@ -50,23 +51,39 @@ const MakeActivity: React.FC = () => {
     }
 
     const result = await writeActivity(activityNo, content);
+    setImageUploadPreSignedUrl(result);
     if (image) {
       const blob = await convertFileToBlob(image);
       setImageBlob(blob);
     }
     console.log('#####################');
     console.log(image);
-    if (!imageBlob) return;
-    const S3UploadProps: S3UploadProps = {
-      uploadFile: imageBlob,
-      preSignedUrlToUpload: result,
-    };
-    console.log('##########################');
-    console.log(imageBlob.type);
-    const uploadS3 = await uploadFileToS3(S3UploadProps);
-    alert('글이 등록되었습니다');
-    window.location.href = '/activity-certification';
+    // if (!imageBlob) return;
+    // const S3UploadProps: S3UploadProps = {
+    //   uploadFile: imageBlob,
+    //   preSignedUrlToUpload: result,
+    // };
+    // console.log('##########################');
+    // console.log(imageBlob.type);
+    // const uploadS3 = await uploadFileToS3(S3UploadProps);
+    // alert('글이 등록되었습니다');
+    // window.location.href = '/activity-certification';
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!imageBlob) return;
+      const S3UploadProps: S3UploadProps = {
+        uploadFile: imageBlob,
+        preSignedUrlToUpload: imageUploadPreSignedUrl,
+      };
+      console.log('##########################');
+      console.log(imageBlob.type);
+      const uploadS3 = await uploadFileToS3(S3UploadProps);
+    };
+    fetchData();
+    alert('글이 등록되었습니다');
+    // window.location.href = '/activity-certification';
+  }, [imageBlob]);
 
   return (
     <div className="main-page">

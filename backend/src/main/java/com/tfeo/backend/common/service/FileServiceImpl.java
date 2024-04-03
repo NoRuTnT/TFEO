@@ -102,6 +102,11 @@ public class FileServiceImpl implements FileService {
 		return String.format("%s/%s", prefix, fileId);
 	}
 
+	@Override
+	public Object getObject(String filePath) {
+		return s3.getObject(bucket, filePath);
+	}
+
 	/**
 	 * 파일 고유 ID 생성
 	 * @return UUID
@@ -109,5 +114,7 @@ public class FileServiceImpl implements FileService {
 	private String createFileId() {
 		return UUID.randomUUID().toString();
 	}
+
+
 
 }
