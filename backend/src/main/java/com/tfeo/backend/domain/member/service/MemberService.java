@@ -68,6 +68,12 @@ public class MemberService {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 		MemberResponseDto memberResponseDto = new MemberResponseDto(member);
+		if (member.getProfileUrl() != null)
+			memberResponseDto.updateProfilePresignedUrl(
+				fileService.createPresignedUrlToDownload(member.getProfileUrl()));
+		if (member.getCertificate() != null)
+			memberResponseDto.updateCertificatePresignedUrl(
+				fileService.createPresignedUrlToDownload(member.getCertificate()));
 		return memberResponseDto;
 	}
 
