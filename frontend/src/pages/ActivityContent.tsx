@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Footer from '../components/footer/Footer';
 import '../styles/Footer.css';
 import '../styles/ActivityContent.css'; // 이 페이지 전용 스타일을 위한 새 CSS 파일 경로
@@ -14,6 +14,7 @@ import { file } from '@babel/types';
 const ActivityContent: React.FC = () => {
   const [activity, setActivity] = useState<IActivity>();
   const [image, setImage] = useState<string>('');
+  const navigate = useNavigate();
   useEffect(() => {
     const activityNofromUrl = new URLSearchParams(location.search).get('activityNo');
     const activityNo = activityNofromUrl ? parseInt(activityNofromUrl, 10) : null;
@@ -37,9 +38,11 @@ const ActivityContent: React.FC = () => {
   return (
     <div className="main-page">
       <div style={{ position: 'fixed', top: '10px', left: '10px' }}>
-        <Link to="/activity-certification">
-          <ArrowBackIosNewIcon />
-        </Link>
+        <ArrowBackIosNewIcon
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
       </div>
 
       <div style={{ margin: '10px', fontWeight: 'bold', fontSize: '20px' }}>{activity?.week}</div>

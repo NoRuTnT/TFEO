@@ -12,6 +12,8 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { fontStyle } from 'html2canvas/dist/types/css/property-descriptors/font-style';
 
 const ActivityCertification: React.FC = () => {
+  const memberNofromURL = new URLSearchParams(location.search).get('memberNo');
+  const parsedMemberNo = memberNofromURL ? parseInt(memberNofromURL, 10) : 0;
   const { MemberInfo } = useMemberStore();
   const [roadmap, setRoadmap] = useState<IActivity[]>();
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ const ActivityCertification: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const roadmapResponse = await getRoadmap(MemberInfo.memberNo);
+      const roadmapResponse = await getRoadmap(parsedMemberNo);
       if (roadmapResponse) {
         setRoadmap(roadmapResponse);
         console.log('######로드맵 조회######');
