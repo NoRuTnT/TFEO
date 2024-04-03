@@ -95,14 +95,19 @@ const ActivityCertification: React.FC = () => {
   return (
     <div>
       <div style={{ display: 'flex' }}>
-        <Link style={{ fontSize: '20px', fontWeight: 'bold' }} to={{ pathname: '/contract' }}>
+        <Link
+          style={{ fontSize: '20px', fontWeight: 'bold', marginTop: '7px', marginLeft: '10px' }}
+          to={{ pathname: '/contract' }}
+        >
           <ArrowBackIosNewIcon />
         </Link>
-        <div style={{ fontSize: '20px', fontWeight: 'bold', marginTop: '4px' }}>도전 올리사랑</div>
+        <div style={{ fontSize: '22px', fontWeight: 'bold', marginTop: '7px', marginLeft: '10px' }}>
+          올리 사랑의 기록
+        </div>
       </div>
 
       <div className="explaination">
-        올리사랑이란 하숙하는 대학생이 어르신과 한 교감 활동을 인증하는 곳입니다. 여러분의 경험을 공유해주세요.
+        올리 사랑이란 여러분과 인생 선배와의 교감 활동을 기록하는 곳입니다. 인생 선배와 함께한 추억을 공유해주세요.
       </div>
 
       <div className="circle-container">{renderCirclesWithLabels()}</div>

@@ -23,6 +23,13 @@ const ContractHomeCard = ({ status, homeDetail, contract }: Props) => {
           {homeImageList.length > 0 && <img src={`https://j10a707.p.ssafy.io${homeImageList[0].homeImageUrl}`} />}
         </CardMedia>
         <CardContent className="cardContent">
+          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {hostPersonality.clean ? <div className="host-filter">청결한</div> : ''}
+            {hostPersonality.smoke ? '' : <div className="host-filter">비흡연</div>}
+            {hostPersonality.extrovert ? '' : <div className="host-filter">관심이 많은</div>}
+            {hostPersonality.introvert ? <div className="host-filter">내향적인</div> : ''}
+            {hostPersonality.nighttime ? <div className="host-filter">밤에 활동하는</div> : ''}
+          </div>
           <div>{contract.progress === 'DONE' ? '태그보여줘야함' : ''}</div>
           <div className="address">{getRoadAddress(home.address)}</div>
           <div>
