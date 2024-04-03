@@ -169,7 +169,7 @@ const initialFilter: HomeFilter = {
     { option: '학교 근처', value: 'school', choice: false },
     { option: '역세권', value: 'subway', choice: false },
     { option: '아파트', value: 'apartment', choice: false },
-    { option: '반려동물', value: 'pets', choice: false },
+    { option: '동물없음', value: 'pets', choice: false },
   ],
   options: [
     { option: '인터넷', value: 'internet', choice: false },
