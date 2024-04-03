@@ -16,6 +16,7 @@ public class deployController {
 	@GetMapping("/profile")
 	public String getProfileName() {
 		return "test";
+
 		// return Arrays.stream(env.getActiveProfiles()).findFirst().orElse("");
 	}
 }
