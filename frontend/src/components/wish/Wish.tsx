@@ -6,7 +6,7 @@ import Slider from 'react-slick';
 import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { IHomeDetail } from '../../interfaces/HomeInterface';
-import { getEMDNameAddress } from '../../utils/addressUtils';
+import { getRoadAddress } from '../../utils/addressUtils';
 
 interface HomeProps {
   settings: any; // settings의 타입에 맞게 수정
@@ -45,7 +45,7 @@ const Wish: React.FC<HomeProps> = ({ settings, home }) => {
           </div>
         </div>
         <div className="content-container">
-          <div>{getEMDNameAddress(home.home.address)}</div>
+          <div>{getRoadAddress(home.home.address)}</div>
           <div>
             {home.home.hostName} {home.home.hostGender == 'F' ? '할머니' : '할아버지'}
           </div>

@@ -6,7 +6,7 @@ import { getMember, modifyMember } from '../../api/MemberApis';
 import SearchAddress from '../../components/mypage/SearchAddress';
 import { IMember } from '../../interfaces/MemberInterface';
 import { getFileFromS3, uploadFileToS3 } from '../../api/S3Apis';
-import { getDetail, getRoadAddress, getRoadNameAddress } from '../../utils/addressUtils';
+import { getDetail, getRoadAddress } from '../../utils/addressUtils';
 import { convertFileToBlob } from '../../utils/fileUtils';
 
 const MyInfo: React.FC = () => {

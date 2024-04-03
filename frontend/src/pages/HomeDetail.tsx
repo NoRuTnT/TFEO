@@ -8,7 +8,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { IHomeDetail, IHomeImage } from '../interfaces/HomeInterface';
 import { applyHomeApi, getHomeDetail } from '../api/HomeApis';
-import { getEMDNameAddress, getRoadAddress } from '../utils/addressUtils';
+import { getRoadAddress } from '../utils/addressUtils';
 import { getHomeOptionTags } from '../utils/homeOptionTagUtils';
 import { Button } from '@mui/material';
 import { getRent } from '../utils/moneyUtils';

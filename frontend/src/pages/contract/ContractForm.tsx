@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { IAddress } from '../../interfaces/AddressInterface';
 import styled from 'styled-components';
-import { getRoadAddress, getRoadNameAddress } from '../../utils/addressUtils';
+import { getRoadAddress } from '../../utils/addressUtils';
 import { getRent } from '../../utils/moneyUtils';
 import { getDay, getMonth, getYear } from '../../utils/timeUtils';
 import Footer from '../../components/footer/Footer';
