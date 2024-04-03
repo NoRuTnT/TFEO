@@ -50,6 +50,7 @@ const ManageContract = () => {
             contractNo={contractInfo.contract.contractNo}
             role="MANAGER"
             homeNo={contractInfo.home.home.homeNo}
+            memberNo={contractInfo.member.memberNo}
           />
         );
     }
