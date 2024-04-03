@@ -9,3 +9,29 @@
 .address {
     font-weight: bold;
 }
+
+.host-filter {
+    position: relative;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+    padding: 7px;
+    padding-left: 20px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
+
+.host-filter::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px; /* 원의 크기 */
+    height: 8px; /* 원의 크기 */
+    background-color: #E07068; /* 원의 색상 */
+    border-radius: 50%;
+}

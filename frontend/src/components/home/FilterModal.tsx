@@ -27,7 +27,6 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     setHomes,
     setHeaderFilterChanged,
   } = useHomeStore();
-  const [newSearchCondition, setNewSearchCondition] = useState(search_condition);
   const ModalContainer = styled.div`
     position: fixed;
     top: 0;
@@ -70,18 +69,10 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
 
   const handleOptionClick = (optionName: string, optionChoice: boolean) => {
     toggleOption(optionName);
-    // setNewSearchCondition((prevState) => ({
-    //   ...prevState,
-    //   [optionName]: !optionChoice,
-    // }));
   };
 
   const handleTypeClick = (typeName: string, typeChoice: boolean) => {
     toggleType(typeName);
-    // setNewSearchCondition((prevState) => ({
-    //   ...prevState,
-    //   [typeName]: !typeChoice,
-    // }));
   };
 
   const fetchData = async () => {
