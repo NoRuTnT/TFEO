@@ -72,6 +72,7 @@
 - Jenkins CI pipeline
 - Nginx
 - Docker
+![인프라구조도](/uploads/4c4842ef9df40fe7e0589806c1a94215/인프라구조도.jpg)
 
 # 🏠 프로젝트 진행
 
