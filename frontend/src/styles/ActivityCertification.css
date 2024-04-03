@@ -1,5 +1,5 @@
 .circle-container {
-    height: 620px;
+    height: 640px;
     position: relative;
     /*margin-left: 50px; !* 세로선과 라벨이 있는 공간을 만들기 위해 추가 *!*/
 }
@@ -7,7 +7,7 @@
 .circle-row {
     display: flex;
     align-items: center;
-    height: 103px;
+    height: 107px;
 }
 
 .circle-row:nth-child(odd) {
@@ -47,7 +47,8 @@
 }
 
 .explaination {
-    margin: 15px;
+    margin: 25px;
+    font-size: 18px;
 }
 
 /* 추가 스타일링 */
