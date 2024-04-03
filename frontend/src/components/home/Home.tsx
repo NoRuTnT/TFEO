@@ -99,7 +99,7 @@ const Home: React.FC<HomeProps> = ({ settings, home }) => {
           </div>
           <div style={{ fontWeight: 'bold', fontSize: '17px' }}>{home.address}</div>
           <div>
-            {home.host_name} {home.gender == 0 ? '할머니' : '할아버지'}
+            {home.host_name} {home.host_gender == 'F' ? '할머니' : '할아버지'}
           </div>
           <div style={{ fontSize: '14px' }}>월 {home.rent} 만원</div>
         </div>
