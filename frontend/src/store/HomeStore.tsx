@@ -1,5 +1,11 @@
 import create from 'zustand';
 
+interface MapPosition {
+  lat: number;
+  lng: number;
+  setCenterPosition: (newLat: number, newLng: number) => void;
+}
+
 // 집 검색 필터
 interface HomeFilter {
   marks: { value: number; label: string }[];
@@ -142,6 +148,12 @@ interface VisibleHomesState {
   setVisibleHomes: (homes: Home[]) => void;
 }
 
+const initialMapPosition: MapPosition = {
+  lat: 37.5642135,
+  lng: 127.0016985,
+  setCenterPosition: (newLat: number, newLng: number) => {},
+};
+
 const initialVisibleHomesState: VisibleHomesState = {
   visibleHomes: [], // 초기 상태는 빈 배열
   setVisibleHomes: (homes: Home[]) => {},
@@ -255,58 +267,67 @@ const initialHomeRequestData: HomeRequestData = {
   setMemberPersonality: (value: MemberPersonality) => {},
 };
 
-export const useHomeStore = create<HomeFilter & HomeRequestData & HomeListState & VisibleHomesState>((set) => ({
-  ...initialFilter,
-  ...initialHomeRequestData,
-  ...initialList,
-  ...initialVisibleHomesState,
-  setVisibleHomes: (homes: Home[]) => set({ visibleHomes: homes }), // 현재 보이는 집들을 설정하는 함수
-  toggleFilter: (value: string) =>
-    set((state) => {
-      const newFilters = state.filters.map((filter) =>
-        filter.value === value ? { ...filter, choice: !filter.choice } : filter,
-      );
-      const newFilterCondition = {
-        ...state.filter_condition,
-        [value]: !state.filter_condition[value as keyof FilterCondition],
-      };
-      return { ...state, filters: newFilters, filter_condition: newFilterCondition };
-    }),
-  toggleOption: (value: string) =>
-    set((state) => {
-      const newOptions = state.options.map((option) =>
-        option.value === value ? { ...option, choice: !option.choice } : option,
-      );
-      const newSearchCondition = {
-        ...state.search_condition,
-        [value]: !state.search_condition[value as keyof SearchCondition],
-      };
-      return { ...state, options: newOptions, search_condition: newSearchCondition };
-    }),
-  toggleRentRange: (newRange: number[]) =>
-    set((state) => {
-      const newSearchCondition = {
-        ...state.search_condition,
-        rent_min: newRange[0],
-        rent_max: newRange[1],
-      };
-      console.log(newSearchCondition);
-      return { ...state, search_condition: newSearchCondition };
-    }),
-  toggleType: (value: string) =>
-    set((state) => {
-      const newTypes = state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type));
-      const newSearchCondition = {
-        ...state.search_condition,
-        [value]: !state.search_condition[value as keyof SearchCondition],
-      };
-      return { ...state, types: newTypes, search_condition: newSearchCondition };
-    }),
-  setMarks: (newMarks: any) => set((state) => ({ ...state, marks: newMarks })),
-  setIsMapLoaded: (isLoaded: boolean) => set({ isMapLoaded: isLoaded }), // 지도 로드 상태 업데이트 함수 추가
-  setHeaderFilterChanged: (isChanged: boolean) => set({ headerFilterChanged: isChanged }),
-  setHomes: (newHomes: Home[]) => set((state) => ({ ...state, homes: newHomes })),
-  setFilterCondition: (newData: FilterCondition) => set((state) => ({ ...state, filter_condition: newData })),
-  setSearchCondition: (newData: SearchCondition) => set((state) => ({ ...state, search_condition: newData })),
-  setMemberPersonality: (newData: MemberPersonality) => set((state) => ({ ...state, member_personality: newData })),
-}));
+export const useHomeStore = create<HomeFilter & HomeRequestData & HomeListState & VisibleHomesState & MapPosition>(
+  (set) => ({
+    ...initialFilter,
+    ...initialHomeRequestData,
+    ...initialList,
+    ...initialVisibleHomesState,
+    ...initialMapPosition,
+    setVisibleHomes: (homes: Home[]) => set({ visibleHomes: homes }), // 현재 보이는 집들을 설정하는 함수
+    setCenterPosition: (newLat: number, newLng: number) =>
+      set((state) => ({
+        ...state,
+        lat: newLat,
+        lng: newLng,
+      })),
+    toggleFilter: (value: string) =>
+      set((state) => {
+        const newFilters = state.filters.map((filter) =>
+          filter.value === value ? { ...filter, choice: !filter.choice } : filter,
+        );
+        const newFilterCondition = {
+          ...state.filter_condition,
+          [value]: !state.filter_condition[value as keyof FilterCondition],
+        };
+        return { ...state, filters: newFilters, filter_condition: newFilterCondition };
+      }),
+    toggleOption: (value: string) =>
+      set((state) => {
+        const newOptions = state.options.map((option) =>
+          option.value === value ? { ...option, choice: !option.choice } : option,
+        );
+        const newSearchCondition = {
+          ...state.search_condition,
+          [value]: !state.search_condition[value as keyof SearchCondition],
+        };
+        return { ...state, options: newOptions, search_condition: newSearchCondition };
+      }),
+    toggleRentRange: (newRange: number[]) =>
+      set((state) => {
+        const newSearchCondition = {
+          ...state.search_condition,
+          rent_min: newRange[0],
+          rent_max: newRange[1],
+        };
+        console.log(newSearchCondition);
+        return { ...state, search_condition: newSearchCondition };
+      }),
+    toggleType: (value: string) =>
+      set((state) => {
+        const newTypes = state.types.map((type) => (type.value === value ? { ...type, choice: !type.choice } : type));
+        const newSearchCondition = {
+          ...state.search_condition,
+          [value]: !state.search_condition[value as keyof SearchCondition],
+        };
+        return { ...state, types: newTypes, search_condition: newSearchCondition };
+      }),
+    setMarks: (newMarks: any) => set((state) => ({ ...state, marks: newMarks })),
+    setIsMapLoaded: (isLoaded: boolean) => set({ isMapLoaded: isLoaded }), // 지도 로드 상태 업데이트 함수 추가
+    setHeaderFilterChanged: (isChanged: boolean) => set({ headerFilterChanged: isChanged }),
+    setHomes: (newHomes: Home[]) => set((state) => ({ ...state, homes: newHomes })),
+    setFilterCondition: (newData: FilterCondition) => set((state) => ({ ...state, filter_condition: newData })),
+    setSearchCondition: (newData: SearchCondition) => set((state) => ({ ...state, search_condition: newData })),
+    setMemberPersonality: (newData: MemberPersonality) => set((state) => ({ ...state, member_personality: newData })),
+  }),
+);
