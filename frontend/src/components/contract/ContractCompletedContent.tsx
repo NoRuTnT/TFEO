@@ -22,7 +22,16 @@ const ContractCompletedContent = ({ contractNo, homeNo, memberNo, role }: Props)
       alert('파일 다운로드 에러: 다시 한번 요청해주세요');
       return;
     }
-    showFile(response);
+    const blobUrl = URL.createObjectURL(response);
+    const downloadLink = document.createElement('a');
+    downloadLink.href = blobUrl;
+    downloadLink.download = 'contract.pdf'; // 다운로드될 파일명 설정
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+
+    // 다운로드 후 URL 해제
+    URL.revokeObjectURL(blobUrl);
+    document.body.removeChild(downloadLink);
   };
   return (
     <div className="contractContent">
