@@ -11,6 +11,7 @@ from starlette.responses import JSONResponse
 from enum import Enum
 from bson.json_util import dumps
 from faker import Faker
+
 from recommend_house import Recommendation
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -21,10 +22,12 @@ import uvicorn
 import json
 import traceback
 import math
+import time
 
 app = FastAPI()
 host = 'mongodb://tfeo:tfeo123@j10a707.p.ssafy.io:27017/?authSource=admin&authMechanism=DEFAULT'
 port = 27017
+TEST_NUMBER = 10 # 수행시간의 평균을 계산하기 위한 수행횟수
 # db = None
 
 # origins에는 protocal, domain, port만 등록한다.
@@ -248,6 +251,7 @@ SCHOOL_LIMIT = 3
 # 추천 알고리즘에 따라 추천 결과를 반환
 @app.post("/recommend")
 def filter_by_search_condition(search_condition: Search_Condition, filter_condition: Filter_Condition, member_personality: Optional[Member_Personality]=None):
+    start_time = time.time()
     ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
     # s_c 가 false 이면 그냥 전부 채택
     # s_c 가 true 이면 s_c가 있는 것만 선택됨
@@ -288,7 +292,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     # 선택되도록 로직 변경
     # if(filter_condition.apartment and (not ('APT' in building_option_list))):
     #     building_option_list.append('APT')
-    print(building_option_list)
+    # print(building_option_list)
     internet_list = get_permit_list(search_condition.internet)
     gas_list = get_permit_list(search_condition.gas)
     washing_machine_list = get_permit_list(search_condition.washing_machine)
@@ -354,7 +358,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     univ_lat = search_condition.lat
     univ_lng = search_condition.lng
 
-    print(data)
+    # print(data)
     data_list = []
     for doc in data:
         doc = dumps(doc)
@@ -365,7 +369,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         doc_json['distance'] = distance
         data_list.append(doc_json)
     # 프론트엔드 4가지 조건에 맞게 필터링하는 과정
-    print("확인된 내용물의 개수는??", len(data_list))
+    # print("확인된 내용물의 개수는??", len(data_list))
     data_list_filtered = []
 
     # 아파트 조건은 db에서 query할 때 미리 거른다.
@@ -387,12 +391,12 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
             # 불필요한 값 제거
             del item['host_vector']
             del item['station']
-        print('client에 반환되는 요소의 개수 ', len(data_list))
+        # print('client에 반환되는 요소의 개수 ', len(data_list))
         return data_list
 
 
-    print(len(data_list))
-    print(data_list)
+    # print(len(data_list))
+    # print(data_list)
 
     data_json = json.dumps(data_list, default=str, ensure_ascii=False)
     data_json = data_json.replace("\"", "")
@@ -423,8 +427,8 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         'host_house_prefer': member_personality.host_house_prefer, # int
     }
     member_vector = get_member_vector(member_personality_json_info)
-    print('vector-format')
-    print(member_vector)
+    # print('vector-format')
+    # print(member_vector)
 
     cosine_values = []
 
@@ -442,14 +446,14 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
         # 끝에다 붙여준다.
         priorities.append([similarity[0][0], item['home_no']])
 
-    print('구한 결과 벡터 list임')
-    print(priorities)
+    # print('구한 결과 벡터 list임')
+    # print(priorities)
 
     #  유사도를 기준으로 내림차순 정렬
     priorities.sort(key=lambda x:x[0], reverse=True)
 
-    print('정렬 결과 벡터 list임')
-    print(priorities)
+    # print('정렬 결과 벡터 list임')
+    # print(priorities)
     # print(data_json) # json 정보 본문
 
     output_list = [] # 최종적으로 추천된 부동산 내용들의 list, 필요시 원하는 성분들만 추출해서 사용
@@ -485,7 +489,16 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
             output_list.append(item_json)
     # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
     # print(output_list)
-    print('client에 반환되는 요소의 개수 ', len(output_list))
+    # print('client에 반환되는 요소의 개수 ', len(output_list))
+    end_time = time.time()
+    elapsed_time = end_time-start_time
+    global number
+    global time_sum
+    print(f"{number}번째 수행 처리시간은:{elapsed_time}")
+    time_sum += elapsed_time
+    number+=1
+    if number==TEST_NUMBER:
+        print(f'{TEST_NUMBER}번 API 수행 시간의 평균{time_sum/TEST_NUMBER}')
     return output_list
 
 # 등록된 집 추가
@@ -542,7 +555,7 @@ def get_one_home(home_no: int):
 
 """np.array형태로 반환함"""
 def get_member_vector(member_personality):
-    print('빅데이터의 벡터화')
+    # print('빅데이터의 벡터화')
     """
     <대학생>
     주간지수, 야간지수, 흡연지수, 외향, 내향, 호스트 습관의 중요함, 동물애호가, 추위잘탐, 더위잘탐
@@ -612,4 +625,6 @@ def init():
 # python -m uvicorn main:app --reload
 if __name__ == '__main__':
     # init() # mongoDB 연결
+    time_sum = 0
+    number = 1 # for debug
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info") # FastAPI 서버 작동
