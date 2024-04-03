@@ -103,45 +103,74 @@ const FilterModal: React.FC<FilterModalProps> = ({ modalOpen, setModalOpen }) =>
     <ModalContainer>
       <ModalContent>
         <Box sx={style}>
-          <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            sx={{ textAlign: 'left', marginBottom: '35px' }}
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
             가격 범위
           </Typography>
-          <Slider
-            getAriaLabel={() => 'Price range'}
-            value={range}
-            onChange={handleChange}
-            marks={marks}
-            min={marks[0].value}
-            max={marks[1].value}
-            valueLabelDisplay="on"
-            // getAriaValueText={valuetext}
-          />
-          <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
+          <div style={{ position: 'relative', margin: 'auto', width: '90%' }}>
+            <Slider
+              getAriaLabel={() => 'Price range'}
+              value={range}
+              onChange={handleChange}
+              marks={marks}
+              min={marks[0].value}
+              max={marks[1].value}
+              valueLabelDisplay="on"
+              // getAriaValueText={valuetext}
+            />
+          </div>
+          <Typography
+            sx={{ textAlign: 'left', marginTop: '10px', marginBottom: '10px' }}
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
             집 옵션
           </Typography>
           <Grid container spacing={1}>
             {options.map((option) => (
-              <Grid item xs={6} key={option.option}>
+              <Grid item xs={4} key={option.option}>
                 <Button
                   onClick={() => handleOptionClick(option.value, option.choice)}
-                  style={{ width: '120px', height: '40px' }}
-                  variant={option.choice ? 'contained' : 'outlined'}
+                  style={{
+                    width: '105px',
+                    height: '50px',
+                    border: option.choice ? '1px solid #E07068' : '1px solid black',
+                    backgroundColor: option.choice ? '#E07068' : 'white',
+                    color: option.choice ? 'white' : 'black',
+                  }}
+                  // variant={option.choice ? 'contained' : 'outlined'}
                 >
                   {option.option}
                 </Button>
               </Grid>
             ))}
           </Grid>
-          <Typography sx={{ textAlign: 'left' }} id="modal-modal-title" variant="h6" component="h2">
+          <Typography
+            sx={{ textAlign: 'left', marginTop: '15px', marginBottom: '10px' }}
+            id="modal-modal-title"
+            variant="h6"
+            component="h2"
+          >
             집 타입
           </Typography>
           <Grid container spacing={1}>
             {types.map((type) => (
-              <Grid item xs={6} key={type.type}>
+              <Grid item xs={4} key={type.type}>
                 <Button
                   onClick={() => handleTypeClick(type.value, type.choice)}
-                  style={{ width: '120px', height: '40px' }}
-                  variant={type.choice ? 'contained' : 'outlined'}
+                  style={{
+                    width: '105px',
+                    height: '50px',
+                    border: type.choice ? '1px solid #E07068' : '1px solid black',
+                    backgroundColor: type.choice ? '#E07068' : 'white',
+                    color: type.choice ? 'white' : 'black',
+                  }}
+                  // variant={type.choice ? 'contained' : 'outlined'}
                 >
                   {type.type}
                 </Button>
