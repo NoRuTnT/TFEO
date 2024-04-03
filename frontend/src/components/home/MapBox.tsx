@@ -16,6 +16,8 @@ declare global {
 export default function MapBox() {
   const [isMounted, setIsMounted] = useState(false);
   const {
+    lat,
+    lng,
     homes, // 집 전체 조회 목록 (추천 반영)
     setHomes,
     setVisibleHomes,
@@ -27,6 +29,7 @@ export default function MapBox() {
     setHeaderFilterChanged,
     setSearchFilterChanged,
     setMemberPersonality,
+    setCenterPosition,
   } = useHomeStore();
   const { MemberInfo } = useMemberStore();
 
@@ -243,7 +246,7 @@ export default function MapBox() {
     window.kakao.maps.load(() => {
       const container = document.getElementById('map');
       const options = {
-        center: new window.kakao.maps.LatLng(MemberInfo.lat, MemberInfo.lng),
+        center: new window.kakao.maps.LatLng(lat, lng),
         level: 7,
         minLevel: 3,
       };
@@ -265,6 +268,8 @@ export default function MapBox() {
 
       // 지도 바운드 안에 들어오는 포지션의 집 마커를 visibleHomes에 추가하는 함수
       const updateVisibleHomes = () => {
+        const center = newMap.getCenter();
+        setCenterPosition(center.getLat(), center.getLng());
         markers = updateMarkers();
         const bounds = newMap.getBounds();
         setVisibleHomes(
