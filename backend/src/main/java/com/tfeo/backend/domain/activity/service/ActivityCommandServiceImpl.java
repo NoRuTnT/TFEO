@@ -6,22 +6,17 @@ import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.time.LocalDate;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.model.StorageType;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
-import net.nurigo.sdk.message.service.DefaultMessageService;
 
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
+import com.tfeo.backend.common.config.SmsUtils;
 import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.common.ActivityException;
 import com.tfeo.backend.domain.activity.common.exception.AccessDeniedException;
@@ -33,37 +28,39 @@ import com.tfeo.backend.domain.activity.model.dto.AddActivityResponseDto;
 import com.tfeo.backend.domain.activity.model.dto.ModifyActivityRequestDto;
 import com.tfeo.backend.domain.activity.model.entity.Activity;
 import com.tfeo.backend.domain.activity.repository.ActivityRepository;
-import com.tfeo.backend.domain.contract.repository.ContractRepository;
 import com.tfeo.backend.domain.home.repository.HomeRepository;
 import com.tfeo.backend.domain.member.common.exception.MemberNotExistException;
 import com.tfeo.backend.domain.member.model.entity.Member;
 import com.tfeo.backend.domain.member.repository.MemberRepository;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
 @Slf4j
+@RequiredArgsConstructor
 public class ActivityCommandServiceImpl implements ActivityCommandService {
 
-	private final DefaultMessageService messageService;
+	// private final DefaultMessageService messageService;
 	private final MemberRepository memberRepository;
 	private final HomeRepository homeRepository;
 	private final ActivityRepository activityRepository;
 	private final FileService fileService;
+	private final SmsUtils smsUtils;
 
-	@Autowired
-	public ActivityCommandServiceImpl(MemberRepository memberRepository, HomeRepository homeRepository,
-		ActivityRepository activityRepository,
-		ContractRepository contractRepository,
-		FileService fileService) {
-		this.messageService = NurigoApp.INSTANCE.initialize("NCSEFOIOGSP2WVMR", "OKB94BHPG494AHUKXGZCBPLL4YILF0DS",
-			"https://api.coolsms.co.kr");
-		this.memberRepository = memberRepository;
-		this.homeRepository = homeRepository;
-		this.activityRepository = activityRepository;
-		this.fileService = fileService;
-	}
+	// @Autowired
+	// public ActivityCommandServiceImpl(MemberRepository memberRepository, HomeRepository homeRepository,
+	// 	ActivityRepository activityRepository,
+	// 	ContractRepository contractRepository,
+	// 	FileService fileService) {
+	// 	this.messageService = NurigoApp.INSTANCE.initialize("NCSEFOIOGSP2WVMR", "OKB94BHPG494AHUKXGZCBPLL4YILF0DS",
+	// 		"https://api.coolsms.co.kr");
+	// 	this.memberRepository = memberRepository;
+	// 	this.homeRepository = homeRepository;
+	// 	this.activityRepository = activityRepository;
+	// 	this.fileService = fileService;
+	// }
 
 	@Override
 	public String addActivity(Long memberNo, Long activityNo,
@@ -161,45 +158,43 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			//승인 처리
 			activity.setApprove(APPROVE);
 			S3Object s3Object = fileService.getObject(activity.getActivityImageUrl());
-			InputStream objectInputStream = s3Object.getObjectContent();
-			File file = new File("classpath:/newFile.jpg");
-			try (OutputStream outputStream = new FileOutputStream(file)) {
-				byte[] buffer = new byte[1024];
-				int bytesRead;
-				while ((bytesRead = objectInputStream.read(buffer)) != -1) {
-					outputStream.write(buffer, 0, bytesRead);
-				}
+			S3ObjectInputStream objectInputStream = s3Object.getObjectContent();
+			File file = new File("temp.jpg");
+			byte[] bytes = IOUtils.toByteArray(objectInputStream);
+			log.info("ok");
+			try {
+				log.info("file stream start");
+				FileOutputStream fos = new FileOutputStream(file);
+				fos.write(bytes);
+				fos.close();
+				log.info("s3 file convert success");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 
-			// URL url = new URL(presignedUrl);
-			// InputStream inputStream = url.openStream();
-			//
-			// // 파일로 데이터 복사
-			// OutputStream outputStream = new FileOutputStream("tempFile"); // 임시 파일로 저장
-			// ReadableByteChannel byteChannel = Channels.newChannel(inputStream);
-			// ((FileOutputStream)outputStream).getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
+			// String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
 
-			String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
-
-			//보호자 전화번호
+			// 보호자 전화번호
 			String receiver = homeRepository.findByMemeber(memberNo).orElseThrow(
 				() -> new ActivityException("계약한 집을 찾을 수 없습니다. id=" + memberNo)
 			).getGuardianPhone();
+			log.info("send message");
+			String message = activity.getActivityText();
 
-			Message message = new Message();
-			// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력
-			message.setFrom(member.getPhone());
-			message.setTo("01045417183");
-			// message.setTo(receiver);
-			message.setText(activity.getActivityText());
-			message.setImageId(imageId);
+			// Message message = new Message();
+			// // 발신번호 및 수신번호는 반드시 01012345678 형태로 입력
+			// message.setFrom(member.getPhone());
+			// message.setTo("01045417183");
+			// // message.setTo(receiver);
+			// message.setText(activity.getActivityText());
+			// message.setImageId(imageId);
 
-			SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+			// SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
 			// file.delete();
-			
+
+			SingleMessageSentResponse response = smsUtils.sendOne(receiver, message, file);
+			file.delete();
 			return response;
 
 		} catch (Exception e) {
