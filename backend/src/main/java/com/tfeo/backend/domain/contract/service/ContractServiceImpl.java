@@ -5,6 +5,7 @@ import static com.tfeo.backend.common.model.type.ContractProgressType.*;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
 import java.util.List;
@@ -70,6 +71,9 @@ public class ContractServiceImpl implements ContractService {
 				.week(getCurrentWeekOfMonth(startAt.plusWeeks(i)))
 				.approve(NONE)
 				.contract(contract)
+				.activityImageUrl("")
+				.activityText("")
+				.createdAt(LocalDateTime.now())
 				.startAt(tmpDate.minusDays(tmpDate.getDayOfWeek().getValue() - 1))
 				.expiredAt(tmpDate.plusDays(tmpDate.getDayOfWeek().getValue() - 1))
 				.build();

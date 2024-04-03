@@ -106,10 +106,15 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 	@Override
 	public ReadActivityResponseDto readActivity(Long memberNo,  Long activityNo) {
 		try {
+			System.out.println(activityNo);
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
-
-			String imageUrl = fileService.createPresignedUrlToDownload(activity.getActivityImageUrl());
+			String imageUrl="";
+			if(!activity.getActivityImageUrl().equals(""))  imageUrl = fileService.createPresignedUrlToDownload(activity.getActivityImageUrl());
+			// System.out.println("##########이미지 경로#########");
+			// System.out.println(activity.getContract().getMember().getMemberNo());
+			// System.out.println(activity.getContract().getMember().getName());
+			System.out.println("##############################");
 			ReadActivityResponseDto result = ReadActivityResponseDto.builder()
 				.memberNo(activity.getContract().getMember().getMemberNo())
 				.memberName(activity.getContract().getMember().getName())

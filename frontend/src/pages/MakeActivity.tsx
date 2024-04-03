@@ -8,12 +8,16 @@ import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { IActivity } from '../interfaces/ActivityInterface';
 import { getActivityDetail } from '../api/ActivityApis';
 import { writeActivity } from '../api/ActivityApis';
+import { uploadFileToS3 } from '../api/S3Apis';
+import { S3UploadProps } from '../interfaces/S3Interface';
+import { convertFileToBlob } from '../utils/fileUtils';
 
 const MakeActivity: React.FC = () => {
   const [activityNo, setActivityNo] = useState<number>(0);
   const [activity, setActivity] = useState<IActivity>();
-  const [image, setImage] = useState<string>(''); // 이미지를 저장할 상태 추가
-
+  const [image, setImage] = useState<File>();
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [imageBlob, setImageBlob] = useState<Blob>();
   useEffect(() => {
     const activityNofromUrl = new URLSearchParams(location.search).get('activityNo');
     const activityNo = activityNofromUrl ? parseInt(activityNofromUrl, 10) : 0;
@@ -30,8 +34,8 @@ const MakeActivity: React.FC = () => {
   // 이미지 업로드 핸들러 함수
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      // 이미지를 상태에 저장합니다 (예: URL.createObjectURL을 사용)
-      setImage(URL.createObjectURL(event.target.files[0]));
+      setImageUrl(URL.createObjectURL(event.target.files[0]));
+      setImage(event.target.files[0]);
     }
   };
 
@@ -45,9 +49,23 @@ const MakeActivity: React.FC = () => {
       return;
     }
 
-    await writeActivity(activityNo, image, content);
-    // alert('글이 등록되었습니다');
-    // window.location.href = '/activity-certification';
+    const result = await writeActivity(activityNo, content);
+    if (image) {
+      const blob = await convertFileToBlob(image);
+      setImageBlob(blob);
+    }
+    console.log('#####################');
+    console.log(image);
+    if (!imageBlob) return;
+    const S3UploadProps: S3UploadProps = {
+      uploadFile: imageBlob,
+      preSignedUrlToUpload: result,
+    };
+    console.log('##########################');
+    console.log(imageBlob.type);
+    const uploadS3 = await uploadFileToS3(S3UploadProps);
+    alert('글이 등록되었습니다');
+    window.location.href = '/activity-certification';
   };
 
   return (
@@ -57,7 +75,6 @@ const MakeActivity: React.FC = () => {
           <ArrowBackIosNewIcon />
         </Link>
       </div>
-      {/* <h2>텍스트 제목</h2> */}
       <div style={{ margin: '10px', fontWeight: 'bold', fontSize: '20px' }}>{activity?.week}</div>
       <label style={{ position: 'absolute', color: 'gray', fontSize: '20px', top: '20px' }} htmlFor="image-upload">
         <div
@@ -70,18 +87,15 @@ const MakeActivity: React.FC = () => {
             borderRadius: '20px',
           }}
         >
-          {/* 이미지 표시 */}
-          {image && <img src={image} alt="uploaded" style={{ width: '100%', height: '100%', borderRadius: '20px' }} />}
-
-          {/* 파일 업로드 */}
+          {image && (
+            <img src={imageUrl} alt="uploaded" style={{ width: '100%', height: '100%', borderRadius: '20px' }} />
+          )}
           <input
             type="file"
             id="image-upload"
             style={{ display: 'none' }} // 파일 입력 숨기기
             onChange={handleImageUpload}
           />
-
-          {/* 이미지 업로드 안내 문구는 이미지가 업로드되면 보이지 않도록 설정 */}
           {!image && (
             <>
               <div style={{ marginTop: '60px', fontSize: '15px' }}>이미지 업로드</div>
@@ -90,7 +104,6 @@ const MakeActivity: React.FC = () => {
           )}
         </div>
       </label>
-
       <textarea
         style={{ marginTop: '400px', border: '1px solid black', width: '270px', height: '120px' }}
         value={content}

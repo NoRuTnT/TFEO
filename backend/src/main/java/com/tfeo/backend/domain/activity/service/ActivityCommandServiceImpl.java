@@ -71,7 +71,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	}
 
 	@Override
-	public AddActivityResponseDto addActivity(Long memberNo, Long activityNo,
+	public String addActivity(Long memberNo, Long activityNo,
 		AddActivityRequestDto request) {
 
 		// Member member = memberRepository.findByMemberNo(memberNo)
@@ -92,12 +92,10 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			throw new TextBlankException();
 		}
 
-		if(request.getActivityImageUrl().isEmpty()){
-			throw new ImageNotExistException();
-		}
-
 		String filePath = fileService.createPath("activity");
 		String activityPresignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
+		System.out.println("#######################");
+		System.out.println(activityPresignedUrlToUpload);
 		activity.writeActivity(filePath, request.getActivityText());
 
 		//승인 처리
@@ -114,9 +112,9 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			.build();
 
 		// 관리자 승인 & 알림톡 전송
-		approveActivity(memberNo,activityNo);
+		// approveActivity(memberNo,activityNo);
 
-		return result;
+		return activityPresignedUrlToUpload;
 	}
 
 	@Override

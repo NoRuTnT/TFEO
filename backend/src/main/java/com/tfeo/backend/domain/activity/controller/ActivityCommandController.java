@@ -41,7 +41,7 @@ public class ActivityCommandController {
 		// Long memberNo = member.getMemberNo();
 		Long memberNo = 1L;
 		// Role role = USER;
-		AddActivityResponseDto result = activityCommandService.addActivity(memberNo, activityNo, request);
+		String result = activityCommandService.addActivity(memberNo, activityNo, request);
 		return ResponseEntity.ok(new SuccessResponse(HttpStatus.OK, "활동인증글 작성 성공", result));
 	}
 
