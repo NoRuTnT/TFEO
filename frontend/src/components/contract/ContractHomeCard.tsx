@@ -8,6 +8,7 @@ import { getRent } from '../../utils/moneyUtils';
 import { getDay, getMonth, getYear } from '../../utils/timeUtils';
 import { IContract } from '../../interfaces/ContractInterface';
 import '../../styles/contract/ContractCard.css';
+import { image } from 'html2canvas/dist/types/css/types/image';
 
 interface Props {
   status: string;
@@ -19,9 +20,10 @@ const ContractHomeCard = ({ status, homeDetail, contract }: Props) => {
   return (
     <div className="homeCard">
       <Card>
-        <CardMedia sx={{ height: (theme) => theme.spacing(30) }}>
-          {homeImageList.length > 0 && <img src={`https://j10a707.p.ssafy.io${homeImageList[0].homeImageUrl}`} />}
-        </CardMedia>
+        <CardMedia
+          sx={{ height: (theme) => theme.spacing(30) }}
+          image={`https://j10a707.p.ssafy.io${homeImageList[0].homeImageUrl}`}
+        />
         <CardContent className="cardContent">
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
             {hostPersonality.clean ? <div className="host-filter">청결한</div> : ''}
