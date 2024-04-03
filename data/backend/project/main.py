@@ -303,6 +303,11 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     station_list = get_permit_list(search_condition.station)
     move_in_date_list = get_permit_list(search_condition.move_in_date)
 
+    pet_list = [0]
+    # true -> 반려동물이 없는 집만 선택
+    # false -> 반려동물
+    if not filter_condition.pets:
+        pet_list.append(1)
     # type: BuildingType  # 건축물 종류(ENUM)
     data = db.home.find({'rent': {'$gte': search_condition.rent_min, '$lte': search_condition.rent_max}, # 월세 범위 내 검색
                         'internet': {'$in':internet_list},
@@ -319,6 +324,7 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
                         'station': {'$in':station_list},
                         'move_in_date': {'$in':move_in_date_list},
                         'type': {'$in':building_option_list},
+                        'pet': {'$in':pet_list}, # pet 필터링 내용 추가
                          }, {'type': 1,
                              'smoke': 1,
                              'pet': 1,
@@ -364,7 +370,9 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
 
     # 아파트 조건은 db에서 query할 때 미리 거른다.
     for data in data_list:
-        if ((data['distance']<=SCHOOL_LIMIT and filter_condition.school) or not filter_condition.school) and ((data['station']==1 and filter_condition.subway) or not filter_condition.subway) and ((data['pet']==1 and filter_condition.pets) or not filter_condition.pets):
+        # if ((data['distance']<=SCHOOL_LIMIT and filter_condition.school) or not filter_condition.school) and ((data['station']==1 and filter_condition.subway) or not filter_condition.subway) and ((data['pet']==1 and filter_condition.pets) or not filter_condition.pets):
+        # 반려동물 필터링 로직 수정
+        if ((data['distance']<=SCHOOL_LIMIT and filter_condition.school) or not filter_condition.school) and ((data['station']==1 and filter_condition.subway) or not filter_condition.subway):
             data_list_filtered.append(data)
 
     data_list = data_list_filtered
