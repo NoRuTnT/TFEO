@@ -75,7 +75,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 		jwtService.updateRefreshToken(oAuth2User.getEmail(), refreshToken);
 
 		Role role = member.getRole();
-		String redirectUrl = pathProperty.getDOMAIN();
+		String redirectUrl = "/home";
 		if (member.getMemberPersonality().getCold() == null) {
 			redirectUrl = "/survey";
 		}
