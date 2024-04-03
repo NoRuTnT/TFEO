@@ -1,6 +1,7 @@
 package com.tfeo.backend.domain.contract.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +19,7 @@ import com.tfeo.backend.common.service.AuthenticationService;
 import com.tfeo.backend.domain.contract.model.dto.ContractResponseDto;
 import com.tfeo.backend.domain.contract.service.ContractService;
 import com.tfeo.backend.domain.member.model.dto.AppliedHomeResponseDto;
+import com.tfeo.backend.domain.member.model.entity.Member;
 
 import lombok.RequiredArgsConstructor;
 
@@ -78,13 +80,12 @@ public class ContractController {
 	// 계약서 목록 조회 (학생)
 	@GetMapping
 	public ResponseEntity<?> getContracts(HttpServletRequest request) {
-		// Optional<Member> memberOptional = authenticationService.getMember(request);
-		// if (!memberOptional.isPresent()) {
-		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		// }
-		// Member member = memberOptional.get();
-		// Long memberNo = member.getMemberNo();
-		Long memberNo = 1L;
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
 		List<ContractResponseDto> contracts = contractService.getContracts(memberNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
@@ -97,13 +98,12 @@ public class ContractController {
 	// 계약서 싸인
 	@PutMapping("/sign/{contractNo}")
 	public ResponseEntity<?> signContract(@PathVariable Long contractNo, HttpServletRequest request) {
-		// Optional<Member> memberOptional = authenticationService.getMember(request);
-		// if (!memberOptional.isPresent()) {
-		// 	return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
-		// }
-		// Member member = memberOptional.get();
-		// Long memberNo = member.getMemberNo();
-		Long memberNo = 1L;
+		Optional<Member> memberOptional = authenticationService.getMember(request);
+		if (!memberOptional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("가입된 사용자 데이터를 찾을 수 없습니다.");
+		}
+		Member member = memberOptional.get();
+		Long memberNo = member.getMemberNo();
 		String contractPresignedUrl = contractService.signContract(memberNo, contractNo);
 		SuccessResponse response = SuccessResponse.builder()
 			.status(HttpStatus.OK)
