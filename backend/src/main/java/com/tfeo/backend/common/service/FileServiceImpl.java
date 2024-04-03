@@ -1,6 +1,5 @@
 package com.tfeo.backend.common.service;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.StringTokenizer;
@@ -16,7 +15,6 @@ import com.amazonaws.services.s3.Headers;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
-import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.tfeo.backend.common.model.dto.FileNotExistException;
 
@@ -73,7 +71,7 @@ public class FileServiceImpl implements FileService {
 	private void validateFileExists(String filePath) {
 		try {
 			s3.getObject(bucket, filePath);
-		} catch(AmazonS3Exception e){
+		} catch (AmazonS3Exception e) {
 			e.printStackTrace();
 			throw new FileNotExistException(filePath);
 		}
@@ -103,7 +101,8 @@ public class FileServiceImpl implements FileService {
 	}
 
 	@Override
-	public Object getObject(String filePath) {
+	public S3Object getObject(String filePath) {
+		S3Object s3Object = s3.getObject(bucket, filePath);
 		return s3.getObject(bucket, filePath);
 	}
 
@@ -114,7 +113,5 @@ public class FileServiceImpl implements FileService {
 	private String createFileId() {
 		return UUID.randomUUID().toString();
 	}
-
-
 
 }

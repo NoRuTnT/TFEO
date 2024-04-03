@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/MainPage.css';
 import '../styles/ActivityCertification.css'; // CSS 파일을 적절히 수정해야 할 수도 있습니다.
 import Footer from '../components/footer/Footer';
 import '../styles/Footer.css';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import { IActivity } from '../interfaces/ActivityInterface';
-import { getActivityDetail } from '../api/ActivityApis';
+import { getActivityDetail, sendMessage } from '../api/ActivityApis';
 import { writeActivity } from '../api/ActivityApis';
 import { uploadFileToS3 } from '../api/S3Apis';
 import { S3UploadProps } from '../interfaces/S3Interface';
@@ -19,6 +19,8 @@ const MakeActivity: React.FC = () => {
   const [imageUrl, setImageUrl] = useState<string>('');
   const [imageBlob, setImageBlob] = useState<Blob>();
   const [imageUploadPreSignedUrl, setImageUploadPreSignedUrl] = useState<string>('');
+  const [canSendMessage, setCanSendMessage] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const activityNofromUrl = new URLSearchParams(location.search).get('activityNo');
     const activityNo = activityNofromUrl ? parseInt(activityNofromUrl, 10) : 0;
@@ -79,18 +81,28 @@ const MakeActivity: React.FC = () => {
       console.log('##########################');
       console.log(imageBlob.type);
       const uploadS3 = await uploadFileToS3(S3UploadProps);
+      setCanSendMessage(true);
     };
     fetchData();
-    alert('글이 등록되었습니다');
-    // window.location.href = '/activity-certification';
   }, [imageBlob]);
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!canSendMessage) return;
+      await sendMessage(activityNo);
+      alert('글이 등록되었습니다');
+      navigate(-1);
+    };
+    fetchData();
+  }, [canSendMessage]);
 
   return (
     <div className="main-page">
       <div style={{ position: 'fixed', top: '10px', left: '10px' }}>
-        <Link to="/activity-certification">
-          <ArrowBackIosNewIcon />
-        </Link>
+        <ArrowBackIosNewIcon
+          onClick={() => {
+            navigate(-1);
+          }}
+        />
       </div>
       <div style={{ margin: '10px', fontWeight: 'bold', fontSize: '20px' }}>{activity?.week}</div>
       <label style={{ position: 'absolute', color: 'gray', fontSize: '20px', top: '20px' }} htmlFor="image-upload">
@@ -140,21 +152,24 @@ const MakeActivity: React.FC = () => {
         >
           등록
         </button>
-        <Link to="/activity-certification">
-          <button
-            style={{
-              border: '1px solid #e07068',
-              borderRadius: '5px',
-              width: '70px',
-              height: '40px',
-              marginRight: '15px',
-              backgroundColor: '#E07068',
-              color: 'white',
-            }}
-          >
-            취소
-          </button>
-        </Link>
+        {/*<Link to="/activity-certification">*/}
+        <button
+          style={{
+            border: '1px solid #e07068',
+            borderRadius: '5px',
+            width: '70px',
+            height: '40px',
+            marginRight: '15px',
+            backgroundColor: '#E07068',
+            color: 'white',
+          }}
+          onClick={() => {
+            navigate(-1);
+          }}
+        >
+          취소
+        </button>
+        {/*</Link>*/}
       </div>
       <Footer />
     </div>

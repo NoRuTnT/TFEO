@@ -32,7 +32,7 @@ const ContractCompletedContent = ({ contractNo, homeNo, memberNo, role }: Props)
       {role === 'USER' && (
         <>
           <button className="selectBtn">
-            <Link to={{ pathname: '/activity-review', search: `?memberNo=${memberNo}` }}>활동 내역</Link>
+            <Link to={{ pathname: '/activity-certification', search: `?memberNo=${memberNo}` }}>활동 내역</Link>
           </button>
           <button className="selectBtn">
             <Link to={{ pathname: '/activity-review', search: `?homeNo=${homeNo}` }}>리뷰 쓰기</Link>

@@ -5,16 +5,12 @@ import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
 import java.time.LocalDate;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +21,11 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.tfeo.backend.common.model.type.Role;
+import com.amazonaws.services.s3.model.S3Object;
 import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.common.ActivityException;
 import com.tfeo.backend.domain.activity.common.exception.AccessDeniedException;
 import com.tfeo.backend.domain.activity.common.exception.ActivityNotExistException;
-import com.tfeo.backend.domain.activity.common.exception.ImageNotExistException;
 import com.tfeo.backend.domain.activity.common.exception.PeriodException;
 import com.tfeo.backend.domain.activity.common.exception.TextBlankException;
 import com.tfeo.backend.domain.activity.model.dto.AddActivityRequestDto;
@@ -89,7 +83,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			throw new PeriodException();
 		}
 
-		if(request.getActivityText().isBlank()){
+		if (request.getActivityText().isBlank()) {
 			throw new TextBlankException();
 		}
 
@@ -119,7 +113,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	}
 
 	@Override
-	public String modifyActivity(Long memberNo,  Long activityNo, ModifyActivityRequestDto request) {
+	public String modifyActivity(Long memberNo, Long activityNo, ModifyActivityRequestDto request) {
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
 
@@ -133,7 +127,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 		String filePath = activity.getActivityImageUrl();
 		String activityPresignedUrlToUpload = null;
 
-		if(!request.getActivityImageUrl().isEmpty()) {
+		if (!request.getActivityImageUrl().isEmpty()) {
 			filePath = fileService.createPath("activity");
 			activityPresignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
 		}
@@ -144,7 +138,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	}
 
 	@Override
-	public void removeActivity(Long memberNo,  Long activityNo) {
+	public void removeActivity(Long memberNo, Long activityNo) {
 
 		Member member = memberRepository.findByMemberNo(memberNo)
 			.orElseThrow(() -> new MemberNotExistException(memberNo));
@@ -156,7 +150,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	}
 
 	@Override
-	public SingleMessageSentResponse approveActivity(Long memberNo,Long activityNo) {
+	public SingleMessageSentResponse approveActivity(Long memberNo, Long activityNo) {
 		try {
 			Member member = memberRepository.findByMemberNo(memberNo)
 				.orElseThrow(() -> new MemberNotExistException(memberNo));
@@ -166,8 +160,18 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 
 			//승인 처리
 			activity.setApprove(APPROVE);
-
-			File file = (File)fileService.getObject(activity.getActivityImageUrl());
+			S3Object s3Object = fileService.getObject(activity.getActivityImageUrl());
+			InputStream objectInputStream = s3Object.getObjectContent();
+			File file = new File("classpath:/newFile.jpg");
+			try (OutputStream outputStream = new FileOutputStream(file)) {
+				byte[] buffer = new byte[1024];
+				int bytesRead;
+				while ((bytesRead = objectInputStream.read(buffer)) != -1) {
+					outputStream.write(buffer, 0, bytesRead);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 
 			// URL url = new URL(presignedUrl);
 			// InputStream inputStream = url.openStream();
@@ -194,6 +198,8 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 
 			SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 
+			// file.delete();
+			
 			return response;
 
 		} catch (Exception e) {

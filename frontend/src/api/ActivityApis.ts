@@ -40,3 +40,12 @@ export const getActivityDetail = async (activityNo: number) => {
     console.log(e);
   }
 };
+
+export const sendMessage = async (activityNo: number) => {
+  try {
+    const response = await customAxios.put<ISuccessResponse>(`/api/activity/${activityNo}/approve`);
+    console.log(response.data.result);
+  } catch (e) {
+    console.log(e);
+  }
+};
