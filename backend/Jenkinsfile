@@ -50,7 +50,6 @@ pipeline {
             }
         }
 
-
         stage('Run Container') {
             steps {
                 dir('exec/docker') {
