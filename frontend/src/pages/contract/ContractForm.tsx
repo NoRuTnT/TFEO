@@ -131,8 +131,15 @@ const ContractForm = () => {
         <StyledEngineProvider injectFirst>
           <Title>스물다섯 여든하나 룸쉐어링 계약서</Title>
           <Introduce>
-            임대인 {contractInfo.home.home.hostName}과 임차인 {contractInfo.member.name}은 아래와 같이 임대차 계약을
-            체결한다.
+            임대인{' '}
+            <span className="name" style={{ whiteSpace: 'nowrap' }}>
+              {contractInfo.home.home.hostName}
+            </span>
+            과 임차인{' '}
+            <span className="name" style={{ whiteSpace: 'nowrap' }}>
+              {contractInfo.member.name}
+            </span>
+            은 아래와 같이 임대차 계약을 체결한다.
           </Introduce>
           <Accordion>
             <AccordionSummary expandIcon={<ArrowDropDownIcon />} style={{ fontWeight: 'bold' }}>
@@ -143,7 +150,7 @@ const ContractForm = () => {
                 <Cell>주소</Cell>
               </HomeInfoFirstCell>
               <HomeInfoSecondCell>
-                <Cell>{getRoadAddress(contractInfo.home.home.address)}</Cell>
+                <Cell className="info">{getRoadAddress(contractInfo.home.home.address)}</Cell>
               </HomeInfoSecondCell>
             </AccordionDetails>
           </Accordion>
@@ -155,17 +162,25 @@ const ContractForm = () => {
               <ContractContentWrapper>
                 <ContractContentTitle>제 1 조 (목적)</ContractContentTitle>
                 <Text>
-                  위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금 {home.rent}
+                  위 임대주택의 임대차에 한하여 임대인과 임차인은 합의에 의하여 월세 금
+                  <span className="info" style={{ display: 'inline', marginLeft: '6px' }}>
+                    {home.rent}
+                  </span>
                   만원정을 선불로 매월 1일에 지불한다.
                 </Text>
               </ContractContentWrapper>
               <ContractContentWrapper>
                 <ContractContentTitle>제 2 조 (존속 기간)</ContractContentTitle>
                 <Text>
-                  임대인은 위 임대주택을 임대차 목적으로 사용, 수익할 수 있는 상태로 {getYear(contract.startAt)}년{' '}
-                  {getMonth(contract.startAt)}월 {getDay(contract.startAt)}일 까지 임차인에게 인도하며, 임대차 기간은
-                  인도일로부터 {getYear(contract.expiredAt)}년 {getMonth(contract.expiredAt)}월{' '}
-                  {getDay(contract.expiredAt)}일 까지로 한다.
+                  임대인은 위 임대주택을 임대차 목적으로 사용, 수익할 수 있는 상태로{' '}
+                  <span className="info" style={{ display: 'inline', marginLeft: '6px' }}>
+                    {getYear(contract.startAt)}년 {getMonth(contract.startAt)}월 {getDay(contract.startAt)}일
+                  </span>{' '}
+                  까지 임차인에게 인도하며, 임대차 기간은 인도일로부터{' '}
+                  <span className="info" style={{ display: 'inline', marginLeft: '6px' }}>
+                    {getYear(contract.expiredAt)}년 {getMonth(contract.expiredAt)}월 {getDay(contract.expiredAt)}일
+                  </span>{' '}
+                  까지로 한다.
                 </Text>
               </ContractContentWrapper>
               <ContractContentWrapper>
@@ -263,9 +278,23 @@ const Title = styled.h2`
 const Document = styled.div``;
 const Page = styled.div`
   margin: 2em;
+  .name {
+    font-weight: bold;
+  }
+  .info {
+    font-weight: bold;
+    color: #e07068;
+  }
+  .MuiAccordionDetails span {
+    white-space: nowrap;
+  }
 `;
 const View = styled.div``;
-const Text = styled.div``;
+const Text = styled.div`
+  span {
+    white-space: nowrap;
+  }
+`;
 const Introduce = styled.div`
   text-align: center;
   padding-bottom: 2em;
