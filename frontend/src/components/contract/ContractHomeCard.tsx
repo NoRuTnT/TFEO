@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { IHomeDetail, IHome } from '../../interfaces/HomeInterface';
 import { Card, CardContent, CardMedia } from '@mui/material';
-import { getRoadNameAddress, getEMDNameAddress, getRoadAddress } from '../../utils/addressUtils';
+import { getRoadAddress } from '../../utils/addressUtils';
 import { IAddress } from '../../interfaces/AddressInterface';
 import home from '../../pages/Home';
 import { getRent } from '../../utils/moneyUtils';
@@ -30,7 +30,6 @@ const ContractHomeCard = ({ status, homeDetail, contract }: Props) => {
             {hostPersonality.introvert ? <div className="host-filter">내향적인</div> : ''}
             {hostPersonality.nighttime ? <div className="host-filter">밤에 활동하는</div> : ''}
           </div>
-          <div>{contract.progress === 'DONE' ? '태그보여줘야함' : ''}</div>
           <div className="address">{getRoadAddress(home.address)}</div>
           <div>
             {home.hostName} {home.hostGender === 'M' ? '할아버지' : '할머니'}

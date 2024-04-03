@@ -5,7 +5,7 @@ import NotoSansKRBold from '../assets/fonts/NotoSansKR-Bold.ttf';
 import { IAddress } from '../interfaces/AddressInterface';
 import { IContractForm } from '../interfaces/ContractFormInterface';
 import { getYear, getMonth, getDay } from './timeUtils';
-import { getRoadAddress, getRoadNameAddress } from './addressUtils';
+import { getRoadAddress } from './addressUtils';
 import { getRent } from './moneyUtils';
 import { IContractInfo } from '../interfaces/ContractInterface';
 
@@ -134,7 +134,7 @@ export const createContractPdf = ({ home, contract, member }: IContractForm) => 
               <Text style={styles.cell}>주소</Text>
             </View>
             <View style={styles.homeInfoSecondCell}>
-              <Text style={styles.cell}>{getRoadNameAddress(home.address)}</Text>
+              <Text style={styles.cell}>{getRoadAddress(home.address)}</Text>
             </View>
           </View>
         </View>
