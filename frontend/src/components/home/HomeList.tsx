@@ -65,7 +65,7 @@ const HomeList: React.FC = () => {
           {/*<div className="home-count" onClick={resetStyles} {...handlers}>*/}
           <div className="home-count" onClick={resetStyles}>
             <div style={{ fontSize: '17px' }}>
-              함께 할 학생을 찾는 어르신 <b>{visibleHomes.length}</b>분
+              함께 할 학생을 찾는 어르신 <b>{visibleHomes.length}</b>명
             </div>
           </div>
           {visibleHomes.map((home, index) => (
