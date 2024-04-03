@@ -145,14 +145,21 @@ const ActivityReview: React.FC = ({ history }: any) => {
               fontSize: '20px',
               color: 'white',
               backgroundColor: '#e07068',
-              marginRight: '3                 0px',
+              marginLeft: '15px',
             }}
           >
             취소
           </button>
         </Link>
         <button
-          style={{ width: '100px', height: '60px', border: '1px solid black', borderRadius: '5px', fontSize: '20px' }}
+          style={{
+            width: '100px',
+            height: '60px',
+            border: '1px solid black',
+            borderRadius: '5px',
+            fontSize: '20px',
+            marginLeft: '15px',
+          }}
           onClick={handleSubmit}
         >
           등록
