@@ -63,15 +63,20 @@
 - Figma 활용 UI/UX 디자인 진행
 - 기능 develop
 
+![캡처1](/uploads/7192ff87ce9583950f2eaeb560cb1376/캡처1.PNG)
+
 ### ✏ ER-Diagram
 
 - ERD Cloud 활용
 
+![캡처](/uploads/fb103e234abc95c5601571eaa02359df/캡처.PNG)
+
 ### ✏ System Architecture
 
-- Jenkins CI pipeline
+- Jenkins CI/CD pipeline
 - Nginx
 - Docker
+
 ![인프라구조도](/uploads/4c4842ef9df40fe7e0589806c1a94215/인프라구조도.jpg)
 
 # 🏠 프로젝트 진행
@@ -92,6 +97,8 @@
 ### ✏ Git
 
 - 팀 Notion에 Git 행동 강령과 Commit convention 작성, 공유
+
+![캡처2](/uploads/b1f4623be4360145c8a76482844fe2c2/캡처2.PNG)
 
 - 작업 브랜치 전략
 
