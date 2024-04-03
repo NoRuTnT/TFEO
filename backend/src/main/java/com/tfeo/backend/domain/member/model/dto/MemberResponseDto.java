@@ -46,10 +46,8 @@ public class MemberResponseDto {
 		} else {
 			this.address = null;
 		}
-		this.profileUrl = member.getProfileUrl();
 		this.gender = member.getGender();
 		this.role = member.getRole();
-		this.certificate = member.getCertificate();
 		this.certificateStatus = member.getCertificateStatus();
 		this.certificateRegisterDate = member.getCertificateRegisterDate();
 		this.certificateExpirationDate = member.getCertificateExpirationDate();
@@ -58,5 +56,13 @@ public class MemberResponseDto {
 		} else {
 			this.memberPersonality = null;
 		}
+	}
+
+	public void updateProfilePresignedUrl(String url) {
+		this.profileUrl = url;
+	}
+
+	public void updateCertificatePresignedUrl(String url) {
+		this.certificate = url;
 	}
 }
