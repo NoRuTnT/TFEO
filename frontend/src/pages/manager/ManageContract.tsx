@@ -8,6 +8,7 @@ import ContractCompletedContent from '../../components/contract/ContractComplete
 import Footer from '../../components/footer/Footer';
 import ContractProgressBar from '../../components/contract/ContractProgressBar';
 import ContractHomeCard from '../../components/contract/ContractHomeCard';
+import ManagerFooter from '../../components/footer/ManagerFooter';
 const ManageContract = () => {
   const location = useLocation();
   const contractNoString = new URLSearchParams(location.search).get('contractNo');
@@ -73,7 +74,7 @@ const ManageContract = () => {
         />
         {renderByStatus(contractInfo.contract.progress)}
         <hr />
-        <Footer />
+        <ManagerFooter />
       </div>
     );
   }
