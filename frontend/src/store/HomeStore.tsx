@@ -1,8 +1,8 @@
 import create from 'zustand';
 
 interface MapPosition {
-  lat: number;
-  lng: number;
+  mapLat: number;
+  mapLng: number;
   setCenterPosition: (newLat: number, newLng: number) => void;
 }
 
@@ -149,8 +149,8 @@ interface VisibleHomesState {
 }
 
 const initialMapPosition: MapPosition = {
-  lat: 37.5642135,
-  lng: 127.0016985,
+  mapLat: 37.5,
+  mapLng: 126.964,
   setCenterPosition: (newLat: number, newLng: number) => {},
 };
 
@@ -190,7 +190,7 @@ const initialFilter: HomeFilter = {
     { type: '빌라', value: 'VL', choice: false },
     { type: '오피스텔', value: 'OPST', choice: false },
     { type: '원룸', value: 'OR', choice: false },
-    { type: '단독/다가구', value: 'DDDGG', choice: false },
+    { type: '단독주택', value: 'DDDGG', choice: false },
   ],
   setMarks: (newMarks: any) => {},
   toggleRentRange: (newRange: number[]) => {},
@@ -240,8 +240,8 @@ const initialHomeRequestData: HomeRequestData = {
     OR: false,
     rent_max: 100,
     rent_min: 0,
-    lat: 37.609641,
-    lng: 126.997697,
+    lat: 37.504147,
+    lng: 126.956954,
   },
   member_personality: {
     member_personality_no: 1,
@@ -278,8 +278,8 @@ export const useHomeStore = create<HomeFilter & HomeRequestData & HomeListState 
     setCenterPosition: (newLat: number, newLng: number) =>
       set((state) => ({
         ...state,
-        lat: newLat,
-        lng: newLng,
+        maplat: newLat,
+        mapLng: newLng,
       })),
     toggleFilter: (value: string) =>
       set((state) => {
