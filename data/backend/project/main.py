@@ -251,7 +251,6 @@ SCHOOL_LIMIT = 3
 # 추천 알고리즘에 따라 추천 결과를 반환
 @app.post("/recommend")
 def filter_by_search_condition(search_condition: Search_Condition, filter_condition: Filter_Condition, member_personality: Optional[Member_Personality]=None):
-    start_time = time.time()
     ## 특정 가전제품, 편의 시설에 대해서만 check하는 방법 ##
     # s_c 가 false 이면 그냥 전부 채택
     # s_c 가 true 이면 s_c가 있는 것만 선택됨
@@ -490,15 +489,6 @@ def filter_by_search_condition(search_condition: Search_Condition, filter_condit
     # weight = member_personality.host_house_prefer  # 0-10사이의 값을 적당하게 mapping
     # print(output_list)
     # print('client에 반환되는 요소의 개수 ', len(output_list))
-    end_time = time.time()
-    elapsed_time = end_time-start_time
-    global number
-    global time_sum
-    print(f"{number}번째 수행 처리시간은:{elapsed_time}")
-    time_sum += elapsed_time
-    number+=1
-    if number==TEST_NUMBER:
-        print(f'{TEST_NUMBER}번 API 수행 시간의 평균{time_sum/TEST_NUMBER}')
     return output_list
 
 # 등록된 집 추가
@@ -625,6 +615,4 @@ def init():
 # python -m uvicorn main:app --reload
 if __name__ == '__main__':
     # init() # mongoDB 연결
-    time_sum = 0
-    number = 1 # for debug
     uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info") # FastAPI 서버 작동
