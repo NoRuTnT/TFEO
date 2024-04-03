@@ -70,9 +70,21 @@ const HomeDetail: React.FC = () => {
   }, []);
   if (!homeDetail)
     return (
-      <>
-        <div>요청하신 집의 정보를 찾을 수 없습니다.</div>
-      </>
+      <div
+        style={{
+          width: '100%',
+          height: '750px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <div style={{ width: '80px', height: '20px' }}>
+          <img src="/assets/loading.gif" alt="이미지 로딩 시패" />
+        </div>
+        <div style={{ fontSize: '20px', marginTop: '50px' }}>로딩 중...</div>
+      </div>
     );
   const applyHome = async () => {
     const response = await applyHomeApi(homeDetail.home.homeNo, startAt);
