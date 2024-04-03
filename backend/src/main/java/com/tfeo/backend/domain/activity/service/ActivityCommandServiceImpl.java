@@ -25,6 +25,7 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.common.ActivityException;
@@ -71,7 +72,7 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 	}
 
 	@Override
-	public AddActivityResponseDto addActivity(Long memberNo, Long activityNo,
+	public String addActivity(Long memberNo, Long activityNo,
 		AddActivityRequestDto request) {
 
 		// Member member = memberRepository.findByMemberNo(memberNo)
@@ -92,12 +93,10 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			throw new TextBlankException();
 		}
 
-		if(request.getActivityImageUrl().isEmpty()){
-			throw new ImageNotExistException();
-		}
-
 		String filePath = fileService.createPath("activity");
 		String activityPresignedUrlToUpload = fileService.createPresignedUrlToUpload(filePath);
+		System.out.println("#######################");
+		System.out.println(activityPresignedUrlToUpload);
 		activity.writeActivity(filePath, request.getActivityText());
 
 		//승인 처리
@@ -114,9 +113,9 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			.build();
 
 		// 관리자 승인 & 알림톡 전송
-		approveActivity(memberNo,activityNo);
+		// approveActivity(memberNo,activityNo);
 
-		return result;
+		return activityPresignedUrlToUpload;
 	}
 
 	@Override
@@ -168,21 +167,17 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			//승인 처리
 			activity.setApprove(APPROVE);
 
-			String presignedUrl = fileService.createPresignedUrlToDownload(activity.getActivityImageUrl());
+			File file = (File)fileService.getObject(activity.getActivityImageUrl());
 
-			URL url = new URL(presignedUrl);
-			InputStream inputStream = url.openStream();
+			// URL url = new URL(presignedUrl);
+			// InputStream inputStream = url.openStream();
+			//
+			// // 파일로 데이터 복사
+			// OutputStream outputStream = new FileOutputStream("tempFile"); // 임시 파일로 저장
+			// ReadableByteChannel byteChannel = Channels.newChannel(inputStream);
+			// ((FileOutputStream)outputStream).getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
 
-			// 파일로 데이터 복사
-			OutputStream outputStream = new FileOutputStream("tempFile"); // 임시 파일로 저장
-			ReadableByteChannel byteChannel = Channels.newChannel(inputStream);
-			((FileOutputStream)outputStream).getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
-
-			String imageId = this.messageService.uploadFile(new File("tempFile"), StorageType.MMS, null);
-
-			// 스트림 및 파일 닫기
-			inputStream.close();
-			outputStream.close();
+			String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
 
 			//보호자 전화번호
 			String receiver = homeRepository.findByMemeber(memberNo).orElseThrow(
