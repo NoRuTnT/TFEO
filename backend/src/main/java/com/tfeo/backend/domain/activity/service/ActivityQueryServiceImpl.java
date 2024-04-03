@@ -1,6 +1,7 @@
 //ActivityQueryServiceImpl
 package com.tfeo.backend.domain.activity.service;
 
+import static com.tfeo.backend.common.model.type.ActivityApproveType.*;
 import static com.tfeo.backend.common.model.type.ContractProgressType.*;
 
 import java.util.ArrayList;
@@ -110,10 +111,7 @@ public class ActivityQueryServiceImpl implements ActivityQueryService {
 			Activity activity = activityRepository.findById(activityNo)
 				.orElseThrow(() -> new ActivityException("해당 활동인증글이 존재하지 않습니다. id=" + activityNo));
 			String imageUrl="";
-			if(!activity.getActivityImageUrl().equals(""))  imageUrl = fileService.createPresignedUrlToDownload(activity.getActivityImageUrl());
-			// System.out.println("##########이미지 경로#########");
-			// System.out.println(activity.getContract().getMember().getMemberNo());
-			// System.out.println(activity.getContract().getMember().getName());
+			if(activity.getApprove().equals(APPROVE))  imageUrl = fileService.createPresignedUrlToDownload(activity.getActivityImageUrl());
 			System.out.println("##############################");
 			ReadActivityResponseDto result = ReadActivityResponseDto.builder()
 				.memberNo(activity.getContract().getMember().getMemberNo())

@@ -25,6 +25,7 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.tfeo.backend.common.model.type.Role;
 import com.tfeo.backend.common.service.FileService;
 import com.tfeo.backend.domain.activity.common.ActivityException;
@@ -166,21 +167,17 @@ public class ActivityCommandServiceImpl implements ActivityCommandService {
 			//승인 처리
 			activity.setApprove(APPROVE);
 
-			String presignedUrl = fileService.createPresignedUrlToDownload(activity.getActivityImageUrl());
+			File file = (File)fileService.getObject(activity.getActivityImageUrl());
 
-			URL url = new URL(presignedUrl);
-			InputStream inputStream = url.openStream();
+			// URL url = new URL(presignedUrl);
+			// InputStream inputStream = url.openStream();
+			//
+			// // 파일로 데이터 복사
+			// OutputStream outputStream = new FileOutputStream("tempFile"); // 임시 파일로 저장
+			// ReadableByteChannel byteChannel = Channels.newChannel(inputStream);
+			// ((FileOutputStream)outputStream).getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
 
-			// 파일로 데이터 복사
-			OutputStream outputStream = new FileOutputStream("tempFile"); // 임시 파일로 저장
-			ReadableByteChannel byteChannel = Channels.newChannel(inputStream);
-			((FileOutputStream)outputStream).getChannel().transferFrom(byteChannel, 0, Long.MAX_VALUE);
-
-			String imageId = this.messageService.uploadFile(new File("tempFile"), StorageType.MMS, null);
-
-			// 스트림 및 파일 닫기
-			inputStream.close();
-			outputStream.close();
+			String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
 
 			//보호자 전화번호
 			String receiver = homeRepository.findByMemeber(memberNo).orElseThrow(

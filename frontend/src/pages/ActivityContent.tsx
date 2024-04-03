@@ -8,19 +8,31 @@ import { useActivityStore } from '../store/ActivityStore';
 import { IActivity } from '../interfaces/ActivityInterface';
 import { format } from 'date-fns';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { getFileFromS3 } from '../api/S3Apis';
+import { file } from '@babel/types';
 
 const ActivityContent: React.FC = () => {
   const [activity, setActivity] = useState<IActivity>();
+  const [image, setImage] = useState<string>('');
   useEffect(() => {
     const activityNofromUrl = new URLSearchParams(location.search).get('activityNo');
     const activityNo = activityNofromUrl ? parseInt(activityNofromUrl, 10) : null;
     const fetchData = async () => {
       if (!activityNo) return;
       const response = await getActivityDetail(activityNo);
-      if (response) setActivity(response);
       console.log(response);
+      if (response) {
+        setActivity(response);
+        if (response.activityImageUrl) {
+          const fileResponse = await getFileFromS3(response.activityImageUrl);
+          if (fileResponse) {
+            setImage(URL.createObjectURL(fileResponse));
+            console.log(image);
+          }
+        }
+      }
     };
-    if (activityNo) fetchData();
+    fetchData();
   }, []);
   return (
     <div className="main-page">
@@ -41,7 +53,7 @@ const ActivityContent: React.FC = () => {
 
       {/* 사진 컨테이너 */}
       <div style={{ display: 'flex', justifyContent: 'center' }} className="photo-container">
-        <img src={`http://j10a707.p.ssafy.io${activity?.activityImageUrl}`} /> 이미지 경로
+        <img src={image} />
       </div>
 
       {/* 사진 설명 */}
