@@ -54,6 +54,7 @@ const Contract = () => {
             contractNo={contractInfo.contract.contractNo}
             role="USER"
             homeNo={contractInfo.home.home.homeNo}
+            memberNo={contractInfo.member.memberNo}
           />
         );
     }
