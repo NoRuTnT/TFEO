@@ -201,6 +201,8 @@ master - develop - feature - backend - 기능
 - 데이터 크롤링 : 부동산 사이트 매물 데이터 수집
 - 추천에 불필요한 정보 제거 : ex) 공인중개사 주소정보
 - 결측치 제거 : ex) 시군구 주소정보 -> 더미 문자열로
+[결측치가 제거(empty로 padding)된 데이터셋]
+![image-1.png](./image-1.png)
 - 획득 정보들의 자료형 정리 : ex) lat: float, address: str
 
 총 1264개 데이터 수집
@@ -210,10 +212,32 @@ master - develop - feature - backend - 기능
 - 부동산은 계약 주기가 길기 때문에 (6개월 이상) 컨텐츠 기반 추천 알고리즘을 사용하기에 부적합 ⇒ 컨텐츠 기반 추천 알고리즘 고도화 추진
 
 - 코사인 유사도 : 두 벡터간 각도 코사인값을 이용하여 측정된 벡터간의 유사한 정도
-
-1. host선호 정보와 member선호 정보를 각각 벡터화
+[출처:https://wikidocs.net/24603]
+![image.png](./image.png)
+1. host선호 정보와 member선호 정보의 종류로부터 특성을 정리하고 각각 벡터화
+```python
+def get_member_vector(member_personality):
+    ...
+    day = convert_bool_to_int(member_personality['daytime'])+convert_bool_to_int(member_personality['fast'])*weight
+    ...
+    member_vector = [day, night, smoke, extro, intro,
+                     host_related, pet_lover, cold, hot]
+    return np.array(member_vector)
+```
 2. 각각의 host벡터에 대해 member벡터와 코사인 유사도 계산
+```python
+from sklearn.metrics.pairwise import cosine_similarity
+# 코사인 유사도 계산
+similarity = cosine_similarity(host_vector.reshape(1,-1), member_vector.reshape(1,-1))
+priorities.append([similarity[0][0], item['home_no']]) # 유사도와 인덱스 번호를 배열에 추가
+```
 3. 우선순위가 높은 순서대로 MongoDB에 다시 find() 수행
+```python
+    for lim, index in enumerate(priorities):
+        if(lim >= SEARCH_LIMIT):
+            break
+        item = db.home.find({'home_no': index[1]}, {mongo_projection_query})
+```
 4. 획득한 결과를 client에 반환
 
 ### 💡 추천 서버구현
@@ -222,7 +246,30 @@ master - develop - feature - backend - 기능
 - MongoDB 접근을 위한 pymongo lib 사용
 - Frontend filter 조건 + 컨텐츠 추천 알고리즘 기반 추천 집 리스트 반환
 
+### 💡 알고리즘 실행 성능 향상
 
+- 최대 검색되는 요소의 개수를 200개 이내로 제한해서 json_data 용량 최소화
+```python
+SEARCH_LIMIT = 200
+...
+    for lim, index in enumerate(priorities):
+        if(lim >= SEARCH_LIMIT):
+            break
+        (data_process_logic)
+```
+- 프론트엔드 코드처리에 필수적인 key-value 성분만 선별해서 추출 (MongoDB Projection 기능)
+```python
+item = db.home.find({'home_no': index[1]}, {'type': 1,
+                             'smoke': 1,
+                             'pet': 1,
+                             'clean': 1,
+                             ...
+                             })
+```
+- 최적화 이전<br/>
+  ![최적화이전.PNG](./최적화이전.PNG)
+- 최적화 이후<br/>
+  ![최적화이후.PNG](./최적화이후.PNG)
 ### 💡 AWS S3 활용 파일 처리
 
 
