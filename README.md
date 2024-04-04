@@ -121,24 +121,25 @@ master - develop - feature - backend - 기능
 
 ### 💡 Version
 
-| Teck stack |            | version |
-| ---------- | ---------- | ------- |
-| Frontend   | Vue        | 3.4.14  |
-|            | Node       | 20.10.0 |
-|            | npm        | 10.2.3  |
-|            | Quasar CLI | 2.3.0   |
-|            | Vite       | 5.0.12  |
-| Data       | FastAPI    | 0.95.0  |
-|            | MongoDB    | 5.0.25  |
-| Backend    | SpringBoot | 2.7.17  |
-|            | Openvidu   | 2.29.0  |
-|            | JavaCV     | 1.5.10  |
-| Database   | MySQL      | 8.0.32  |
-|            | Redis      |         |
-| Infra      | Docker     |         |
-|            | Nginx      |         |
-|            | AWS EC2    |         |
-
+| Teck stack |                | version |
+|------------|----------------|---------|
+| Frontend   | React          | 18.2.0  |
+|            | Node           | 20.12.1 |
+|            | zustand        | 4.5.2   |
+|            | Vite           | 5.0.12  |
+| Data       | FastAPI        | 0.95.0  |
+|            | uvicorn        | 0.21.1  |
+| Backend    | SpringBoot     | 2.7.17  |
+| Database   | MySQL          | 8.0.32  |
+|            | Redis          |         |
+|            | MongoDB        | 5.0.25  |
+| Infra      | Docker         |         |
+|            | Docker-compose |         |
+|            | Docker Hub     |         |
+|            | Nginx          |         |
+|            | AWS EC2        |         |
+|            | Prometheus     |         |
+|            | Grafana        |         |
 # 🏠 데이터 분석
 
 ### 💡 데이터 수집, 전처리
