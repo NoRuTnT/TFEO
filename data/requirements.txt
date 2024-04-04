@@ -1,0 +1,13 @@
+matplotlib>=3.5.1
+numpy>=1.22.2
+pandas>=1.4.0
+seaborn>=0.11.2
+requests>=2.22.0
+urllib3>=1.25.8
+fastapi==0.95.0
+uvicorn==0.21.1
+pymongo==4.3.3
+Faker
+matplotlib==3.7.1
+scikit-learn==1.2.2
+scipy==1.10.1

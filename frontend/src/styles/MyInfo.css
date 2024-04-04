@@ -1,0 +1,62 @@
+.textarea-editing {
+  box-shadow: 0 0 2px rgba(255, 90, 90, 1);
+  padding: 3px 0px 3px 3px;
+  margin: 5px 1px 3px 0px;
+  border: 1px solid rgba(255, 90, 90, 1);
+  cursor: text;
+}
+
+/* 프로필 이미지와 사진 업로드 버튼을 가운데 정렬 */
+.profile-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* 요소들을 세로로 쌓음 */
+  margin-bottom: 20px; /* 버튼과 이미지 사이의 여백 조정 */
+}
+
+.profile-image {
+  width: 150px; /* 이미지 크기 조정 */
+  height: 150px; /* 이미지 크기 조정 */
+  border-radius: 50%; /* 이미지를 원형으로 만듦 */
+  object-fit: cover; /* 이미지 비율 유지 */
+  margin-bottom: 10px; /* 이미지와 버튼 사이의 여백 */
+  background-color: #c5f6c7;
+}
+
+.image-upload-button {
+  background-color: #f1f1f1; /* 버튼 배경색 */
+  border: none;
+  padding: 10px 20px; /* 패딩으로 버튼 크기 조정 */
+  border-radius: 20px; /* 버튼 모서리 둥글게 */
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+}
+
+.image-upload-button label {
+  cursor: pointer; /* 마우스 오버 시 커서 변경 */
+}
+
+/* 링크 버튼 스타일 */
+.info-buttons-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2열 그리드 */
+  gap: 10px; /* 그리드 간격 */
+  padding: 20px; /* 컨테이너 패딩 */
+  text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.info-buttons-container a {
+  background-color: #4caf50; /* 버튼 배경색 */
+  color: white; /* 텍스트 색상 */
+  padding: 15px 25px; /* 패딩으로 버튼 크기 조정 */
+  border-radius: 20px; /* 버튼 모서리 둥글게 */
+  text-decoration: none; /* 밑줄 제거 */
+  display: inline-block; /* inline-block으로 설정하여 width, height, margin, padding 적용 */
+  width: 100%; /* 부모의 전체 너비 차지 */
+}
+
+/* 버튼 호버 효과 */
+.info-buttons-container a:hover {
+  background-color: #45a049; /* 호버 시 배경색 변경 */
+}
+

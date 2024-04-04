@@ -1,0 +1,15 @@
+spring:
+  config:
+    import:
+      - optional:file:env/security.env[.properties]
+cloud:
+  aws:
+    s3:
+      bucket: tfeo-bucket
+    stack:
+      auto: false
+    region:
+      static: ap-northeast-2
+    credentials:
+      accessKey: ${S3_ACCESSKEY}
+      secretKey: ${S3_SECRETKEY}

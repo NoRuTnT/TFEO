@@ -1,0 +1,86 @@
+.circle-container {
+    height: 640px;
+    position: relative;
+    /*margin-left: 50px; !* 세로선과 라벨이 있는 공간을 만들기 위해 추가 *!*/
+}
+
+.circle-row {
+    display: flex;
+    align-items: center;
+    height: 107px;
+}
+
+.circle-row:nth-child(odd) {
+    background-color: #fff4f0;
+}
+
+.circle-row:nth-child(even) {
+    background-color: #ffe5d5;
+}
+
+.circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: white;
+    margin: 17px;
+    border: 1px solid #E07068;
+    z-index: 1000;
+}
+
+.circle.filled {
+    background-color: #E07068;
+    border: none; /* 테두리가 배경색과 같으므로 제거 */
+}
+
+.label {
+    width: 50px; /* 충분한 공간을 확보 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px; /* 텍스트 크기 조정 */
+    font-weight: bold;
+    color: black; /* 라벨 색상 조정 */
+}
+
+.explaination {
+    margin: 25px;
+    font-size: 18px;
+}
+
+/* 추가 스타일링 */
+.circle-container::before {
+    content: '';
+    position: absolute;
+    left: 25px; /* Adjust this value as needed for alignment */
+    top: 0;
+    bottom: 0;
+    width: 2px; /* Line thickness */
+    background-color: red; /* Line color */
+}
+
+.small-circle {
+    /*position: fixed;*/
+    margin-left: 18px;
+    border-radius: 50%;
+    width: 17px;
+    height: 17px;
+    background-color: white;
+    border: 2px solid red;
+    z-index: 1;
+}
+
+.line {
+    z-index: 1;
+    width: 200px;
+    /*height: 1px;*/
+    /*background-color: gray;*/
+    position: absolute;
+    margin-left: 110px;
+    margin-top: 5px;
+    border-top: 2px dotted #555555; /* 위쪽 테두리를 점선으로 설정 */
+    height: 0; /* 이전에 설정한 높이를 0으로 설정 */
+}
