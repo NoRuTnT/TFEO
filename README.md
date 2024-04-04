@@ -176,21 +176,25 @@ master - develop - feature - backend - 기능
 
 ### 💡 Version
 
-| Teck stack |                      | version |
-| ---------- | -------------------- | ------- |
-| Frontend   | React                | 18.2.0  |
-|            | Typescript           | 4.4.2   |
-|            | zustand              | 4.5.2   |
-|            | webpack              | 5.6.0   |
-| Data       | FastAPI              | 0.95.0  |
-| Backend    | SpringBoot           | 2.7.17  |
-|            | Java (Amazon Coretto)| 11.0.22 |
-| Database   | MySQL                | 8.0.32  |
-|            | MongoDB              | 5.0.25  |
-|            | Redis                |         |
-| Infra      | Docker               |         |
-|            | Nginx                |         |
-|            | AWS EC2              |         |
+| Teck stack |                       | version |
+| ---------- |-----------------------| ------- |
+| Frontend   | React                 | 18.2.0  |
+|            | Typescript            | 4.4.2   |
+|            | zustand               | 4.5.2   |
+|            | webpack               | 5.6.0   |
+| Data       | FastAPI               | 0.95.0  |
+|            | uvicorn               | 0.21.1  |
+| Backend    | SpringBoot            | 2.7.17  |
+|            | Java (Amazon Coretto) | 11.0.22 |
+| Database   | MySQL                 | 8.0.32  |
+|            | MongoDB               | 5.0.25  |
+|            | Redis                 |         |
+| Infra      | Docker                |         |
+|            | Docker Hub            |         |
+|            | Nginx                 |         |
+|            | AWS EC2               |         |
+|            | Prometheus            |         |
+|            | Grafana               |         |
 
 # 🏠 데이터 분석
 
@@ -200,7 +204,7 @@ master - develop - feature - backend - 기능
 - 추천에 불필요한 정보 제거 : ex) 공인중개사 주소정보
 - 결측치 제거 : ex) 시군구 주소정보 -> 더미 문자열로
 [결측치가 제거(empty로 padding)된 데이터셋]
-![image-1.png](./image-1.png)
+![image-1](/uploads/f2b209f3cebf28bda0dc532df14bc7ae/image-1.png)
 - 획득 정보들의 자료형 정리 : ex) lat: float, address: str
 
 총 1264개 데이터 수집
@@ -211,7 +215,7 @@ master - develop - feature - backend - 기능
 
 - 코사인 유사도 : 두 벡터간 각도 코사인값을 이용하여 측정된 벡터간의 유사한 정도
 [출처:https://wikidocs.net/24603]
-![image.png](./image.png)
+![image](/uploads/ffc5e9b0152e3cf02baab7cc012cce54/image.png)
 1. host선호 정보와 member선호 정보의 종류로부터 특성을 정리하고 각각 벡터화
 ```python
 def get_member_vector(member_personality):
@@ -265,9 +269,9 @@ item = db.home.find({'home_no': index[1]}, {'type': 1,
                              })
 ```
 - 최적화 이전<br/>
-  ![최적화이전.PNG](./최적화이전.PNG)
+  ![최적화이전](/uploads/05139fbce2aba5a30ea64134f52287fb/최적화이전.PNG)
 - 최적화 이후<br/>
-  ![최적화이후.PNG](./최적화이후.PNG)
+  ![최적화이후](/uploads/dd54a18e21175e1a3da4e8efde1cee80/최적화이후.PNG)
 ### 💡 AWS S3 활용 파일 처리
 
 
@@ -278,7 +282,7 @@ item = db.home.find({'home_no': index[1]}, {'type': 1,
 | ---------- | ---------- | ------- |
 | 김태윤   | 팀장, BE 리더, FE        | 팀장으로 프로젝트에 참여하게 되었는데, 일정을 어느 정도 리드해줘야 하는 자리인데 그 점이 다소 미흡했던 거 같아 조금은 아쉬웠고, 모두에게 신경을 쓰지는 못했었다는 것도 아쉬웠습니다. 그렇지만 좋은 팀원들과 즐겁게 프로젝트 마무리할 수 있어서 좋았고, 리액트를 처음 사용해보게 되었는데 프런트엔드 개발도 많이 이해할 수 있어 유익한 시간이었습니다.  |
 | 문준형     | Infra, BE    | 20.10.0 |
-| 박중현     | FE 리더       | 10.2.3  |
+| 박중현     | FE 리더       | 프론트엔드 팀장이지만 부족한 실력으로 인해 프론트엔드 개발이 많이 늦어졌는데 api 호출이나 상태관리에 능력이 뛰어난 팀원들 덕분에 개발을 잘 끝낸 것 같습니다. 저는 UI/UX 부분에 많은 노력을 들였는데, 발표 때 오류 없이 계획한 대로 진행되어서 기뻤습니다. 프론트엔드 개발자로서 갖춰야 하는 능력이 비단 눈에 보이는 영역 뿐만 아니라 백엔드에 대한 이해가 필요하다고 느꼈고 보다 워크플로우를 잘 알아야겠다는 생각을 했습니다. 빠른 상황판단과 역할 분배로 프로젝트를 잘 끝낼 수 있게 노력해준 팀원분들께 감사합니다.|
 | 서해광     | Data 리더, FE, BE | 빅데이터 분석 부분을 더 빠르게 구현하고 프론트엔드에 집중하고 싶었는데 그러지 못해 미안한 마음이 있습니다. 고된 프로젝트 과정 가운데 힘든 내색 전혀하지 않고 즐거이 프로젝트를 같이한 다른 팀원분들께 감사하고 새로운 프레임워크, 데이터베이스를 적용하고 데이터를 가공하고 분석하는 능력을 기를 수 있어서 정말로 좋았습니다.  |
 | 이민지     | FE, BE       | 5.0.12  |
 | 이하은     | Data, BE, FE | 데이터셋이 없는 상황에서 추천 시스템 구현을 위한 빅데이터 셋을 모으고 가공하는 과정에서 전처리 및 크롤링과 관련한 파이썬 라이브러리들을 사용해보는 경험은 정말 뜻깊었습니다. react라는 새로운 프레임워크를 단시간에 적용해 프로젝트를 완성해야 하는 힘든 일정이었음에도 불구하고, 좋은 팀원들 덕분에 잘 끝낼 수 있었다고 생각합니다. 소통의 중요성을 다시한번 체감했고 새로운 기술을 빠르게 배워 적용하는 경험을 통해 많이 성장할 수 있어 좋았습니다. |

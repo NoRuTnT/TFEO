@@ -1,3 +1,7 @@
+spring:
+  config:
+    import:
+      - optional:file:env/security.env[.properties]
 cloud:
   aws:
     s3:
@@ -7,5 +11,5 @@ cloud:
     region:
       static: ap-northeast-2
     credentials:
-      accessKey: AKIA4QRMPZYRUH5IQSFJ
-      secretKey: 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
+      accessKey: ${S3_ACCESSKEY}
+      secretKey: ${S3_SECRETKEY}
