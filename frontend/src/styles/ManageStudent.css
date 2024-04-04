@@ -1,0 +1,57 @@
+.student-header {
+    display: flex;
+    /*justify-content: space-between;*/
+    /*align-items: center;*/
+    padding: 10px;
+    background-color: #E07068;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.home-button {
+    /* 여기에 홈 버튼 스타일을 추가하세요 */
+}
+
+h1 {
+    margin: 0 auto; /* 가운데 정렬 */
+}
+
+.student-list {
+    margin-top: 60px; /* 헤더의 높이에 따라 조정하세요 */
+    margin-bottom: 60px;
+}
+
+.student-item {
+    height: 100px;
+    border-bottom: 1px solid darkgray;
+    padding: 10px;
+}
+
+.student-item:first-child {
+    border-top: 1px solid darkgray;
+}
+
+.date {
+    color: gray;
+    font-size: 14px;
+}
+.info {
+    margin-top: 3px;
+    display: flex;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.info-detail {
+    font-size: 15px;
+    margin-left: 5px;
+    margin-top: 1px;
+}
+
+.isNew {
+    color: red;
+    margin-left: 20px;
+}
+

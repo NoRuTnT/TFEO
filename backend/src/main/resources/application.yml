@@ -1,0 +1,8 @@
+spring:
+  config:
+    import:
+      - application-db.yml
+      - application-security.yml
+      - application-s3.yml
+server:
+  port: ${SERVER_PORT1}

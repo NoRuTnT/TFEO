@@ -1,0 +1,24 @@
+.main-page {
+  text-align: center;
+  display: flex;
+  flex-direction: column; /* flex 컨테이너 설정 */
+  justify-content: center;
+  align-items: center;
+  height: 90%; /* 최소 높이를 뷰포트 높이의 100%로 설정 */
+}
+
+.background-image-container img {
+  width: 100%;
+  height: auto;
+}
+
+.image-slider {
+  display: flex;
+  overflow-x: auto;
+}
+
+.image-slider .slide {
+  min-width: 100%;
+  margin-right: 10px;
+}
+

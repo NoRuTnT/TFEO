@@ -1,0 +1,239 @@
+pipeline {
+    agent any
+    tools {
+        gradle 'gradle'
+    }
+    environment {
+        // 환경 변수를 선언하고 초기화
+        imageName = "norutnt/develop"
+        frontimageName = "norutnt/front"
+        dataimageName = "norutnt/data"
+        registryCredential = "tfeo-docker"
+        dockerImage = ''
+
+        releaseServerAccount = 'ubuntu'
+        releaseServerUri = 'j10a707.p.ssafy.io'
+        frontreleasePort = '3000'
+        datareleasePort = '8000'
+        releasePort = '8081'
+
+    }
+    post {
+        success {
+            updateGitlabCommitStatus name: 'build', state: 'success'
+        }
+
+        failure {
+            updateGitlabCommitStatus name: 'build', state: 'failed'
+        }
+    }
+
+    stages {
+        stage('Get Merge Request and preBuildMerge') {
+            steps {
+                cleanWs()
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: [[name: "origin/${env.gitlabSourceBranch}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[$class: 'PreBuildMerge', options: [mergeRemote: 'origin', mergeTarget: "${env.gitlabTargetBranch}"]]],
+                        submoduleCfg: [],
+                        userRemoteConfigs: [[credentialsId: 'gitlab_access_token', url: 'https://lab.ssafy.com/s10-bigdata-recom-sub2/S10P22A707.git']]
+                    ])
+                }
+
+            }
+        }
+
+        stage('Setup build environment') {
+            steps {
+                script {
+                        sh 'rm -rf backend/env'
+                        sh 'mkdir -p backend/env'
+                        sh "chown -R jenkins:jenkins backend/env"
+                        sh "chmod -R 755 backend/env"
+                        sh "chown -R jenkins:jenkins frontend"
+                        sh "chmod -R 755 frontend"
+                }
+
+
+                withCredentials([file(credentialsId: 'db', variable: 'dbFile')]) {
+                    script {
+                        sh 'cp $dbFile backend/env/db.env'
+                    }
+                }
+
+
+                withCredentials([file(credentialsId: 'test-db', variable: 'testdbFile')]) {
+                    script {
+                        sh 'cp $testdbFile backend/env/test-db.env'
+                    }
+                }
+
+                withCredentials([file(credentialsId: 'security', variable: 'securityFile')]) {
+                    script {
+                        sh 'cp $securityFile backend/env/security.env'
+                    }
+                }
+
+                withCredentials([file(credentialsId: 'front', variable: 'frontFile')]) {
+                    script {
+                        sh 'cp $frontFile frontend/.env'
+                    }
+                }
+
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building...'
+                 // 빌드 실행
+                 dir('backend') {
+                    // backend 디렉토리 안에서 빌드 실행
+                    sh 'chmod +x ./gradlew'
+                    sh './gradlew clean bootJar'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Test...'
+                // 테스트 실행
+                dir('backend') {
+                    // backend 디렉토리 안에서 빌드 실행
+                    sh './gradlew test'
+                }
+            }
+        }
+
+        stage('[Backend]Image Build & DockerHub Push') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                dir('backend') {
+                    script {
+                        docker.withRegistry('', registryCredential) {
+                            // 이미지 빌드
+                            sh "docker build -t $imageName:$BUILD_NUMBER ."
+                            sh "docker build -t $imageName:latest ."
+
+                            // Docker Hub에 푸시
+                            sh "docker push $imageName:$BUILD_NUMBER"
+                            sh "docker push $imageName:latest"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('[FastAPI]Image Build & DockerHub Push') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                dir('data') {
+                    script {
+                        docker.withRegistry('', registryCredential) {
+                            // 이미지 빌드
+                            sh "docker build -t $dataimageName:$BUILD_NUMBER ."
+                            sh "docker build -t $dataimageName:latest ."
+
+                            // Docker Hub에 푸시
+                            sh "docker push $dataimageName:$BUILD_NUMBER"
+                            sh "docker push $dataimageName:latest"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('[Frontend]Image Build & DockerHub Push') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                dir('frontend') {
+                    script {
+                        docker.withRegistry('', registryCredential) {
+                            // 이미지 빌드
+                            sh "docker build -t $frontimageName:$BUILD_NUMBER ."
+                            sh "docker build -t $frontimageName:latest ."
+
+                            // Docker Hub에 푸시
+                            sh "docker push $frontimageName:$BUILD_NUMBER"
+                            sh "docker push $frontimageName:latest"
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('DockerHub Pull') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $imageName:latest'"
+                    sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $frontimageName:latest'"
+                    sh "ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri 'sudo docker pull $dataimageName:latest'"
+                }
+            }
+        }
+
+        stage('blue-green deploy') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ubuntu@j10a707.p.ssafy.io "
+                    sh '/home/ubuntu/deploy.sh'
+                    "
+                    '''
+                }
+            }
+        }
+
+
+        stage('Before Service Stop') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ubuntu@j10a707.p.ssafy.io "
+                    docker stop front || true
+                    docker stop data || true
+
+                    docker rm -f front || true
+                    docker rm -f data || true
+                    "
+                    '''
+                }
+            }
+        }
+
+
+
+        stage('Service Start') {
+            when {
+                expression { env.gitlabMergeRequestState != 'opened' }
+            }
+            steps {
+                sshagent(credentials: ['ubuntu']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul --env-file=/home/ubuntu/env/.env --name front --network tfeo-network -p $frontreleasePort:$frontreleasePort -d $frontimageName:latest"
+                        ssh -o StrictHostKeyChecking=no $releaseServerAccount@$releaseServerUri "sudo docker run -i -e TZ=Asia/Seoul --name data --network tfeo-network -p $datareleasePort:$datareleasePort -d $dataimageName:latest"
+                    """
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,48 @@
+spring:
+  config:
+    import:
+      - optional:file:env/security.env[.properties]
+  security:
+    oauth2:
+      client:
+        provider:
+          kakao:
+            authorization-uri: ${KAKAO_AUTHORIZATION_URI}
+            token-uri: ${KAKAO_TOKEN_URI}
+            user-info-uri: ${KAKAO_USER_INFO_URI}
+            user-name-attribute: ${KAKAO_USER_NAME_ATTRIBUTE}
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: ${KAKAO_REDIRECT_URI}
+            scope: ${KAKAO_SCOPE}
+            client-name: ${KAKAO_CLIENT_NAME}
+            authorization-grant-type: ${KAKAO_AUTHORIZATION_GRANT_TYPE}
+            client-authentication-method: ${KAKAO_CLIENT_AUTHENTICATION_METHOD}
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: ${GOOGLE_SCOPE}
+
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+
+jwt:
+  secretKey: ${SECRET_KEY}
+  access:
+    expiration: ${ACCESS_EXPIRATION}
+    header: ${ACCESS_HEADER}
+  refresh:
+    expiration: ${REFRESH_EXPIRATION}
+    header: ${REFRESH_HEADER}
+
+coolsms:
+  api:
+    key: ${COOLSMS_API_KEY}
+    secret: ${COOLSMS_API_SECRET_KEY}
+
+tfeo:
+  domain: ${TFEO_DOMAIN}
+

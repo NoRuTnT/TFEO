@@ -1,0 +1,53 @@
+.small-page-wrapper {
+    /*text-align: center;*/
+    width: 94%;
+    display: flex;
+    flex-direction: column; /* flex 컨테이너 설정 */
+    margin-bottom: 17%;
+    border-radius: 20px;
+    box-shadow: 1px 1px 9px gray;
+}
+
+.small-swipeable-image{
+    width: 100%; /* 부모 요소에 맞게 이미지를 확장 */
+    height: 170px; /* 부모 요소에 맞게 이미지를 확장 */
+    object-fit: cover; /* 이미지를 요소에 꽉 채우도록 설정 */
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.small-content-wrapper {
+    margin-left: 10px;
+}
+
+.name-container {
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.explaination-wrapper {
+    font-size: 12px;
+    margin: 8px 0;
+}
+
+.small-indicators {
+    text-align: center;
+    margin-top: -25px; /* Adjust this value to position the dots over the image */
+    z-index: 200;
+}
+
+.small-dot {
+    height: 7px;
+    width: 7px;
+    margin: 0 5px;
+    background-color: #F9EAE1;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+.small-dot.active {
+    background-color: #E07068; /* Active dot color */
+}
