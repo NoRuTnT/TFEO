@@ -204,7 +204,7 @@ master - develop - feature - backend - 기능
 - 추천에 불필요한 정보 제거 : ex) 공인중개사 주소정보
 - 결측치 제거 : ex) 시군구 주소정보 -> 더미 문자열로
 [결측치가 제거(empty로 padding)된 데이터셋]
-![image-1.png](./image-1.png)
+![image-1](/uploads/f2b209f3cebf28bda0dc532df14bc7ae/image-1.png)
 - 획득 정보들의 자료형 정리 : ex) lat: float, address: str
 
 총 1264개 데이터 수집
@@ -215,7 +215,7 @@ master - develop - feature - backend - 기능
 
 - 코사인 유사도 : 두 벡터간 각도 코사인값을 이용하여 측정된 벡터간의 유사한 정도
 [출처:https://wikidocs.net/24603]
-![image.png](./image.png)
+![image](/uploads/ffc5e9b0152e3cf02baab7cc012cce54/image.png)
 1. host선호 정보와 member선호 정보의 종류로부터 특성을 정리하고 각각 벡터화
 ```python
 def get_member_vector(member_personality):
@@ -269,9 +269,9 @@ item = db.home.find({'home_no': index[1]}, {'type': 1,
                              })
 ```
 - 최적화 이전<br/>
-  ![최적화이전.PNG](./최적화이전.PNG)
+  ![최적화이전](/uploads/05139fbce2aba5a30ea64134f52287fb/최적화이전.PNG)
 - 최적화 이후<br/>
-  ![최적화이후.PNG](./최적화이후.PNG)
+  ![최적화이후](/uploads/dd54a18e21175e1a3da4e8efde1cee80/최적화이후.PNG)
 ### 💡 AWS S3 활용 파일 처리
 
 
