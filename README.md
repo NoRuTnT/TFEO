@@ -144,7 +144,7 @@ master - develop - feature - backend - 기능
 
 ![리드미7](https://github.com/NoRuTnT/Dotori/assets/114069644/5c679a92-7a62-4cd8-8085-dace39dbbe58)
 
--계약서 서명 및 생성
+- 계약서 서명 및 생성
 
 ![리드미8](https://github.com/NoRuTnT/Dotori/assets/114069644/1914e68c-d39e-41a3-9154-063fae1be639)
 ![리드미9](https://github.com/NoRuTnT/Dotori/assets/114069644/54f63759-f7c7-4ec6-b3cc-7087452d4861)
@@ -281,6 +281,7 @@ item = db.home.find({'home_no': index[1]}, {'type': 1,
   - 빅데이터를 다루는 만큼, 대량의 파일처리를 위해서 백엔드 서버에 multipart 형식의 파일을 보내 서버가 직접 업로드/다운로드 하는 방식은 장기적으로 생각했을 때 서버에 부하를 줄 수 있을 것이라 생각해 프로젝트에서 presined url 방식을 사용하게 되었습니다. 
 
 - 문서화
+
 ![tfeo-s3](/uploads/7a6f5c12f4c7f28ee34b97f6e8e073ca/tfeo-s3.gif)
 
 ---
