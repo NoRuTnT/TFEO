@@ -128,36 +128,36 @@ master - develop - feature - backend - 기능
 ### 🧓 집 신청 및 집 상세 정보
 - 집 옵션 및 호스트 정보 조회
 
-![KakaoTalk_20240403_171140784_01](/uploads/cbcf3615c7e65238f45a9e60395a1be6/KakaoTalk_20240403_171140784_01.jpg)
-![KakaoTalk_20240403_171140784_02](/uploads/c5c5f39379ceab986422c997c944852a/KakaoTalk_20240403_171140784_02.jpg)
+![리드미1](https://github.com/NoRuTnT/Dotori/assets/114069644/22260ef8-9381-4dba-abb7-c6f502eea37d)
+![리드미2](https://github.com/NoRuTnT/Dotori/assets/114069644/d01f48bd-27f7-4b08-b413-533c67e16c0a)
 
 ### 🧓 계약 진행
 - 집 계약 신청
 
-![KakaoTalk_20240403_171140784_03](/uploads/28dc3f2e0b89bbda5fcf41e97b735412/KakaoTalk_20240403_171140784_03.jpg)
-![KakaoTalk_20240403_171140784_04](/uploads/3701e9f3d5f1e7afd27bc18a47ebb908/KakaoTalk_20240403_171140784_04.jpg)
+![리드미3](https://github.com/NoRuTnT/Dotori/assets/114069644/154abe0f-14cc-4945-8534-54fb31b030e4)
+![리드미4](https://github.com/NoRuTnT/Dotori/assets/114069644/0ea3b694-c631-46b4-93ff-ea2ec539fb39)
 
 - 계약서 확인
 
-![KakaoTalk_20240403_171140784_05](/uploads/2ed532ed9b1b0c6b3f9d6a6b837cf66d/KakaoTalk_20240403_171140784_05.jpg)
-![KakaoTalk_20240403_171140784_06](/uploads/de07ed3978ead4bc2705262f95accc5a/KakaoTalk_20240403_171140784_06.jpg)
+![리드미5](https://github.com/NoRuTnT/Dotori/assets/114069644/25ad16ee-353d-4d86-8a63-2e766bd80cf4)
+![리드미6](https://github.com/NoRuTnT/Dotori/assets/114069644/47da2806-5def-48c1-9a31-3fc651b8da70)
 
-![KakaoTalk_20240403_171140784_08](/uploads/264af968488f024bc12754d1e67e6529/KakaoTalk_20240403_171140784_08.jpg)
+![리드미7](https://github.com/NoRuTnT/Dotori/assets/114069644/5c679a92-7a62-4cd8-8085-dace39dbbe58)
 
 -계약서 서명 및 생성
 
-![KakaoTalk_20240403_171140784_09](/uploads/f4092e7b0a7bd0d8e98622d86560bd59/KakaoTalk_20240403_171140784_09.jpg)
-![KakaoTalk_20240403_171140784_10](/uploads/06e5558e441b98a564d1409de5887ab8/KakaoTalk_20240403_171140784_10.jpg)
+![리드미8](https://github.com/NoRuTnT/Dotori/assets/114069644/1914e68c-d39e-41a3-9154-063fae1be639)
+![리드미9](https://github.com/NoRuTnT/Dotori/assets/114069644/54f63759-f7c7-4ec6-b3cc-7087452d4861)
 
 - 계약 완료 및 계약서 파일 생성
 
-![KakaoTalk_20240403_171140784_13](/uploads/f697793e7f13c8f06d82579a30e1d9d8/KakaoTalk_20240403_171140784_13.jpg)
-![KakaoTalk_20240403_171140784_14](/uploads/b68d2807cd3e7ab58d450a9543b6c58e/KakaoTalk_20240403_171140784_14.jpg)
+![리드미10](https://github.com/NoRuTnT/Dotori/assets/114069644/95f26105-d9b4-4eb3-8145-aa4facc8f556)
+![리드미11](https://github.com/NoRuTnT/Dotori/assets/114069644/0db8f6b7-3c9d-42e5-8911-4736bff73b42)
 
 - 계약서 다운로드
 
-![KakaoTalk_20240403_233139757_01](/uploads/883683d6f556c6df822959329ccdfc06/KakaoTalk_20240403_233139757_01.jpg)
-![KakaoTalk_20240403_233139757_02](/uploads/59da6f237fce54af6986f124056f1409/KakaoTalk_20240403_233139757_02.jpg)
+![리드미12](https://github.com/NoRuTnT/Dotori/assets/114069644/458390af-3030-449b-8d5e-b3fd73c88f85)
+![리드미13](https://github.com/NoRuTnT/Dotori/assets/114069644/565262ed-b9fe-4bfb-8ef9-6317558fa391)
 
 ### 🧓 활동 인증 및 보호자 알림
 - 활동 내역 인증
