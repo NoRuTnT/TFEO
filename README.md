@@ -9,7 +9,7 @@
 - 컨텐츠 기반 필터링을 통한 맞춤 집 추천부터 계약서 생성 자동화를 통한 손 쉬운 계약 진행, 기존 활동 인증 체계를 개선한 서로의 니즈를 충족하는 기능을 제공함으로써
 복잡했던 룸 쉐어링 사업의 시행을 간소화 하였습니다.
 
-### 기획배경
+### ✏ 기획배경
 
 한국보다 고령화 문제가 사회적 문제로 먼저 대두된 일본의 설문조사에서, 
 독거 노인 중 78%가 외로움을 가장 큰 문제라고 뽑았습니다. 
@@ -28,7 +28,7 @@
 
 이에 우리 팀은 서울시가 진행하는 '한지붕세대공감' 정책 문제점을 개선한 이 서비스를 기획하게 되었습니다.
 
-### 기존 서비스의 문제점
+### ✏ 기존 서비스의 문제점
 
 - 사업 신청 시, 집 정보 미공개로 인해 학생들이 선택할 수 있는 기회를 제공 받지 못하고 있습니다.
 - 학생과 어르신의 성향을 반영한 매칭의 어려움으로 인해 학생과 어르신 간 갈등 상황이 빈번히 발생하고 있습니다.
@@ -63,13 +63,13 @@
 - Figma 활용 UI/UX 디자인 진행
 - 기능 develop
 
-![캡처1](/uploads/7192ff87ce9583950f2eaeb560cb1376/캡처1.PNG)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/0dc85625-49ab-4331-859c-5685927aba04)
 
 ### ✏ ER-Diagram
 
 - ERD Cloud 활용
 
-![캡처](/uploads/fb103e234abc95c5601571eaa02359df/캡처.PNG)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/ed7566b0-411a-4f4f-abbd-9b747557f370)
 
 ### ✏ System Architecture
 
@@ -98,7 +98,7 @@
 
 - 팀 Notion에 Git 행동 강령과 Commit convention 작성, 공유
 
-![캡처2](/uploads/b1f4623be4360145c8a76482844fe2c2/캡처2.PNG)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/df8f51b2-e225-4889-922b-5ca67670cca3)
 
 - 작업 브랜치 전략
 
@@ -111,64 +111,64 @@ master - develop - feature - backend - 기능
 # 🏠 서비스 화면 및 기능 소개
 
 ### 👪 랜딩 및 로그인 페이지
-
+![image](https://github.com/NoRuTnT/becareful/assets/114069644/694ab51f-ec75-4f75-b7b1-115662e7f8f4)
 ### 🧓 메인 홈 페이지
 #### 🧓 지도
 - 지도 상 위치 및 헤더 필터, 상세 필터 기반 집 추천
 
-![집추천1](/uploads/5b16b75d1a86f3bc4350e2f9a83ed280/집추천1.png)
-![집추천2](/uploads/12793bf9311a22c83d0da170fa5a5120/집추천2.png)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/6519ab8d-8e22-40bd-9c4b-68e1a7f310df)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/a1093405-bbfa-4a15-a3ef-5b347013b483)
 
 #### 🧓 집 추천
 - 집 리스트 지도와 연동
 
-![집추천3](/uploads/51a5bcb48bef1c4bb70297ac952cdefd/집추천3.png)
-![집추천4](/uploads/c5890160944adc9ab6c841d7d5a292cd/집추천4.png)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/58baf84a-c848-48e9-a8ee-7aa99dfd3f9a)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/9ea148d2-f083-45d6-9da8-3d8ed5315ed6)
 
 ### 🧓 집 신청 및 집 상세 정보
 - 집 옵션 및 호스트 정보 조회
 
-![KakaoTalk_20240403_171140784_01](/uploads/cbcf3615c7e65238f45a9e60395a1be6/KakaoTalk_20240403_171140784_01.jpg)
-![KakaoTalk_20240403_171140784_02](/uploads/c5c5f39379ceab986422c997c944852a/KakaoTalk_20240403_171140784_02.jpg)
+![리드미1](https://github.com/NoRuTnT/Dotori/assets/114069644/22260ef8-9381-4dba-abb7-c6f502eea37d)
+![리드미2](https://github.com/NoRuTnT/Dotori/assets/114069644/d01f48bd-27f7-4b08-b413-533c67e16c0a)
 
 ### 🧓 계약 진행
 - 집 계약 신청
 
-![KakaoTalk_20240403_171140784_03](/uploads/28dc3f2e0b89bbda5fcf41e97b735412/KakaoTalk_20240403_171140784_03.jpg)
-![KakaoTalk_20240403_171140784_04](/uploads/3701e9f3d5f1e7afd27bc18a47ebb908/KakaoTalk_20240403_171140784_04.jpg)
+![리드미3](https://github.com/NoRuTnT/Dotori/assets/114069644/154abe0f-14cc-4945-8534-54fb31b030e4)
+![리드미4](https://github.com/NoRuTnT/Dotori/assets/114069644/0ea3b694-c631-46b4-93ff-ea2ec539fb39)
 
 - 계약서 확인
 
-![KakaoTalk_20240403_171140784_05](/uploads/2ed532ed9b1b0c6b3f9d6a6b837cf66d/KakaoTalk_20240403_171140784_05.jpg)
-![KakaoTalk_20240403_171140784_06](/uploads/de07ed3978ead4bc2705262f95accc5a/KakaoTalk_20240403_171140784_06.jpg)
+![리드미5](https://github.com/NoRuTnT/Dotori/assets/114069644/25ad16ee-353d-4d86-8a63-2e766bd80cf4)
+![리드미6](https://github.com/NoRuTnT/Dotori/assets/114069644/47da2806-5def-48c1-9a31-3fc651b8da70)
 
-![KakaoTalk_20240403_171140784_08](/uploads/264af968488f024bc12754d1e67e6529/KakaoTalk_20240403_171140784_08.jpg)
+![리드미7](https://github.com/NoRuTnT/Dotori/assets/114069644/5c679a92-7a62-4cd8-8085-dace39dbbe58)
 
--계약서 서명 및 생성
+- 계약서 서명 및 생성
 
-![KakaoTalk_20240403_171140784_09](/uploads/f4092e7b0a7bd0d8e98622d86560bd59/KakaoTalk_20240403_171140784_09.jpg)
-![KakaoTalk_20240403_171140784_10](/uploads/06e5558e441b98a564d1409de5887ab8/KakaoTalk_20240403_171140784_10.jpg)
+![리드미8](https://github.com/NoRuTnT/Dotori/assets/114069644/1914e68c-d39e-41a3-9154-063fae1be639)
+![리드미9](https://github.com/NoRuTnT/Dotori/assets/114069644/54f63759-f7c7-4ec6-b3cc-7087452d4861)
 
 - 계약 완료 및 계약서 파일 생성
 
-![KakaoTalk_20240403_171140784_13](/uploads/f697793e7f13c8f06d82579a30e1d9d8/KakaoTalk_20240403_171140784_13.jpg)
-![KakaoTalk_20240403_171140784_14](/uploads/b68d2807cd3e7ab58d450a9543b6c58e/KakaoTalk_20240403_171140784_14.jpg)
+![리드미10](https://github.com/NoRuTnT/Dotori/assets/114069644/95f26105-d9b4-4eb3-8145-aa4facc8f556)
+![리드미11](https://github.com/NoRuTnT/Dotori/assets/114069644/0db8f6b7-3c9d-42e5-8911-4736bff73b42)
 
 - 계약서 다운로드
 
-![KakaoTalk_20240403_233139757_01](/uploads/883683d6f556c6df822959329ccdfc06/KakaoTalk_20240403_233139757_01.jpg)
-![KakaoTalk_20240403_233139757_02](/uploads/59da6f237fce54af6986f124056f1409/KakaoTalk_20240403_233139757_02.jpg)
+![리드미12](https://github.com/NoRuTnT/Dotori/assets/114069644/458390af-3030-449b-8d5e-b3fd73c88f85)
+![리드미13](https://github.com/NoRuTnT/Dotori/assets/114069644/565262ed-b9fe-4bfb-8ef9-6317558fa391)
 
 ### 🧓 활동 인증 및 보호자 알림
 - 활동 내역 인증
 
-![KakaoTalk_20240403_233139757_03](/uploads/044bc26257024b00a14345ee1dc897cc/KakaoTalk_20240403_233139757_03.jpg)
-![KakaoTalk_20240403_233139757_04](/uploads/6d359e64ef09c11915fc15c3adf3dab3/KakaoTalk_20240403_233139757_04.jpg)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/fc1e69ef-067e-49da-9b14-7a386dd67f1a)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/2b987641-ef2b-4a35-a21f-c85122456501)
 
 - 리뷰
 
-![KakaoTalk_20240403_233139757_06](/uploads/4f6ab6f5f3fa9acbaab2afe4fbd30034/KakaoTalk_20240403_233139757_06.jpg)
-![KakaoTalk_20240403_233139757_05](/uploads/1c4921b36545906eac0b2a9adee01818/KakaoTalk_20240403_233139757_05.jpg)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/cf1c6032-6a8b-4957-a8a6-5289198c093a)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/f42425b2-67a1-4edb-8f13-777a089a7dab)
 
 # 🏠 기술 스택
 
@@ -204,7 +204,7 @@ master - develop - feature - backend - 기능
 - 추천에 불필요한 정보 제거 : ex) 공인중개사 주소정보
 - 결측치 제거 : ex) 시군구 주소정보 -> 더미 문자열로
 [결측치가 제거(empty로 padding)된 데이터셋]
-![image-1](/uploads/f2b209f3cebf28bda0dc532df14bc7ae/image-1.png)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/a3fc4c72-dddf-4f1e-827b-8ae810e99ddf)
 - 획득 정보들의 자료형 정리 : ex) lat: float, address: str
 
 총 1264개 데이터 수집
@@ -215,7 +215,7 @@ master - develop - feature - backend - 기능
 
 - 코사인 유사도 : 두 벡터간 각도 코사인값을 이용하여 측정된 벡터간의 유사한 정도
 [출처:https://wikidocs.net/24603]
-![image](/uploads/ffc5e9b0152e3cf02baab7cc012cce54/image.png)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/bfeb17d1-65a6-4c17-b067-486b0a875c6c)
 1. host선호 정보와 member선호 정보의 종류로부터 특성을 정리하고 각각 벡터화
 ```python
 def get_member_vector(member_personality):
@@ -269,11 +269,20 @@ item = db.home.find({'home_no': index[1]}, {'type': 1,
                              })
 ```
 - 최적화 이전<br/>
-  ![최적화이전](/uploads/05139fbce2aba5a30ea64134f52287fb/최적화이전.PNG)
+  ![image](https://github.com/NoRuTnT/TFEO/assets/114069644/441f5aed-41f8-4740-a34c-bd0826eb042f)
 - 최적화 이후<br/>
-  ![최적화이후](/uploads/dd54a18e21175e1a3da4e8efde1cee80/최적화이후.PNG)
+  ![image](https://github.com/NoRuTnT/TFEO/assets/114069644/24dd6ddf-b139-43b5-a633-0a4af1392078)
 ### 💡 AWS S3 활용 파일 처리
+- presined url 방식
 
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/93cefe0c-f67a-4016-8b89-3abe5938bf61)
+
+  - s3에 직접 파일을 업로드/다운로드 하기 위해서는 해당 s3에 대한 접근 권한을 인증해야 합니다.
+  - 빅데이터를 다루는 만큼, 대량의 파일처리를 위해서 백엔드 서버에 multipart 형식의 파일을 보내 서버가 직접 업로드/다운로드 하는 방식은 장기적으로 생각했을 때 서버에 부하를 줄 수 있을 것이라 생각해 프로젝트에서 presined url 방식을 사용하게 되었습니다. 
+
+- 문서화
+
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/b48d0c51-f004-4761-a570-076b4f65afdd)
 
 ---
 
@@ -285,4 +294,4 @@ item = db.home.find({'home_no': index[1]}, {'type': 1,
 | 박중현     | FE 리더       | 프론트엔드 팀장이지만 부족한 실력으로 인해 프론트엔드 개발이 많이 늦어졌는데 api 호출이나 상태관리에 능력이 뛰어난 팀원들 덕분에 개발을 잘 끝낸 것 같습니다. 저는 UI/UX 부분에 많은 노력을 들였는데, 발표 때 오류 없이 계획한 대로 진행되어서 기뻤습니다. 프론트엔드 개발자로서 갖춰야 하는 능력이 비단 눈에 보이는 영역 뿐만 아니라 백엔드에 대한 이해가 필요하다고 느꼈고 보다 워크플로우를 잘 알아야겠다는 생각을 했습니다. 빠른 상황판단과 역할 분배로 프로젝트를 잘 끝낼 수 있게 노력해준 팀원분들께 감사합니다.|
 | 서해광     | Data 리더, FE, BE | 빅데이터 분석 부분을 더 빠르게 구현하고 프론트엔드에 집중하고 싶었는데 그러지 못해 미안한 마음이 있습니다. 고된 프로젝트 과정 가운데 힘든 내색 전혀하지 않고 즐거이 프로젝트를 같이한 다른 팀원분들께 감사하고 새로운 프레임워크, 데이터베이스를 적용하고 데이터를 가공하고 분석하는 능력을 기를 수 있어서 정말로 좋았습니다.  |
 | 이민지     | FE, BE       | 풀스택으로 참여하면서 처음으로 리액트도 써보고 개발자로서 필요한 백엔드, 프론트엔드 역량을 키울 수 있었습니다. 특히 열정적인 팀원들과 함께하면서 열심히 하는 태도나 문제 해결 능력 등 많은 점을 배웠습니다. 프로젝트 하면서 어려운 점도 있었지만, 같이 논의하면서 극복할 수 있었고 이를 통해 성장할 수 있었습니다. 저희 서비스가 사회적 문제인 대학생 주거난과 노인 우울증을 해결하고 세대간 공감을 추구했기 때문에 더 뜻깊었던 것 같습니다. 완성도 있는 서비스를 만들 수 있어서 굉장히 만족스럽고 발표날까지 열심히 참여한 팀원들에게 수고했고 고맙다는 말 전하고 싶습니다.  |
-| 이하은     | Data, BE, FE | 데이터셋이 없는 상황에서 추천 시스템 구현을 위한 빅데이터 셋을 모으고 가공하는 과정에서 전처리 및 크롤링과 관련한 파이썬 라이브러리들을 사용해보는 경험은 정말 뜻깊었습니다. react라는 새로운 프레임워크를 단시간에 적용해 프로젝트를 완성해야 하는 힘든 일정이었음에도 불구하고, 좋은 팀원들 덕분에 잘 끝낼 수 있었다고 생각합니다. 소통의 중요성을 다시한번 체감했고 새로운 기술을 빠르게 배워 적용하는 경험을 통해 많이 성장할 수 있어 좋았습니다. |
+| 이하은     | Data, BE, FE | 필요한 데이터가 없는 상황에서 추천 시스템 구현을 위한 빅데이터를 크롤링을 통해 직접 수집하고 전처리하는 과정에서 전처리와 관련된 파이썬 라이브러리들을 활용하고 데이터 분석을 위한 데이터셋을 직접 만들어 볼 수 있어 정말 좋은 경험이었습니다. data, be, fe 모든 과정을 알아야하고 react라는 새로운 프레임워크를 단시간에 학습해 프로젝트에 적용해야 하는 힘든 일정, 그리고 개인적으로 힘든 기간이었음에도 불구하고, 서로 독려하고 각자의 역할에 최선을 다하며 소통하는 좋은 팀원들 덕분에 잘 마무리할 수 있었다고 생각합니다. 비록 개선해야할 점도 있는 프로젝트이지만, 소통의 중요성을 다시한번 체감했고 유독 새로 배워야할 것이 많은 프로젝트였기에 힘들었던 만큼 여러 부분에서 성장할 수 있어 좋았습니다. |
