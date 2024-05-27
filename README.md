@@ -63,13 +63,13 @@
 - Figma 활용 UI/UX 디자인 진행
 - 기능 develop
 
-![캡처1](/uploads/7192ff87ce9583950f2eaeb560cb1376/캡처1.PNG)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/0dc85625-49ab-4331-859c-5685927aba04)
 
 ### ✏ ER-Diagram
 
 - ERD Cloud 활용
 
-![캡처](/uploads/fb103e234abc95c5601571eaa02359df/캡처.PNG)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/ed7566b0-411a-4f4f-abbd-9b747557f370)
 
 ### ✏ System Architecture
 
@@ -98,7 +98,7 @@
 
 - 팀 Notion에 Git 행동 강령과 Commit convention 작성, 공유
 
-![캡처2](/uploads/b1f4623be4360145c8a76482844fe2c2/캡처2.PNG)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/df8f51b2-e225-4889-922b-5ca67670cca3)
 
 - 작업 브랜치 전략
 
@@ -116,14 +116,14 @@ master - develop - feature - backend - 기능
 #### 🧓 지도
 - 지도 상 위치 및 헤더 필터, 상세 필터 기반 집 추천
 
-![집추천1](/uploads/5b16b75d1a86f3bc4350e2f9a83ed280/집추천1.png)
-![집추천2](/uploads/12793bf9311a22c83d0da170fa5a5120/집추천2.png)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/6519ab8d-8e22-40bd-9c4b-68e1a7f310df)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/a1093405-bbfa-4a15-a3ef-5b347013b483)
 
 #### 🧓 집 추천
 - 집 리스트 지도와 연동
 
-![집추천3](/uploads/51a5bcb48bef1c4bb70297ac952cdefd/집추천3.png)
-![집추천4](/uploads/c5890160944adc9ab6c841d7d5a292cd/집추천4.png)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/58baf84a-c848-48e9-a8ee-7aa99dfd3f9a)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/9ea148d2-f083-45d6-9da8-3d8ed5315ed6)
 
 ### 🧓 집 신청 및 집 상세 정보
 - 집 옵션 및 호스트 정보 조회
@@ -162,13 +162,13 @@ master - develop - feature - backend - 기능
 ### 🧓 활동 인증 및 보호자 알림
 - 활동 내역 인증
 
-![KakaoTalk_20240403_233139757_03](/uploads/044bc26257024b00a14345ee1dc897cc/KakaoTalk_20240403_233139757_03.jpg)
-![KakaoTalk_20240403_233139757_04](/uploads/6d359e64ef09c11915fc15c3adf3dab3/KakaoTalk_20240403_233139757_04.jpg)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/fc1e69ef-067e-49da-9b14-7a386dd67f1a)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/2b987641-ef2b-4a35-a21f-c85122456501)
 
 - 리뷰
 
-![KakaoTalk_20240403_233139757_06](/uploads/4f6ab6f5f3fa9acbaab2afe4fbd30034/KakaoTalk_20240403_233139757_06.jpg)
-![KakaoTalk_20240403_233139757_05](/uploads/1c4921b36545906eac0b2a9adee01818/KakaoTalk_20240403_233139757_05.jpg)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/cf1c6032-6a8b-4957-a8a6-5289198c093a)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/f42425b2-67a1-4edb-8f13-777a089a7dab)
 
 # 🏠 기술 스택
 
@@ -204,7 +204,7 @@ master - develop - feature - backend - 기능
 - 추천에 불필요한 정보 제거 : ex) 공인중개사 주소정보
 - 결측치 제거 : ex) 시군구 주소정보 -> 더미 문자열로
 [결측치가 제거(empty로 padding)된 데이터셋]
-![image-1](/uploads/f2b209f3cebf28bda0dc532df14bc7ae/image-1.png)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/a3fc4c72-dddf-4f1e-827b-8ae810e99ddf)
 - 획득 정보들의 자료형 정리 : ex) lat: float, address: str
 
 총 1264개 데이터 수집
@@ -215,7 +215,7 @@ master - develop - feature - backend - 기능
 
 - 코사인 유사도 : 두 벡터간 각도 코사인값을 이용하여 측정된 벡터간의 유사한 정도
 [출처:https://wikidocs.net/24603]
-![image](/uploads/ffc5e9b0152e3cf02baab7cc012cce54/image.png)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/bfeb17d1-65a6-4c17-b067-486b0a875c6c)
 1. host선호 정보와 member선호 정보의 종류로부터 특성을 정리하고 각각 벡터화
 ```python
 def get_member_vector(member_personality):
@@ -269,20 +269,20 @@ item = db.home.find({'home_no': index[1]}, {'type': 1,
                              })
 ```
 - 최적화 이전<br/>
-  ![최적화이전](/uploads/05139fbce2aba5a30ea64134f52287fb/최적화이전.PNG)
+  ![image](https://github.com/NoRuTnT/TFEO/assets/114069644/441f5aed-41f8-4740-a34c-bd0826eb042f)
 - 최적화 이후<br/>
-  ![최적화이후](/uploads/dd54a18e21175e1a3da4e8efde1cee80/최적화이후.PNG)
+  ![image](https://github.com/NoRuTnT/TFEO/assets/114069644/24dd6ddf-b139-43b5-a633-0a4af1392078)
 ### 💡 AWS S3 활용 파일 처리
 - presined url 방식
 
-![s3image](/uploads/ddb7881afcc64b0fd1cff22670a2ae1f/s3image.PNG)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/93cefe0c-f67a-4016-8b89-3abe5938bf61)
 
   - s3에 직접 파일을 업로드/다운로드 하기 위해서는 해당 s3에 대한 접근 권한을 인증해야 합니다.
   - 빅데이터를 다루는 만큼, 대량의 파일처리를 위해서 백엔드 서버에 multipart 형식의 파일을 보내 서버가 직접 업로드/다운로드 하는 방식은 장기적으로 생각했을 때 서버에 부하를 줄 수 있을 것이라 생각해 프로젝트에서 presined url 방식을 사용하게 되었습니다. 
 
 - 문서화
 
-![tfeo-s3](/uploads/7a6f5c12f4c7f28ee34b97f6e8e073ca/tfeo-s3.gif)
+![image](https://github.com/NoRuTnT/TFEO/assets/114069644/b48d0c51-f004-4761-a570-076b4f65afdd)
 
 ---
 
